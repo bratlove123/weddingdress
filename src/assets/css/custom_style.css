@@ -1,0 +1,288 @@
+/* Checkbox */
+.checkbox-custom input[type="checkbox"]:checked + label::before {
+    background-color: #02c0ce;
+    border-color: #02c0ce;
+}
+.checkbox label::before {
+    -o-transition: 0.3s ease-in-out;
+    -webkit-transition: 0.3s ease-in-out;
+    background-color: #ffffff;
+    border-radius: 3px;
+    border: 2px solid #98a6ad;
+    content: "";
+    display: inline-block;
+    height: 18px;
+    left: 0;
+    margin-left: -18px;
+    position: absolute;
+    transition: 0.3s ease-in-out;
+    width: 18px;
+    outline: none !important;
+}
+
+.checkbox-custom input[type="checkbox"]:checked + label::after {
+    border-color: #ffffff;
+}
+.checkbox input[type="checkbox"]:checked + label::after {
+    content: "";
+    position: absolute;
+    top: 3px;
+    left: 7px;
+    display: table;
+    width: 5px;
+    height: 10px;
+    border: 1px solid #313a46;
+    border-top-width: 0;
+    border-left-width: 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    -o-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+.checkbox label::after {
+    color: #797979;
+    display: inline-block;
+    font-size: 11px;
+    height: 18px;
+    left: 0;
+    margin-left: -18px;
+    padding-left: 3px;
+    padding-top: 2px;
+    position: absolute;
+    top: 0;
+    width: 18px;
+}
+
+.accountbg{
+    background: url('../images/bg-1.jpg');background-size: cover;
+}
+
+.field-error{
+    color: #f1556c;
+    margin-top: 5px;
+    padding-left: 15px;
+}
+
+.field-error::before{
+    content: "\F159";
+    font-family: "Material Design Icons";
+    position: absolute;
+    left: 16px;
+    top: 67px;
+}
+
+.search-in-form{
+    text-align: right;
+}
+
+.search-in-form input[type='text']{
+    height: 35px;
+}
+
+.table-sort-header th.sortable{
+    cursor: pointer;
+}
+
+.table-sort-header th i{
+    float: right;
+    padding-top: 3px;
+}
+
+.error {
+    color: #f1556c;
+}
+
+.large-icon{
+    color: #02a8b5;
+    font-size: 60px;
+}
+
+.facebook-color{
+    background-color: #3b5998;
+    border-color: #3b5998;
+}
+
+.facebook-color:hover,.facebook-color:active,.facebook-color:visited,.facebook-color:focus{
+    background-color: #2f4779 !important;
+    border-color: #2f4779 !important;
+    outline: none !important;
+}
+
+.slimscroll-fix{
+    max-height: 230px;
+}
+
+.example-enter {
+    opacity: 0;
+    max-height: 0;
+}
+
+.example-enter.example-enter-active {
+opacity: 1;
+max-height: 500px;
+transition: 400ms ease-in;
+}
+
+.example-leave {
+opacity: 1;
+max-height: 500px;
+}
+
+.example-leave.example-leave-active {
+opacity: 0;
+max-height: 0;
+transition: 400ms ease-out;
+}
+
+.modal-wrapper .close{
+    top: 0;
+    position: absolute;
+    right: 0;
+    height: 36px;
+    width: 36px;
+    background-color: #313a46;
+    opacity: 1;
+    border: 2px solid #ffffff;
+    text-shadow: none;
+    color: #ffffff;
+    border-radius: 50%;
+    padding: 0;
+}
+
+.modal-footer{
+    padding-bottom: 0;
+}
+
+.modal-mask {
+  position: fixed;
+  z-index: 9998;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, .5);
+  display: table;
+  transition: opacity .3s ease;
+}
+
+.modal-wrapper {
+  display: table-cell;
+  vertical-align: middle;
+}
+
+.modal-container {
+  width: 300px;
+  margin: 0px auto;
+  background-color: #fff;
+  border-radius: 5px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, .33);
+  transition: all .3s ease;
+  font-family: Helvetica, Arial, sans-serif;
+}
+
+.modal-header{
+    position: relative;
+    padding-bottom: 0;
+    padding-top: 10px;
+}
+
+.modal-header h3 {
+  margin-top: 0;
+  color: #02c0ce;
+}
+
+.modal-body {
+  margin: 20px 0;
+  overflow-x: hidden;
+}
+
+.modal-default-button {
+  float: right;
+}
+
+.modal-enter {
+  opacity: 0;
+}
+
+.modal-leave-active {
+  opacity: 0;
+}
+
+.modal-enter .modal-container,
+.modal-leave-active .modal-container {
+  -webkit-transform: scale(1.1);
+  transform: scale(1.1);
+}
+
+.btn-add-url{
+    text-align: right;
+    margin-top: 10px;
+}
+
+.margin-auto{
+    margin:auto;
+}
+
+.nav-child-item{
+    margin-bottom: 10px;
+}
+
+.fix-scroll{
+    padding-left: 5px;
+    padding-right: 20px;
+}
+
+.fix-table{
+    margin-top: 10px;
+}
+
+.fix-eraser-btn{
+    margin-left: 5px;
+}
+
+.togglable:hover{
+    background: rgb(230, 230, 230);
+    cursor: pointer;
+}
+
+.react-confirm-alert-body{
+    background: #02a8b5 !important;
+    color: #fff !important;
+}
+
+.table-header .search-box{
+    width: 200px;
+    float: right;
+}
+
+.paging_simple_numbers{
+    float: right;
+}
+
+.sorting-header{
+    cursor: pointer;
+}
+
+.navbar-custom .dropdown-menu{
+    display: block;
+}
+
+.dropdownmenu-enter {
+    opacity: 0;
+}
+
+.dropdownmenu-enter.dropdownmenu-enter-active {
+opacity: 1;
+margin-top: 2px !important;
+transition: 300ms ease-in;
+}
+
+.dropdownmenu-leave {
+opacity: 1;
+}
+
+.dropdownmenu-leave.dropdownmenu-leave-active {
+opacity: 0;
+margin-top: 20px;
+transition: 300ms ease-out;
+}
