@@ -15,6 +15,7 @@ class Routing extends Component{
         return(
             <div>
                 <Switch>
+                    <Route exact path="/" component={Dashboard} />
                     <Route exact path="/admin" component={Dashboard} />
                     <Route path="/admin/login" component={Login} />
                     <Route path="/admin/registration" component={Registration} />
