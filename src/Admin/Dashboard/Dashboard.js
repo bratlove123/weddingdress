@@ -14,7 +14,7 @@ class Dashboard extends Component{
         
         return(
             <Layout>
-                This is HomePage
+                This is HomePage Test
             </Layout>
         );
     }

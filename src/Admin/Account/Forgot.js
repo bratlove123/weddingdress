@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import Layout from './Layout';
 import AuthenticationService from '../../Services/AuthenticationService';
 import { Redirect } from 'react-router';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import Input from 'react-validation/build/input';
 import Button from 'react-validation/build/button';
 import {Link} from 'react-router-dom';
@@ -61,7 +61,6 @@ class Forgot extends Component{
 
         return(
             <Layout>
-                <ToastContainer />
                 <div className="text-center m-b-20">
                     <p className="text-muted m-b-0">Enter your email address and we'll send you an email with instructions to reset your password.  </p>
                 </div>

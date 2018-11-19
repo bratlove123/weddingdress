@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import logo from '../../assets/images/logo.png';
+import { ToastContainer } from 'react-toastify';
 
 class Layout extends Component{
     constructor(props){
@@ -9,6 +10,7 @@ class Layout extends Component{
     render(){
         return(
             <div className="account-pages">
+                <ToastContainer/>
                 <div className="accountbg"></div>
 
                 <div className="wrapper-page account-page-full">

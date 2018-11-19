@@ -6,11 +6,15 @@ import LeftNavItem from './LeftNavItem';
 import { Scrollbars } from 'react-custom-scrollbars';
 import LeftNavService from '../../Services/LeftNavService';
 import AuthenticationService from '../../Services/AuthenticationService';
+import ErrorHandlerService from '../../Services/ErrorHandlerService';
 import {Link} from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { Redirect } from 'react-router';
 
 class LeftNav extends Component{
     leftNavService=new LeftNavService();
     authenticationService=new AuthenticationService();
+    errorHandlerService=new ErrorHandlerService();
 
     constructor(props){
         super(props);
@@ -22,24 +26,35 @@ class LeftNav extends Component{
                 email: "",
                 avatar: "",
                 role: ""
-            }
+            },
+            redirectToLogin:false
         };
     }
 
-    componentWillMount(){
-        this.leftNavService.getLeftNavs(this.authenticationService.getToken()).then((res)=>{
+    componentDidMount(){
+        let thiz=this;
+        thiz.leftNavService.getLeftNavs(thiz.authenticationService.getToken()).then((res)=>{
             if(res.data){
-                this.setState(
+                thiz.setState(
                     {
                         leftNavItems: res.data,
-                        userInfo: this.authenticationService.getUserLoginInfo()
+                        userInfo: thiz.authenticationService.getUserLoginInfo()
                     }
                 );
             }
+        }).catch(function (error) {
+            thiz.errorHandlerService.basicErrorHandler(error, toast, thiz);
         });
     }
 
     render(){
+        if(this.state.redirectToLogin){
+            return <Redirect to={{
+                pathname: '/admin/login',
+                state: { currentUrl: window.location.pathname }
+            }} />;
+        }
+
         return(
             <div className="left side-menu">
 

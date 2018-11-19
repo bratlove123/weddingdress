@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import Layout from './Layout';
 import AuthenticationService from '../../Services/AuthenticationService';
 import { Redirect } from 'react-router';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import queryString from 'query-string';
 import ErrorHandlerService from '../../Services/ErrorHandlerService';
@@ -55,7 +55,6 @@ class VerifyEmail extends Component{
 
         return(
             <Layout>
-                <ToastContainer />
                 <div className="account-content text-center">
                     <span className="large-icon"><FontAwesomeIcon icon="envelope" /></span>
 

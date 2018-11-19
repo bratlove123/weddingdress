@@ -5,7 +5,7 @@ import { Scrollbars } from 'react-custom-scrollbars';
 import LeftNavService from '../../Services/LeftNavService';
 import AuthenticationService from '../../Services/AuthenticationService';
 import ErrorHandlerService from '../../Services/ErrorHandlerService';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
@@ -30,7 +30,6 @@ class ManageLeftNav extends Component{
 
     constructor(props){
         super(props);
-
         this.state = {
             modalIsOpen: false,
             redirectToLogin:false,
@@ -324,7 +323,6 @@ class ManageLeftNav extends Component{
 
         return(
             <Layout breadcrumb={this.breadcrumb}>
-                <ToastContainer />
                 <div className="card-box table-responsive">
                     <div className="table-header">
                         <button className="btn btn-success" onClick={this.openModal}>Add New Nav</button>

@@ -5,7 +5,7 @@ import { Redirect } from 'react-router';
 import Form from 'react-validation/build/form';
 import Input from 'react-validation/build/input';
 import Button from 'react-validation/build/button';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import {Link} from 'react-router-dom';
 import ErrorHandlerService from '../../Services/ErrorHandlerService';
 
@@ -135,7 +135,6 @@ class Login extends Component{
 
         return(
             <Layout>
-                <ToastContainer />
                 <Form ref={c => { this.form = c }}>
 
                     <div className="form-group m-b-20 row">

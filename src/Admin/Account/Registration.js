@@ -5,7 +5,7 @@ import { Redirect } from 'react-router';
 import Form from 'react-validation/build/form';
 import Input from 'react-validation/build/input';
 import Button from 'react-validation/build/button';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import {Link} from 'react-router-dom';
 import ErrorHandlerService from '../../Services/ErrorHandlerService';
 
@@ -94,7 +94,6 @@ class Registration extends Component{
 
         return(
             <Layout>
-                <ToastContainer />
                 <Form className="form-horizontal" action="#">
 
                     <div className="form-group row m-b-20">

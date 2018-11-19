@@ -3,6 +3,7 @@ import LeftNav from './LeftNav';
 import TopNav from './TopNav';
 import { Redirect } from 'react-router';
 import AuthenticationService from '../../Services/AuthenticationService';
+import { ToastContainer } from 'react-toastify';
 
 class Layout extends Component{
     authService = new AuthenticationService();
@@ -15,15 +16,6 @@ class Layout extends Component{
         };
     }
 
-    componentWillMount(){
-        let that=this;
-        that.authService.checkLogon(this.authService.getToken()).then((res)=>{
-
-        }).catch(function (error) {
-            that.setState({ redirectToLogin: true });
-        });
-    }
-
     render(){
         if(this.state.redirectToLogin){
             return <Redirect to={{
@@ -34,6 +26,7 @@ class Layout extends Component{
 
         return(
             <div id="wrapper">
+                <ToastContainer/>
                 <LeftNav/>
                 <div className="content-page">
                     <TopNav breadcrumb={this.props.breadcrumb} />
