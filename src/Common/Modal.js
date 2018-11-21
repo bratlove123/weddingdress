@@ -6,15 +6,16 @@ class Modal extends Component{
         super(props);
 
         this.state={
-            modalIsOpen: this.props.modalIsOpen
+            modalIsOpen: false
         };
 
         this.handleOutsideClick=this.handleOutsideClick.bind(this);
+        this.closeModal=this.closeModal.bind(this);
     }
 
     handleOutsideClick(e) {
         if (e.target && e.target.className=="modal-wrapper") {
-            this.props.handleClose();
+            this.closeModal();
         }
     }
     
@@ -26,11 +27,20 @@ class Modal extends Component{
         document.removeEventListener('click', this.handleOutsideClick, false);
     }
 
+    closeModal(){
+        this.setState({modalIsOpen: false});
+    }
+
+    componentWillReceiveProps(nextProps){
+        if(nextProps!==this.props){
+            this.setState({modalIsOpen: nextProps.modalIsOpen});
+        }
+    }
+
     render(){
-        const modalIsOpen=this.props.modalIsOpen;
         return(
             <CSSTransitionGroup transitionName="modal" transitionEnterTimeout={100} transitionLeaveTimeout={100}>
-                {modalIsOpen&&<div className="modal-mask">
+                {this.state.modalIsOpen&&<div className="modal-mask">
                                     <div className="modal-wrapper">
                                         <div className="modal-container" style={{width: this.props.width + "px"}}>
 
@@ -38,7 +48,7 @@ class Modal extends Component{
                                                 <h3>
                                                     {this.props.header}
                                                 </h3>              
-                                                <button type="button" onClick={this.props.handleClose} className="close">&times;</button>
+                                                <button type="button" onClick={this.closeModal} className="close">&times;</button>
                                             </div>
 
                                             <div className="modal-body">

@@ -1,7 +1,8 @@
 const initState={
     users:[
 
-    ]
+    ],
+    modalIsOpen: false
 };
 
 const manageUserReducer=(state=initState,action)=>{

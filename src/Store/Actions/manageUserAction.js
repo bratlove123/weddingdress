@@ -1,6 +1,5 @@
-export const openUpdateUserModal=(isAdd)=>{
-    return {
-        type: 'OPEN_UPDATE_USER',
-        isAdd: isAdd
+export const createUser=(user)=>{
+    return (dispatch, getState) => {
+        dispatch({type: 'CREATE_USER', user});
     }
 }

@@ -140,7 +140,7 @@ class Login extends Component{
                     <div className="form-group m-b-20 row">
                         <div className="col-12">
                             <label>Username</label>
-                            <Input validations={[required]} value={this.state.username} onChange={this.handleChangeValue} className="form-control" type="text" name="username" placeholder="Enter your username"/>
+                            <Input tabIndex="1" validations={[required]} value={this.state.username} onChange={this.handleChangeValue} className="form-control" type="text" name="username" placeholder="Enter your username"/>
                         </div>
                     </div>
 
@@ -148,7 +148,7 @@ class Login extends Component{
                         <div className="col-12">
                             <Link to="/admin/forgot" className="text-muted pull-right"><small>Forgot your password?</small></Link>
                             <label>Password</label>
-                            <Input validations={[required]} value={this.state.password} onChange={this.handleChangeValue} className="form-control" type="password" name="password" placeholder="Enter your password"/>
+                            <Input tabIndex="2" validations={[required]} value={this.state.password} onChange={this.handleChangeValue} className="form-control" type="password" name="password" placeholder="Enter your password"/>
                         </div>
                     </div>
 

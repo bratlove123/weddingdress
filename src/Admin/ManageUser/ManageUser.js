@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
 import Layout from '../Common/Layout';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {connect} from 'react-redux'
+import {connect} from 'react-redux';
+import UpdateUser from './UpdateUser';
 
 class ManageUser extends Component{
     breadcrumb = [
@@ -17,14 +18,25 @@ class ManageUser extends Component{
 
     constructor(props){
         super(props);
+
+        this.state={
+            modalIsOpen: false,
+            isEdit: false
+        };
+        this.addNewUser=this.addNewUser.bind(this);
+    }
+
+    addNewUser(){
+        this.setState({modalIsOpen: true});
     }
 
     render(){
         return(
             <Layout breadcrumb={this.breadcrumb}>
+                <UpdateUser modalIsOpen={this.state.modalIsOpen} isEdit={this.state.isEdit}></UpdateUser>
                 <div className="card-box table-responsive">
                     <div className="table-header">
-                        <button className="btn btn-success" >Add New User</button>
+                        <button className="btn btn-success" onClick={this.addNewUser} >Add New User</button>
                         <input name="currentSearch" className="form-control search-box" placeholder="Search" />
                     </div>
                     <table className="table table-colored m-b-0 toggle-arrow-tiny fix-table">
@@ -59,4 +71,10 @@ class ManageUser extends Component{
     }
 }
 
-export default ManageUser;
+const mapStateToProps=(state)=>{
+    return {
+        users: state.manageUser.users
+    }
+}
+
+export default connect(mapStateToProps)(ManageUser);

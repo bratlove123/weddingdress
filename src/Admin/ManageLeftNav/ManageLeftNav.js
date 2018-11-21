@@ -57,7 +57,6 @@ class ManageLeftNav extends Component{
         };
       
         this.openModal = this.openModal.bind(this);
-        this.closeModal = this.closeModal.bind(this);
         this.handleChangeValue=this.handleChangeValue.bind(this);
         this.setIsHasBadge=this.setIsHasBadge.bind(this);
         this.addNewItem=this.addNewItem.bind(this);
@@ -117,9 +116,6 @@ class ManageLeftNav extends Component{
             modalIsOpen: true,
             isEdit:false
         });
-    }
-    closeModal(){
-        this.setState({modalIsOpen: false});
     }
     handleChangeValue(e){
         this.setState({[e.target.name]: e.target.value})
@@ -418,7 +414,7 @@ class ManageLeftNav extends Component{
                         </div>
                     </div>
                 </div>
-                <Modal header={!this.state.isEdit?"Add Left Nav":"Edit Left Nav"} modalIsOpen={this.state.modalIsOpen} handleClose={this.closeModal} width="700">
+                <Modal header={!this.state.isEdit?"Add Left Nav":"Edit Left Nav"} modalIsOpen={this.state.modalIsOpen} width="700">
                     <Scrollbars autoHeight autoHeightMin={500} autoHide autoHideTimeout={1000} autoHideDuration={200}>
                         <div className="row fix-scroll">
                             <div className="col-6">
