@@ -3,6 +3,10 @@ import Layout from '../Common/Layout';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {connect} from 'react-redux';
 import UpdateUser from './UpdateUser';
+import ReactLoading from 'react-loading';
+import {getUsers} from '../../Store/Actions/manageUserAction';
+import {openUpdateUserDialog} from '../../Store/Actions/manageUserAction';
+import { Redirect } from 'react-router';
 
 class ManageUser extends Component{
     breadcrumb = [
@@ -19,21 +23,32 @@ class ManageUser extends Component{
     constructor(props){
         super(props);
 
-        this.state={
-            modalIsOpen: false,
-            isEdit: false
-        };
         this.addNewUser=this.addNewUser.bind(this);
+        this.updateUser=this.updateUser.bind(this);
+    }
+
+    componentWillMount(){
+        this.props.getUsers();
     }
 
     addNewUser(){
-        this.setState({modalIsOpen: true});
+        this.props.openUpdateUserDialog();
+    }
+
+    updateUser(){
+        this.setState({modalIsOpen: true, isEdit: true});
     }
 
     render(){
+        if(this.props.redirectToLogin){
+            return <Redirect to={{
+                pathname: '/admin/login',
+                state: { currentUrl: this.props.location.pathname }
+            }} />;
+        }
         return(
             <Layout breadcrumb={this.breadcrumb}>
-                <UpdateUser modalIsOpen={this.state.modalIsOpen} isEdit={this.state.isEdit}></UpdateUser>
+                <UpdateUser modalIsOpen={this.props.modalIsOpen} isEdit={this.props.isEdit} fixOpen={this.props.fixOpen}></UpdateUser>
                 <div className="card-box table-responsive">
                     <div className="table-header">
                         <button className="btn btn-success" onClick={this.addNewUser} >Add New User</button>
@@ -51,18 +66,23 @@ class ManageUser extends Component{
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>Avatar</td>
-                                <td><b>Administrator</b></td>
-                                <td>thaiphong.spkt@gmail.com</td>
-                                <td>Phong Ho</td>
-                                <td>Admin</td>
-                                <td className="text-center">
-                                    <button className="btn btn-warning"><FontAwesomeIcon icon="pencil-alt" /></button>
-                                    <button className="btn btn-danger fix-eraser-btn"><FontAwesomeIcon icon="eraser" /></button>
-                                </td>
-                                
-                            </tr>
+                        {this.props.isLoadingUsers?<tr><td colSpan="6"><div className="loading"><ReactLoading type={'cylon'} color={'#02c0ce'} height={'15px'} /></div></td></tr>:
+                            this.props.users.map((user, i)=>{
+                                return (
+                                    <tr key={i}>
+                                        <td>{user.avatar}</td>
+                                        <td><b>{user.userName}</b></td>
+                                        <td>{user.email}</td>
+                                        <td>{user.firstName + " " + user.lastName}</td>
+                                        <td>Admin</td>
+                                        <td className="text-center">
+                                            <button className="btn btn-warning" onClick={this.updateUser}><FontAwesomeIcon icon="pencil-alt" /></button>
+                                            <button className="btn btn-danger fix-eraser-btn"><FontAwesomeIcon icon="eraser" /></button>
+                                        </td>
+                                    </tr>
+                                )
+                            })
+                        }
                         </tbody>
                     </table>
                 </div>
@@ -73,8 +93,20 @@ class ManageUser extends Component{
 
 const mapStateToProps=(state)=>{
     return {
-        users: state.manageUser.users
+        users: state.manageUser.users,
+        isLoadingUsers: state.manageUser.isLoadingUsers,
+        modalIsOpen: state.manageUser.modalIsOpen,
+        isEdit: state.manageUser.modalIsOpen,
+        fixOpen: state.manageUser.fixOpen,
+        redirectToLogin: state.manageUser.redirectToLogin
     }
 }
 
-export default connect(mapStateToProps)(ManageUser);
+const mapDispatchToProps = (dispatch) => {
+    return {
+        getUsers: () => dispatch(getUsers()),
+        openUpdateUserDialog: (id) => dispatch(openUpdateUserDialog())
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(ManageUser);

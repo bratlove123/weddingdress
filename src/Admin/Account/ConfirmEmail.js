@@ -1,11 +1,8 @@
 import React, {Component} from 'react';
 import Layout from './Layout';
-import AuthenticationService from '../../Services/AuthenticationService';
-import { toast } from 'react-toastify';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 class ConfirmEmail extends Component{
-    authService = new AuthenticationService();
     constructor(props){
         super(props);
         this.state = {

@@ -3,9 +3,7 @@ import avatar from '../../assets/images/users/avatar-1.jpg';
 import CSSTransitionGroup from 'react-addons-css-transition-group';
 import { Redirect } from 'react-router';
 import AuthenticationService from '../../Services/AuthenticationService';
-
 class Control extends Component{
-    authenticationService=new AuthenticationService();
     constructor(props){
         super(props);
 
@@ -41,7 +39,7 @@ class Control extends Component{
     }
 
     logOut(){
-        this.authenticationService.removeToken();
+        AuthenticationService.removeToken();
         this.setState({redirectToLogin:true});
     }
 

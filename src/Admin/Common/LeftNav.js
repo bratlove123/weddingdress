@@ -8,14 +8,9 @@ import LeftNavService from '../../Services/LeftNavService';
 import AuthenticationService from '../../Services/AuthenticationService';
 import ErrorHandlerService from '../../Services/ErrorHandlerService';
 import {Link} from 'react-router-dom';
-import { toast } from 'react-toastify';
 import { Redirect } from 'react-router';
 
 class LeftNav extends Component{
-    leftNavService=new LeftNavService();
-    authenticationService=new AuthenticationService();
-    errorHandlerService=new ErrorHandlerService();
-
     constructor(props){
         super(props);
         this.state = {
@@ -33,17 +28,19 @@ class LeftNav extends Component{
 
     componentDidMount(){
         let thiz=this;
-        thiz.leftNavService.getLeftNavs(thiz.authenticationService.getToken()).then((res)=>{
+        LeftNavService.getLeftNavs(AuthenticationService.getToken()).then((res)=>{
             if(res.data){
                 thiz.setState(
                     {
                         leftNavItems: res.data,
-                        userInfo: thiz.authenticationService.getUserLoginInfo()
+                        userInfo: AuthenticationService.getUserLoginInfo()
                     }
                 );
             }
         }).catch(function (error) {
-            thiz.errorHandlerService.basicErrorHandler(error, toast, thiz);
+            ErrorHandlerService.basicErrorHandler(error, function(){
+                thiz.setState({redirectToLogin: true});
+            });
         });
     }
 

@@ -1,7 +1,7 @@
-import Common from '../Consts/Common';
+import { toast } from 'react-toastify';
 
 class ErrorHandlerService{
-    errorWithMessageFromAPI(error, toast){
+    static errorWithMessageFromAPI(error){
         if(error && error.response && error.response.status == 400 && error.response.data){
             toast(error.response.data.Message[0], { type: toast.TYPE.ERROR });
         }
@@ -10,25 +10,26 @@ class ErrorHandlerService{
         }
     }
 
-    basicErrorHandler(error, toast, thiz){
-        if(error.response && error.response.status==401){
-            if(thiz){
-                thiz.setState({redirectToLogin:true});
-            }
+    static basicErrorHandler(error, redirectToLogin){
+        if(error && error.response && error.response.status == 400 && error.response.data){
+            toast(error.response.data.Message[0], { type: toast.TYPE.ERROR });
+        }
+        else if(error.response && error.response.status==401){
+            redirectToLogin();
         }
         else{
             toast(error.message, { type: toast.TYPE.ERROR });
         }
     }
 
-    loginErrorHandler(error, toast, thiz){
+    static loginErrorHandler(error, callback){
         if(error && error.response && error.response.status == 400 && error.response.data){
             switch(error.response.data.ErrorCode[0]){
                 case "1100":
                     toast(error.response.data.Message[0], { type: toast.TYPE.ERROR });
                     break;
                 case "1101":
-                    thiz.setState({redirectToConfirm:true});
+                    callback();
                     break;
             }
         }

@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import {Component} from 'react';
 import queryString from 'query-string';
 
 class FacebookAuth extends Component{

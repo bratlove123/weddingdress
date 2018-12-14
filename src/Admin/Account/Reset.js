@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import Layout from './Layout';
 import AuthenticationService from '../../Services/AuthenticationService';
 import { Redirect } from 'react-router';
-import { toast } from 'react-toastify';
 import Input from 'react-validation/build/input';
 import Button from 'react-validation/build/button';
 import {Link} from 'react-router-dom';
@@ -30,9 +29,6 @@ const minlength = (value) => {
 };
 
 class Reset extends Component{
-    authService = new AuthenticationService();
-    errorHandlerService=new ErrorHandlerService();
-
     constructor(props){
         super(props);
         var params = queryString.parse(this.props.location.search)
@@ -52,12 +48,12 @@ class Reset extends Component{
     resetPassword(e){
         let thiz=this;
         e.preventDefault();
-        thiz.authService.reset({code:thiz.state.code,
+        AuthenticationService.reset({code:thiz.state.code,
         userId: thiz.state.userId,
         password: thiz.state.password}).then((res)=>{
             thiz.setState({isSuccess:true});
         }).catch(function (error) {
-            thiz.errorHandlerService.errorWithMessageFromAPI(error, toast);
+            ErrorHandlerService.errorWithMessageFromAPI(error);
         });;
     }
 

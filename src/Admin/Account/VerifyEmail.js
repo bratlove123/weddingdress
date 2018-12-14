@@ -2,15 +2,11 @@ import React, {Component} from 'react';
 import Layout from './Layout';
 import AuthenticationService from '../../Services/AuthenticationService';
 import { Redirect } from 'react-router';
-import { toast } from 'react-toastify';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import queryString from 'query-string';
 import ErrorHandlerService from '../../Services/ErrorHandlerService';
 
 class VerifyEmail extends Component{
-    authService = new AuthenticationService();
-    errorHandlerService=new ErrorHandlerService();
-
     constructor(props){
         super(props);
         var params = queryString.parse(this.props.location.search)
@@ -28,10 +24,10 @@ class VerifyEmail extends Component{
 
     componentWillMount(){
         let thiz=this;
-        thiz.authService.verify({code: thiz.state.code, userId: thiz.state.userId}).then((res)=>{
+        AuthenticationService.verify({code: thiz.state.code, userId: thiz.state.userId}).then((res)=>{
             thiz.setState({message: "Verify email successfully! Please click the button bellow to login.", isSuccess: true});
         }).catch(function (error) {
-            thiz.errorHandlerService.errorWithMessageFromAPI(error, toast);
+            ErrorHandlerService.errorWithMessageFromAPI(error);
         });
     }
 

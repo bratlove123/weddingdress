@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import Layout from './Layout';
 import AuthenticationService from '../../Services/AuthenticationService';
 import { Redirect } from 'react-router';
-import { toast } from 'react-toastify';
 import Input from 'react-validation/build/input';
 import Button from 'react-validation/build/button';
 import {Link} from 'react-router-dom';
@@ -24,8 +23,6 @@ const email = (value) => {
 };
 
 class Forgot extends Component{
-    authService = new AuthenticationService();
-    errorHandlerService=new ErrorHandlerService();
     constructor(props){
         super(props);
         this.state = {
@@ -40,10 +37,10 @@ class Forgot extends Component{
     recoverAccount(e){
         let thiz=this;
         e.preventDefault();
-        thiz.authService.forgot({email:thiz.state.email}).then((res)=>{
+        AuthenticationService.forgot({email:thiz.state.email}).then((res)=>{
                 thiz.setState({redirect:true});
             }).catch(function (error) {
-                thiz.errorHandlerService.errorWithMessageFromAPI(error, toast);
+                ErrorHandlerService.errorWithMessageFromAPI(error);
             });;
     }
 

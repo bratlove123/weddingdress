@@ -4,11 +4,11 @@ import { Redirect, Route } from 'react-router-dom';
 // Utils
 import AuthenticationService from '../Services/AuthenticationService';
 
-const authService = new AuthenticationService();
+//const authService = new AuthenticationService();
 const PrivateRoute = ({ component: Component, ...rest }) =>{
     return (  
         <Route {...rest} render={props => (
-            authService.getToken() !== null ? (
+          AuthenticationService.getToken() !== null ? (
             <Component {...props} />
           ) : (
             <Redirect to={{

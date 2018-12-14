@@ -13,10 +13,6 @@ import { Redirect } from 'react-router';
 import Common from '../../Consts/Common';
 
 class ManageLeftNav extends Component{
-    leftNavService = new LeftNavService();
-    authService = new AuthenticationService();
-    errorHandlerService=new ErrorHandlerService();
-
     breadcrumb = [
         {
             name: "Configuration",
@@ -84,11 +80,13 @@ class ManageLeftNav extends Component{
                 label: 'Yes',
                 onClick: () => {
                     let thiz=this;
-                    thiz.leftNavService.deleteLeftNav(id, thiz.authService.getToken()).then((res)=>{
+                    LeftNavService.deleteLeftNav(id, AuthenticationService.getToken()).then((res)=>{
                         toast("Deleted left nav item successfully.", { type: toast.TYPE.SUCCESS });
                         thiz.getLeftNavsItem(Common.pageSize, this.state.currentPage, this.state.currentSort, true, this.state.currentSearch);
                     }).catch(function (error) {
-                        thiz.errorHandlerService.basicErrorHandler(error, toast, thiz);
+                        ErrorHandlerService.basicErrorHandler(error, function(){
+                            thiz.setState({redirectToLogin: true});
+                        });
                     });
                 }
             },
@@ -151,7 +149,7 @@ class ManageLeftNav extends Component{
     }
     addNewItem(){
         let thiz=this;
-        thiz.leftNavService.addLeftNav({
+        LeftNavService.addLeftNav({
             name: thiz.state.navName,
             url: thiz.state.navUrl,
             iconClass: thiz.state.iconClass,
@@ -159,12 +157,14 @@ class ManageLeftNav extends Component{
             badgeClass: thiz.state.badgeClass,
             badgeNumber: thiz.state.badgeNumber,
             childs:thiz.state.childs
-        }, thiz.authService.getToken()).then((res)=>{
+        }, AuthenticationService.getToken()).then((res)=>{
             toast("Added left nav item successfully.", { type: toast.TYPE.SUCCESS });
             thiz.setState({modalIsOpen:false});
             thiz.getLeftNavsItem(Common.pageSize, this.state.currentPage, this.state.currentSort, true, this.state.currentSearch);
         }).catch(function (error) {
-            thiz.errorHandlerService.basicErrorHandler(error, toast, thiz);
+            ErrorHandlerService.basicErrorHandler(error, function(){
+                thiz.setState({redirectToLogin: true});
+            });
         });
     }
 
@@ -174,7 +174,7 @@ class ManageLeftNav extends Component{
 
     getLeftNavsItem(pageSize, pageNumber, orderBy, sort, search){
         let thiz=this;
-        thiz.leftNavService.getLeftNavsWithSorting(thiz.authService.getToken(), {
+        LeftNavService.getLeftNavsWithSorting(AuthenticationService.getToken(), {
             pageSize: pageSize,
             pageNumber: pageNumber,
             orderBy: orderBy,
@@ -190,13 +190,15 @@ class ManageLeftNav extends Component{
                 });
             }
         }).catch(function (error) {
-            thiz.errorHandlerService.basicErrorHandler(error, toast, thiz);
+            ErrorHandlerService.basicErrorHandler(error, function(){
+                thiz.setState({redirectToLogin: true});
+            });
         });
     }
 
     editLeftNav=(id)=>()=>{
         let thiz=this;
-        thiz.leftNavService.getLeftNav(id, thiz.authService.getToken()).then((res)=>{
+        LeftNavService.getLeftNav(id, AuthenticationService.getToken()).then((res)=>{
             if(res.data){
                 let leftNav=res.data;
                 thiz.setState({
@@ -213,13 +215,15 @@ class ManageLeftNav extends Component{
                 });
             }
         }).catch(function (error) {
-            thiz.errorHandlerService.basicErrorHandler(error, toast, thiz);
+            ErrorHandlerService.basicErrorHandler(error, function(){
+                thiz.setState({redirectToLogin: true});
+            });
         });
     }
 
     editLeftNavItem(){
         let thiz=this;
-        thiz.leftNavService.editLeftNav({
+        LeftNavService.editLeftNav({
             id:thiz.state.id,
             name: thiz.state.navName,
             url: thiz.state.navUrl,
@@ -228,12 +232,14 @@ class ManageLeftNav extends Component{
             badgeClass: thiz.state.badgeClass,
             badgeNumber: thiz.state.badgeNumber,
             childs:thiz.state.childs
-        }, thiz.authService.getToken()).then((res)=>{
+        }, AuthenticationService.getToken()).then((res)=>{
             toast("Updated left nav item successfully.", { type: toast.TYPE.SUCCESS });
             thiz.setState({modalIsOpen:false});
             thiz.getLeftNavsItem(Common.pageSize, this.state.currentPage, this.state.currentSort, true, this.state.currentSearch);
         }).catch(function (error) {
-            thiz.errorHandlerService.basicErrorHandler(error, toast, thiz);
+            ErrorHandlerService.basicErrorHandler(error, function(){
+                thiz.setState({redirectToLogin: true});
+            });
         });
     }
 

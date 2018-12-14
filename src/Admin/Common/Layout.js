@@ -2,12 +2,9 @@ import React, {Component} from 'react';
 import LeftNav from './LeftNav';
 import TopNav from './TopNav';
 import { Redirect } from 'react-router';
-import AuthenticationService from '../../Services/AuthenticationService';
 import { ToastContainer } from 'react-toastify';
 
 class Layout extends Component{
-    authService = new AuthenticationService();
-
     constructor(props){
         super(props);
 

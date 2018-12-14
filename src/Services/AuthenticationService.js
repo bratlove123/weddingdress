@@ -2,37 +2,37 @@ import axios from 'axios';
 import Common from '../Consts/Common';
 
 class AuthenticationService{
-    login (params) {
+    static login (params) {
         return axios.post(Common.apiUrl + '/auth/login', params);
     }
 
-    signup (params) {
+    static signup (params) {
         return axios.post(Common.apiUrl + '/auth/register', params);
     }
 
-    verify(params){
+    static verify(params){
         return axios.get(Common.apiUrl + '/auth/confirm?code='+
         params.code+"&userId="+params.userId);
     }
 
-    forgot(params){
+    static forgot(params){
         return axios.post(Common.apiUrl + '/auth/forgot', params);
     }
 
-    reset(params){
+    static reset(params){
         return axios.post(Common.apiUrl + '/auth/reset', params);
     }
 
-    loginFacebook(params){
+    static loginFacebook(params){
         return axios.post(Common.apiUrl + '/auth/facebook', params);
     }
 
-    checkLogon(token){
+    static checkLogon(token){
         const authStr = 'Bearer '.concat(token);
         return axios.get(Common.apiUrl + '/auth/check', { headers: { Authorization: authStr }});
     }
 
-    getToken(){
+    static getToken(){
         let token = localStorage.getItem(Common.tokenStorage);
         if(token && JSON.parse(token)){
             token = JSON.parse(token);
@@ -43,7 +43,7 @@ class AuthenticationService{
         return null;
     }
 
-    getUserLoginInfo(){
+    static getUserLoginInfo(){
         let token = localStorage.getItem(Common.tokenStorage);
         if(token && JSON.parse(token)){
             token = JSON.parse(token);
@@ -54,11 +54,11 @@ class AuthenticationService{
         return null;
     }
 
-    setToken(token){
+    static setToken(token){
         localStorage.setItem(Common.tokenStorage, JSON.stringify(token));
     }
 
-    removeToken(){
+    static removeToken(){
         localStorage.removeItem(Common.tokenStorage);
     }
 }

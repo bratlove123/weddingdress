@@ -5,7 +5,6 @@ import { Redirect } from 'react-router';
 import Form from 'react-validation/build/form';
 import Input from 'react-validation/build/input';
 import Button from 'react-validation/build/button';
-import { toast } from 'react-toastify';
 import {Link} from 'react-router-dom';
 import ErrorHandlerService from '../../Services/ErrorHandlerService';
 
@@ -36,10 +35,6 @@ const match = (value, props, components) =>{
 };
 
 class Registration extends Component{
-
-    authService = new AuthenticationService();
-    errorHandlerService=new ErrorHandlerService();
-
     constructor(props){
         super(props);
 
@@ -70,17 +65,17 @@ class Registration extends Component{
     signUp(e){
         let thiz=this;
         e.preventDefault();
-        thiz.authService.signup({
+        AuthenticationService.signup({
             username: thiz.state.username,
             email: thiz.state.email,
             password: thiz.state.password,
             firstName: thiz.state.firstname,
             lastName:thiz.state.lastname
         }).then(res=>{
-            thiz.authService.setToken(res.data);
+            AuthenticationService.setToken(res.data);
             thiz.setState({ redirect: true });
         }).catch(function (error) {
-            thiz.errorHandlerService.errorWithMessageFromAPI(error, toast);
+            ErrorHandlerService.errorWithMessageFromAPI(error);
         });
     }
 

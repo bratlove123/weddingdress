@@ -17,9 +17,6 @@ const required = (value) => {
 };
 
 class Login extends Component{
-    authService = new AuthenticationService();
-    errorHandlerService=new ErrorHandlerService();
-
     constructor(props){
         super(props);
 
@@ -51,11 +48,13 @@ class Login extends Component{
     signIn(e){
         e.preventDefault();
         let thiz=this;
-        thiz.authService.login({username: thiz.state.username, password: thiz.state.password}).then(res=>{
-            thiz.authService.setToken(res.data);
+        AuthenticationService.login({username: thiz.state.username, password: thiz.state.password}).then(res=>{
+            AuthenticationService.setToken(res.data);
             thiz.setState({ redirect: true });
         }).catch(function (error) {
-            thiz.errorHandlerService.loginErrorHandler(error, toast, thiz);
+            ErrorHandlerService.loginErrorHandler(error, function(){
+                thiz.setState({ redirectToConfirm: true });
+            });
         });
     }
 
@@ -85,12 +84,12 @@ class Login extends Component{
     statusChangeCallback(response) {
         let thiz =this;
         if (response.status === 'connected') {
-            thiz.authService.loginFacebook({accessToken: response.authResponse.accessToken}).then((res)=>{
-                thiz.authService.setToken(res.data);
+            AuthenticationService.loginFacebook({accessToken: response.authResponse.accessToken}).then((res)=>{
+                AuthenticationService.setToken(res.data);
                 thiz.setState({ redirect: true });
             })
             .catch(function (error) {
-                thiz.errorHandlerService.errorWithMessageFromAPI(error, toast);
+                ErrorHandlerService.errorWithMessageFromAPI(error);
             });
         } else if (response.status === 'not_authorized') {
             toast("Cannot login with this facebook account.", { type: toast.TYPE.ERROR });
@@ -112,7 +111,7 @@ class Login extends Component{
 
     componentWillMount(){
         let thiz=this;
-        thiz.authService.checkLogon(this.authService.getToken()).then((res)=>{
+        AuthenticationService.checkLogon(AuthenticationService.getToken()).then((res)=>{
             thiz.setState({ redirect: true });
         }).catch(function (error) {
    

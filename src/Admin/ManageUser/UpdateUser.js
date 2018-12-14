@@ -3,6 +3,7 @@ import Modal from '../../Common/Modal';
 import selectImg from '../../assets/images/select-image.png';
 import {createUser} from '../../Store/Actions/manageUserAction';
 import {connect} from 'react-redux';
+import ReactLoading from 'react-loading';
 
 class UpdateUser extends Component{
     fileInput=null;
