@@ -4,48 +4,22 @@ import logoSm from '../../assets/images/logo_sm.png';
 import avatar from '../../assets/images/users/avatar-1.jpg'
 import LeftNavItem from './LeftNavItem';
 import { Scrollbars } from 'react-custom-scrollbars';
-import LeftNavService from '../../Services/LeftNavService';
-import AuthenticationService from '../../Services/AuthenticationService';
-import ErrorHandlerService from '../../Services/ErrorHandlerService';
+import {connect} from 'react-redux';
 import {Link} from 'react-router-dom';
 import { Redirect } from 'react-router';
+import {getLeftNavs} from '../../Store/Actions/leftNavAction';
 
 class LeftNav extends Component{
     constructor(props){
         super(props);
-        this.state = {
-            leftNavItems: [],
-            userInfo: {
-                userName: "",
-                fullName: "",
-                email: "",
-                avatar: "",
-                role: ""
-            },
-            redirectToLogin:false
-        };
     }
 
     componentDidMount(){
-        let thiz=this;
-        LeftNavService.getLeftNavs().then((res)=>{
-            if(res.data){
-                thiz.setState(
-                    {
-                        leftNavItems: res.data,
-                        userInfo: AuthenticationService.getUserLoginInfo()
-                    }
-                );
-            }
-        }).catch(function (error) {
-            ErrorHandlerService.basicErrorHandler(error, function(){
-                thiz.setState({redirectToLogin: true});
-            });
-        });
+        this.props.getLeftNavs();
     }
 
     render(){
-        if(this.state.redirectToLogin){
+        if(this.props.redirectToLogin){
             return <Redirect to={{
                 pathname: '/admin/login',
                 state: { currentUrl: window.location.pathname }
@@ -71,16 +45,16 @@ class LeftNav extends Component{
                     <Scrollbars autoHeight autoHeightMin={900} autoHide autoHideTimeout={1000} autoHideDuration={200}>
                         <div className="user-box">
                             <div className="user-img">
-                                <img src={this.state.userInfo&&this.state.userInfo.avatar?this.state.userInfo.avatar:avatar} alt="user-img" className="rounded-circle img-fluid"/>
+                                <img src={this.props.userInfo&&this.props.userInfo.avatar?this.props.userInfo.avatar:avatar} alt="user-img" className="rounded-circle img-fluid"/>
                             </div>
-                            <h5><a href="#">{this.state.userInfo&&this.state.userInfo.fullName.trim()?this.state.userInfo.fullName:this.state.userInfo.userName}</a> </h5>
-                            <p className="text-muted">{this.state.userInfo&&this.state.userInfo.role?this.state.userInfo.role:"N/A"}</p>
+                            <h5><a href="#">{this.props.userInfo&&this.props.userInfo.fullName.trim()?this.props.userInfo.fullName:this.props.userInfo.userName}</a> </h5>
+                            <p className="text-muted">{this.props.userInfo&&this.props.userInfo.role?this.props.userInfo.role:"N/A"}</p>
                         </div>
 
                         <div id="sidebar-menu">
 
                             <ul className="metismenu" id="side-menu">
-                                {this.state.leftNavItems.map((item, i) => {        
+                                {this.props.leftNavItems.map((item, i) => {        
                                     return (<LeftNavItem key={i} config={item} />) 
                                 })}
                             </ul>
@@ -95,4 +69,17 @@ class LeftNav extends Component{
     }
 }
 
-export default LeftNav;
+const mapStateToProps=(state)=>{
+    return {
+        leftNavItems: state.leftNav.leftNavItems,
+        userInfo: state.leftNav.userInfo,
+        redirectToLogin:state.leftNav.redirectToLogin
+    }
+}
+const mapDispatchToProps = (dispatch) => {
+    return {
+        getLeftNavs: () => dispatch(getLeftNavs())
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(LeftNav);
