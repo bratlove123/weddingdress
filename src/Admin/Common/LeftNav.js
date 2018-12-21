@@ -28,7 +28,7 @@ class LeftNav extends Component{
 
     componentDidMount(){
         let thiz=this;
-        LeftNavService.getLeftNavs(AuthenticationService.getToken()).then((res)=>{
+        LeftNavService.getLeftNavs().then((res)=>{
             if(res.data){
                 thiz.setState(
                     {

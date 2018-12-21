@@ -9,8 +9,9 @@ import Reset from './Admin/Account/Reset';
 import FacebookAuth from './Admin/Account/FacebookAuth';
 import ManageLeftNav from './Admin/ManageLeftNav/ManageLeftNav';
 import ManageUser from './Admin/ManageUser/ManageUser';
-import {BrowserRouter, Switch, Route} from 'react-router-dom';
+import {Switch, Route} from 'react-router-dom';
 import PrivateRoute from './Common/PrivateRoute';
+import PageNotFound from './Admin/Account/PageNotFound';
 
 class Routing extends Component{
     render(){
@@ -27,6 +28,7 @@ class Routing extends Component{
                 <Route path="/admin/facebookauth" component={FacebookAuth} />
                 <PrivateRoute path="/admin/manageleftnav" component={ManageLeftNav} />
                 <PrivateRoute path="/admin/manageuser" component={ManageUser} />
+                <PrivateRoute component={PageNotFound} />
             </Switch>
         );
     }

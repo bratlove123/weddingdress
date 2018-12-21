@@ -1,13 +1,12 @@
 import React, {Component} from 'react';
 import Layout from './Layout';
-import AuthenticationService from '../../Services/AuthenticationService';
 import { Redirect } from 'react-router';
 import Form from 'react-validation/build/form';
 import Input from 'react-validation/build/input';
 import Button from 'react-validation/build/button';
-import { toast } from 'react-toastify';
 import {Link} from 'react-router-dom';
-import ErrorHandlerService from '../../Services/ErrorHandlerService';
+import {connect} from 'react-redux';
+import {signInDispatch, loginFacebookCallbackDispatch, checkLogon, resetState} from '../../Store/Actions/loginAction';
 
 const required = (value) => {
     if (!value.toString().trim().length) {
@@ -22,12 +21,11 @@ class Login extends Component{
 
         let currentUrl= this.props.location && this.props.location.state && this.props.location.state.currentUrl;
         this.state = {
-            username: '',
-            password: '',
-            email: '',
-            rememberMe: false,
-            redirect: false,
-            redirectToConfirm: false,
+            login: {
+                username: '',
+                password: '',
+                rememberMe: false
+            },         
             redirectUrl: currentUrl
         };
 
@@ -38,24 +36,16 @@ class Login extends Component{
     }
 
     handleChangeValue(e){
-        this.setState({[e.target.name]: e.target.value})
+        this.setState({login: {...this.state.login, [e.target.name]: e.target.value}});
     }
 
     setRememberMeCb(){
-        this.setState({rememberMe: !this.state.rememberMe});
+        this.setState({login: {...this.state.login, rememberMe: !this.state.login.rememberMe}});
     }
 
     signIn(e){
         e.preventDefault();
-        let thiz=this;
-        AuthenticationService.login({username: thiz.state.username, password: thiz.state.password}).then(res=>{
-            AuthenticationService.setToken(res.data);
-            thiz.setState({ redirect: true });
-        }).catch(function (error) {
-            ErrorHandlerService.loginErrorHandler(error, function(){
-                thiz.setState({ redirectToConfirm: true });
-            });
-        });
+        this.props.signInDispatch(this.state.login);
     }
 
     loadFbLoginApi() {
@@ -81,26 +71,13 @@ class Login extends Component{
         this.loadFbLoginApi();
     }
 
-    statusChangeCallback(response) {
-        let thiz =this;
-        if (response.status === 'connected') {
-            AuthenticationService.loginFacebook({accessToken: response.authResponse.accessToken}).then((res)=>{
-                AuthenticationService.setToken(res.data);
-                thiz.setState({ redirect: true });
-            })
-            .catch(function (error) {
-                ErrorHandlerService.errorWithMessageFromAPI(error);
-            });
-        } else if (response.status === 'not_authorized') {
-            toast("Cannot login with this facebook account.", { type: toast.TYPE.ERROR });
-        } else {
-            toast("Unknown error with facebook login.", { type: toast.TYPE.ERROR });
-        }
+    componentWillUnmount(){
+        this.props.resetState();
     }
 
     checkLoginState() {
         window.FB.getLoginStatus(function(response) {
-            this.statusChangeCallback(response);
+            this.props.loginFacebookCallbackDispatch(response);
         }.bind(this));
     }
   
@@ -110,25 +87,20 @@ class Login extends Component{
     }
 
     componentWillMount(){
-        let thiz=this;
-        AuthenticationService.checkLogon(AuthenticationService.getToken()).then((res)=>{
-            thiz.setState({ redirect: true });
-        }).catch(function (error) {
-   
-        });
+        this.props.checkLogon();
     }
 
     render(){
-        if (this.state.redirect) {
+        if (this.props.redirectToHome) {
             if(this.state.redirectUrl){
                 return <Redirect to={this.state.redirectUrl}/>;
             }
             return <Redirect to='/admin'/>;
         }
-        if(this.state.redirectToConfirm){
+        if(this.props.redirectToConfirm){
             return <Redirect to={{
                 pathname: '/admin/confirm',
-                state: { email: this.state.email }
+                state: { email: this.props.email }
             }}/>;
         }
 
@@ -139,7 +111,7 @@ class Login extends Component{
                     <div className="form-group m-b-20 row">
                         <div className="col-12">
                             <label>Username</label>
-                            <Input tabIndex="1" validations={[required]} value={this.state.username} onChange={this.handleChangeValue} className="form-control" type="text" name="username" placeholder="Enter your username"/>
+                            <Input tabIndex="1" validations={[required]} value={this.state.login.username} onChange={this.handleChangeValue} className="form-control" type="text" name="username" placeholder="Enter your username"/>
                         </div>
                     </div>
 
@@ -147,7 +119,7 @@ class Login extends Component{
                         <div className="col-12">
                             <Link to="/admin/forgot" className="text-muted pull-right"><small>Forgot your password?</small></Link>
                             <label>Password</label>
-                            <Input tabIndex="2" validations={[required]} value={this.state.password} onChange={this.handleChangeValue} className="form-control" type="password" name="password" placeholder="Enter your password"/>
+                            <Input tabIndex="2" validations={[required]} value={this.state.login.password} onChange={this.handleChangeValue} className="form-control" type="password" name="password" placeholder="Enter your password"/>
                         </div>
                     </div>
 
@@ -155,7 +127,7 @@ class Login extends Component{
                         <div className="col-12">
 
                             <div className="checkbox checkbox-custom">
-                                <input id="remember" name="rememberMe" type="checkbox" checked={this.state.rememberMe} />
+                                <input id="remember" name="rememberMe" type="checkbox" checked={this.state.login.rememberMe} />
                                 <label onClick={this.setRememberMeCb}>
                                     Remember me
                                 </label>
@@ -182,4 +154,20 @@ class Login extends Component{
     }
 }
 
-export default Login;
+const mapStateToProps=(state)=>{
+    return {
+        redirectToHome:  state.login.redirectToHome,
+        redirectToConfirm:  state.login.redirectToConfirm,
+        email: state.login.email
+    }
+}
+const mapDispatchToProps = (dispatch) => {
+    return {
+        signInDispatch: (login) => dispatch(signInDispatch(login)),
+        loginFacebookCallbackDispatch: (response) => dispatch(loginFacebookCallbackDispatch(response)),
+        checkLogon: ()=>dispatch(checkLogon()),
+        resetState: ()=>dispatch(resetState())
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login);

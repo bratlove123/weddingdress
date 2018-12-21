@@ -80,7 +80,7 @@ class ManageLeftNav extends Component{
                 label: 'Yes',
                 onClick: () => {
                     let thiz=this;
-                    LeftNavService.deleteLeftNav(id, AuthenticationService.getToken()).then((res)=>{
+                    LeftNavService.deleteLeftNav(id).then((res)=>{
                         toast("Deleted left nav item successfully.", { type: toast.TYPE.SUCCESS });
                         thiz.getLeftNavsItem(Common.pageSize, this.state.currentPage, this.state.currentSort, true, this.state.currentSearch);
                     }).catch(function (error) {
@@ -157,7 +157,7 @@ class ManageLeftNav extends Component{
             badgeClass: thiz.state.badgeClass,
             badgeNumber: thiz.state.badgeNumber,
             childs:thiz.state.childs
-        }, AuthenticationService.getToken()).then((res)=>{
+        }).then((res)=>{
             toast("Added left nav item successfully.", { type: toast.TYPE.SUCCESS });
             thiz.setState({modalIsOpen:false});
             thiz.getLeftNavsItem(Common.pageSize, this.state.currentPage, this.state.currentSort, true, this.state.currentSearch);
@@ -174,7 +174,7 @@ class ManageLeftNav extends Component{
 
     getLeftNavsItem(pageSize, pageNumber, orderBy, sort, search){
         let thiz=this;
-        LeftNavService.getLeftNavsWithSorting(AuthenticationService.getToken(), {
+        LeftNavService.getLeftNavsWithSorting({
             pageSize: pageSize,
             pageNumber: pageNumber,
             orderBy: orderBy,
@@ -183,7 +183,7 @@ class ManageLeftNav extends Component{
         }).then((res)=>{
             if(res.data){
                 thiz.setState({
-                    leftNavs: res.data.leftNavs,
+                    leftNavs: res.data.data,
                     totalItemCount: res.data.countAll,
                     totalPage: Math.ceil(res.data.countAll/Common.pageSize),
                     currentPage: pageNumber
@@ -198,7 +198,7 @@ class ManageLeftNav extends Component{
 
     editLeftNav=(id)=>()=>{
         let thiz=this;
-        LeftNavService.getLeftNav(id, AuthenticationService.getToken()).then((res)=>{
+        LeftNavService.getLeftNav(id).then((res)=>{
             if(res.data){
                 let leftNav=res.data;
                 thiz.setState({
@@ -232,7 +232,7 @@ class ManageLeftNav extends Component{
             badgeClass: thiz.state.badgeClass,
             badgeNumber: thiz.state.badgeNumber,
             childs:thiz.state.childs
-        }, AuthenticationService.getToken()).then((res)=>{
+        }).then((res)=>{
             toast("Updated left nav item successfully.", { type: toast.TYPE.SUCCESS });
             thiz.setState({modalIsOpen:false});
             thiz.getLeftNavsItem(Common.pageSize, this.state.currentPage, this.state.currentSort, true, this.state.currentSearch);

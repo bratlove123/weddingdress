@@ -14,7 +14,7 @@ class Modal extends Component{
     }
 
     handleOutsideClick(e) {
-        if (e.target && e.target.className=="modal-wrapper") {
+        if (e.target && e.target.className==="modal-wrapper") {
             this.closeModal();
         }
     }

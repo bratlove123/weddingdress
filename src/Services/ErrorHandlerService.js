@@ -29,7 +29,8 @@ class ErrorHandlerService{
                     toast(error.response.data.Message[0], { type: toast.TYPE.ERROR });
                     break;
                 case "1101":
-                    callback();
+                    let email = error.response.data.Email[0];
+                    callback(email);
                     break;
             }
         }

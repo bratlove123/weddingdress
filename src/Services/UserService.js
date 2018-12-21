@@ -1,18 +1,58 @@
 import axios from 'axios';
 import Common from '../Consts/Common';
+import AuthenticationService from './AuthenticationService';
 
-class UserService{
-    static addUser (token, params) {
-        const authStr = 'Bearer '.concat(token);
+var cancel=null;
+var CancelToken = axios.CancelToken;
+
+class UserService{   
+    constructor(){
+    }
+
+    static addUser (params) {
+        const authStr = 'Bearer '.concat(AuthenticationService.getToken());
         return axios.post(Common.apiUrl + '/user/add', params, { headers: { Authorization: authStr }});
     }
 
-    static getUsers (token) {
-        const authStr = 'Bearer '.concat(token);
-        return axios.get(Common.apiUrl + '/user/getall', { headers: { 
-            'Content-Type': 'application/json;charset=utf-8', 
-            'Accept': 'application/json',
-            Authorization: authStr }});
+    static getUsers () {
+        const authStr = 'Bearer '.concat(AuthenticationService.getToken());
+        return axios.get(Common.apiUrl + '/user/getall', { headers: { Authorization: authStr }});
+    }
+
+    static getUserById (id) {
+        const authStr = 'Bearer '.concat(AuthenticationService.getToken());
+        return axios.get(Common.apiUrl + '/user/get/' + id, { headers: { Authorization: authStr }});
+    }
+
+    static updateUser (params) {
+        const authStr = 'Bearer '.concat(AuthenticationService.getToken());
+        return axios.put(Common.apiUrl + '/user/update', params, { headers: { Authorization: authStr }});
+    }
+
+    static deleteUser(id){
+        const authStr = 'Bearer '.concat(AuthenticationService.getToken());
+        return axios.delete(Common.apiUrl + '/user/delete/'+id, { headers: { Authorization: authStr }});
+    }
+
+    static getUsersWithSorting(params){
+        //Cancel previous typing
+        if (cancel != null) {
+            cancel();
+        }
+        const authStr = 'Bearer '.concat(AuthenticationService.getToken());
+        return axios.get(Common.apiUrl + '/user/getsort',{
+            headers: { Authorization: authStr },
+            params: params
+            ,
+            cancelToken: new CancelToken(function executor(c) {
+                cancel = c;
+            })
+        });
+    }
+
+    static getAllRoles(){
+        const authStr = 'Bearer '.concat(AuthenticationService.getToken());
+        return axios.get(Common.apiUrl + '/user/roles', { headers: { Authorization: authStr }});
     }
 }
 

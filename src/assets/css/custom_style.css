@@ -319,3 +319,37 @@ transition: 300ms ease-out;
     flex-direction: column;
     align-items: center;
 }
+
+.list-img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    -o-object-fit: cover;
+    object-fit: cover;
+    -o-object-position: center right;
+    object-position: center right;
+    cursor: pointer;
+}
+
+.fix-table td{
+    vertical-align: middle;
+}
+
+.global-loading{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    -ms-flex-pack: center;
+    justify-content: center;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -ms-flex-align: center;
+    align-items: center;
+    background: #000;
+    opacity: 0.5;
+    z-index: 9999;
+}

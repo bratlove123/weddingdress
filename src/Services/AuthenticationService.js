@@ -27,8 +27,8 @@ class AuthenticationService{
         return axios.post(Common.apiUrl + '/auth/facebook', params);
     }
 
-    static checkLogon(token){
-        const authStr = 'Bearer '.concat(token);
+    static checkLogon(){
+        const authStr = 'Bearer '.concat(this.getToken());
         return axios.get(Common.apiUrl + '/auth/check', { headers: { Authorization: authStr }});
     }
 
