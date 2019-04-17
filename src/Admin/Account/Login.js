@@ -8,12 +8,12 @@ import {Link} from 'react-router-dom';
 import {connect} from 'react-redux';
 import {signInDispatch, loginFacebookCallbackDispatch, checkLogon, resetState} from '../../Store/Actions/loginAction';
 
-const required = (value) => {
-    if (!value.toString().trim().length) {
-        // We can return string or jsx as the 'error' prop for the validated Component
-        return <small className="error">This field is required.</small>;
-    }
-};
+// const required = (value) => {
+//     if (!value.toString().trim().length) {
+//         // We can return string or jsx as the 'error' prop for the validated Component
+//         return <small className="error">This field is required.</small>;
+//     }
+// };
 
 class Login extends Component{
     constructor(props){
@@ -106,12 +106,12 @@ class Login extends Component{
 
         return(
             <Layout>
-                <Form ref={c => { this.form = c }}>
+                <form ref={c => { this.form = c }}>
 
                     <div className="form-group m-b-20 row">
                         <div className="col-12">
                             <label>Username</label>
-                            <Input tabIndex="1" validations={[required]} value={this.state.login.username} onChange={this.handleChangeValue} className="form-control" type="text" name="username" placeholder="Enter your username"/>
+                            <input tabIndex="1" value={this.state.login.username} onChange={this.handleChangeValue} className="form-control" type="text" name="username" placeholder="Enter your username"/>
                         </div>
                     </div>
 
@@ -119,7 +119,7 @@ class Login extends Component{
                         <div className="col-12">
                             <Link to="/admin/forgot" className="text-muted pull-right"><small>Forgot your password?</small></Link>
                             <label>Password</label>
-                            <Input tabIndex="2" validations={[required]} value={this.state.login.password} onChange={this.handleChangeValue} className="form-control" type="password" name="password" placeholder="Enter your password"/>
+                            <input tabIndex="2" value={this.state.login.password} onChange={this.handleChangeValue} className="form-control" type="password" name="password" placeholder="Enter your password"/>
                         </div>
                     </div>
 
@@ -138,11 +138,11 @@ class Login extends Component{
 
                     <div className="form-group row text-center m-t-10">
                         <div className="col-12">
-                            <Button className="btn btn-block btn-custom waves-effect waves-light" onClick={this.signIn}>Sign In</Button>
+                            <button className="btn btn-block btn-custom waves-effect waves-light" onClick={this.signIn}>Sign In</button>
                         </div>
                     </div>
                     <button className="btn btn-block btn-custom waves-effect waves-light facebook-color" onClick={this.handleFBLogin}>Login with facebook</button>
-                </Form>
+                </form>
 
                 <div className="row m-t-50">
                     <div className="col-sm-12 text-center">

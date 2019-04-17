@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 
 export const signInDispatch=(login)=>{
     return (dispatch) => {
-        AuthenticationService.login({username: login.username, password: login.password}).then(res=>{
+        AuthenticationService.login({userName: login.username, password: login.password}).then(res=>{
             AuthenticationService.setToken(res.data);
             let redirectToHome = true;
             dispatch({type: 'REDIRECT_TO_HOME', redirectToHome});
@@ -41,12 +41,11 @@ export const loginFacebookCallbackDispatch=(response)=>{
 
 export const checkLogon=()=>{
     return (dispatch) => {
-        AuthenticationService.checkLogon().then((res)=>{
+        let token = AuthenticationService.getToken();
+        if(token){
             let redirectToHome = true;
             dispatch({type: 'REDIRECT_TO_HOME', redirectToHome});
-        }).catch(function (error) {
-   
-        });
+        }
     }
 }
 

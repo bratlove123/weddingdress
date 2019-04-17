@@ -2,8 +2,8 @@ import { toast } from 'react-toastify';
 
 class ErrorHandlerService{
     static errorWithMessageFromAPI(error){
-        if(error && error.response && error.response.status == 400 && error.response.data){
-            toast(error.response.data.Message[0], { type: toast.TYPE.ERROR });
+        if(error && error.response && error.response.data){
+            toast(error.response.data.message, { type: toast.TYPE.ERROR });
         }
         else{
             toast(error.message, { type: toast.TYPE.ERROR });
@@ -11,8 +11,8 @@ class ErrorHandlerService{
     }
 
     static basicErrorHandler(error, redirectToLogin){
-        if(error && error.response && error.response.status == 400 && error.response.data){
-            toast(error.response.data.Message[0], { type: toast.TYPE.ERROR });
+        if(error && error.response && error.response.data){
+            toast(error.response.data.message, { type: toast.TYPE.ERROR });
         }
         else if(error.response && error.response.status==401){
             redirectToLogin();
@@ -23,13 +23,14 @@ class ErrorHandlerService{
     }
 
     static loginErrorHandler(error, callback){
-        if(error && error.response && error.response.status == 400 && error.response.data){
-            switch(error.response.data.ErrorCode[0]){
-                case "1100":
-                    toast(error.response.data.Message[0], { type: toast.TYPE.ERROR });
+        if(error && error.response && error.response.data){
+            switch(error.response.data.code){
+                case "USER_NOT_FOUND":
+                case "WRONG_PASSWORD":
+                    toast(error.response.data.message, { type: toast.TYPE.ERROR });
                     break;
-                case "1101":
-                    let email = error.response.data.Email[0];
+                case "NOT_CONFIRM_EMAIL":
+                    let email = error.response.data.email;
                     callback(email);
                     break;
             }

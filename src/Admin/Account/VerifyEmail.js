@@ -13,7 +13,7 @@ class VerifyEmail extends Component{
         this.state = {
             redirect: false,
             code: params.code,
-            userId: params.userId,
+            email: params.email,
             message: "Verify email failure! Please click the link below to resend the email.",
             isSuccess: false,
             redirectToLogin:false,
@@ -24,7 +24,7 @@ class VerifyEmail extends Component{
 
     componentWillMount(){
         let thiz=this;
-        AuthenticationService.verify({code: thiz.state.code, userId: thiz.state.userId}).then((res)=>{
+        AuthenticationService.verify({code: thiz.state.code, email: thiz.state.email}).then((res)=>{
             thiz.setState({message: "Verify email successfully! Please click the button bellow to login.", isSuccess: true});
         }).catch(function (error) {
             ErrorHandlerService.errorWithMessageFromAPI(error);

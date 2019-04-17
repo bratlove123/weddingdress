@@ -66,7 +66,7 @@ class Registration extends Component{
         let thiz=this;
         e.preventDefault();
         AuthenticationService.signup({
-            username: thiz.state.username,
+            userName: thiz.state.username,
             email: thiz.state.email,
             password: thiz.state.password,
             firstName: thiz.state.firstname,
