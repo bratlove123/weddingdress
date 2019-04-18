@@ -7,12 +7,11 @@ class AuthenticationService{
     }
 
     static signup (params) {
-        return axios.post(Common.apiUrl + '/auth/register', params);
+        return axios.post(Common.apiUrl + '/auth/signup', params);
     }
 
     static verify(params){
-        return axios.get(Common.apiUrl + '/auth/confirm?code='+
-        params.code+"&userId="+params.userId);
+        return axios.post(Common.apiUrl + '/auth/verify', params);
     }
 
     static forgot(params){
@@ -21,6 +20,10 @@ class AuthenticationService{
 
     static reset(params){
         return axios.post(Common.apiUrl + '/auth/reset', params);
+    }
+
+    static sendEmailVerify(params){
+        return axios.post(Common.apiUrl + '/auth/active', params);
     }
 
     static loginFacebook(params){
@@ -36,8 +39,8 @@ class AuthenticationService{
         let token = localStorage.getItem(Common.tokenStorage);
         if(token && JSON.parse(token)){
             token = JSON.parse(token);
-            if(token && token.auth_token){
-                return token.auth_token;
+            if(token && token.token){
+                return token.token;
             }
         }
         return null;
