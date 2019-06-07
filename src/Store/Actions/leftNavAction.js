@@ -5,9 +5,9 @@ import LeftNavService from '../../Services/LeftNavService';
 export const getLeftNavs=()=>{
     return (dispatch) => {
         LeftNavService.getLeftNavs().then((res)=>{
-            if(res.data){
+            if(res.data && res.data.data && res.data.data.length >0){
                 let data={};
-                data.leftNavItems = res.data;
+                data.leftNavItems = res.data.data;
                 data.userInfo=AuthenticationService.getUserLoginInfo();
                 dispatch({type: 'GET_LEFTNAVS', data});
             }

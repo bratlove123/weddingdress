@@ -51,7 +51,7 @@ class AuthenticationService{
         if(token && JSON.parse(token)){
             token = JSON.parse(token);
             if(token){
-                return token;
+                return token.userInfo;
             }
         }
         return null;

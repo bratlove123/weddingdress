@@ -47,7 +47,7 @@ class LeftNav extends Component{
                             <div className="user-img">
                                 <img src={this.props.userInfo&&this.props.userInfo.avatar?this.props.userInfo.avatar:avatar} alt="user-img" className="rounded-circle img-fluid"/>
                             </div>
-                            <h5><a href="#">{this.props.userInfo&&this.props.userInfo.fullName.trim()?this.props.userInfo.fullName:this.props.userInfo.userName}</a> </h5>
+                            <h5><a href="#">{this.props.userInfo&&this.props.userInfo.fullName?this.props.userInfo.fullName:""}</a> </h5>
                             <p className="text-muted">{this.props.userInfo&&this.props.userInfo.role?this.props.userInfo.role:"N/A"}</p>
                         </div>
 

@@ -27,7 +27,7 @@ class Layout extends Component{
             <div id="wrapper">
                 {this.props.isShowGlobalLoading?<GlobalLoading/>:""}
                 <ToastContainer/>
-                {/* <LeftNav/> */}
+                <LeftNav/>
                 <div className="content-page">
                     <TopNav breadcrumb={this.props.breadcrumb} />
                     <div className="content">

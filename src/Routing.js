@@ -11,6 +11,7 @@ import ManageLeftNav from './Admin/ManageLeftNav/ManageLeftNav';
 import ManageUser from './Admin/ManageUser/ManageUser';
 import {Switch, Route} from 'react-router-dom';
 import PrivateRoute from './Common/PrivateRoute';
+import LoginRoute from './Common/LoginRoute';
 import PageNotFound from './Admin/Account/PageNotFound';
 
 class Routing extends Component{
@@ -19,7 +20,7 @@ class Routing extends Component{
             <Switch>
                 <PrivateRoute exact path="/" component={Dashboard} />
                 <PrivateRoute exact path="/admin" component={Dashboard} />
-                <Route path="/admin/login" component={Login} />
+                <LoginRoute path="/admin/login" component={Login} />
                 <Route path="/admin/registration" component={Registration} />
                 <Route path="/admin/confirm" component={ConfirmEmail} />
                 <Route path="/admin/verify" component={VerifyEmail} />

@@ -27,9 +27,9 @@ class LeftNavService{
         return axios.get(Common.apiUrl + '/leftnav/get/'+id, { headers: { Authorization: authStr }});
     }
 
-    static editLeftNav(params){
+    static editLeftNav(id, params){
         const authStr = 'Bearer '.concat(AuthenticationService.getToken());
-        return axios.put(Common.apiUrl + '/leftnav/edit',params, { headers: { Authorization: authStr }});
+        return axios.put(Common.apiUrl + '/leftnav/update/'+id,params, { headers: { Authorization: authStr }});
     }
 
     static deleteLeftNav(id){

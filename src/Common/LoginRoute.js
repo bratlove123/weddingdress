@@ -4,18 +4,17 @@ import { Redirect, Route } from 'react-router-dom';
 // Utils
 import AuthenticationService from '../Services/AuthenticationService';
 
-const PrivateRoute = ({ component: Component, ...rest }) =>{
+const LoginRoute = ({ component: Component, ...rest }) =>{
     return (  
         <Route {...rest} render={props => (
-          AuthenticationService.getToken() !== null ? (
+          AuthenticationService.getToken() === null ? (
             <Component {...props} />
           ) : (
             <Redirect to={{
-              pathname: '/admin/login',
-              state: { currentUrl: window.location.pathname }
+              pathname: '/admin'
           }} />
           )
         )} />
       );      
 } 
-export default PrivateRoute;
+export default LoginRoute;

@@ -7,13 +7,14 @@ import Button from 'react-validation/build/button';
 import {Link} from 'react-router-dom';
 import {connect} from 'react-redux';
 import {signInDispatch, loginFacebookCallbackDispatch, checkLogon, resetState} from '../../Store/Actions/loginAction';
+import AuthenticationService from '../../Services/AuthenticationService';
 
-// const required = (value) => {
-//     if (!value.toString().trim().length) {
-//         // We can return string or jsx as the 'error' prop for the validated Component
-//         return <small className="error">This field is required.</small>;
-//     }
-// };
+const required = (value) => {
+    if (!value.toString().trim().length) {
+        // We can return string or jsx as the 'error' prop for the validated Component
+        return <small className="error">This field is required.</small>;
+    }
+};
 
 class Login extends Component{
     constructor(props){
@@ -86,16 +87,14 @@ class Login extends Component{
         window.FB.login(this.checkLoginState());
     }
 
-    componentWillMount(){
-        this.props.checkLogon();
-    }
-
     render(){
-        if (this.props.redirectToHome) {
+        if(this.props.redirectToHome && AuthenticationService.getToken() !== null){
             if(this.state.redirectUrl){
                 return <Redirect to={this.state.redirectUrl}/>;
             }
-            return <Redirect to='/admin'/>;
+            else{
+                return <Redirect to='/admin'/>;
+            }
         }
         if(this.props.redirectToConfirm){
             return <Redirect to={{
@@ -106,12 +105,12 @@ class Login extends Component{
 
         return(
             <Layout>
-                <form ref={c => { this.form = c }}>
+                <Form ref={c => { this.form = c }}>
 
                     <div className="form-group m-b-20 row">
                         <div className="col-12">
                             <label>Username</label>
-                            <input tabIndex="1" value={this.state.login.username} onChange={this.handleChangeValue} className="form-control" type="text" name="username" placeholder="Enter your username"/>
+                            <Input validations={[required]} tabIndex="1" value={this.state.login.username} onChange={this.handleChangeValue} className="form-control" type="text" name="username" placeholder="Enter your username"/>
                         </div>
                     </div>
 
@@ -119,7 +118,7 @@ class Login extends Component{
                         <div className="col-12">
                             <Link to="/admin/forgot" className="text-muted pull-right"><small>Forgot your password?</small></Link>
                             <label>Password</label>
-                            <input tabIndex="2" value={this.state.login.password} onChange={this.handleChangeValue} className="form-control" type="password" name="password" placeholder="Enter your password"/>
+                            <Input validations={[required]} tabIndex="2" value={this.state.login.password} onChange={this.handleChangeValue} className="form-control" type="password" name="password" placeholder="Enter your password"/>
                         </div>
                     </div>
 
@@ -138,11 +137,11 @@ class Login extends Component{
 
                     <div className="form-group row text-center m-t-10">
                         <div className="col-12">
-                            <button className="btn btn-block btn-custom waves-effect waves-light" onClick={this.signIn}>Sign In</button>
+                            <Button className="btn btn-block btn-custom waves-effect waves-light" onClick={this.signIn}>Sign In</Button>
                         </div>
                     </div>
                     <button className="btn btn-block btn-custom waves-effect waves-light facebook-color" onClick={this.handleFBLogin}>Login with facebook</button>
-                </form>
+                </Form>
 
                 <div className="row m-t-50">
                     <div className="col-sm-12 text-center">
@@ -165,7 +164,6 @@ const mapDispatchToProps = (dispatch) => {
     return {
         signInDispatch: (login) => dispatch(signInDispatch(login)),
         loginFacebookCallbackDispatch: (response) => dispatch(loginFacebookCallbackDispatch(response)),
-        checkLogon: ()=>dispatch(checkLogon()),
         resetState: ()=>dispatch(resetState())
     }
 }

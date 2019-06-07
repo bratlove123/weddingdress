@@ -39,16 +39,6 @@ export const loginFacebookCallbackDispatch=(response)=>{
     }
 }
 
-export const checkLogon=()=>{
-    return (dispatch) => {
-        let token = AuthenticationService.getToken();
-        if(token){
-            let redirectToHome = true;
-            dispatch({type: 'REDIRECT_TO_HOME', redirectToHome});
-        }
-    }
-}
-
 export const resetState=()=>{
     return (dispatch) => {
         dispatch({type: 'RESET_STATE'});

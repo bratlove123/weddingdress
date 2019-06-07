@@ -49,7 +49,8 @@ class ManageLeftNav extends Component{
             currentSort: "",
             currentArrow: -1,
             totalPage: 0,
-            totalItemCount: 0
+            totalItemCount: 0,
+            del_arr: []
         };
       
         this.openModal = this.openModal.bind(this);
@@ -145,7 +146,13 @@ class ManageLeftNav extends Component{
         this.setState({childs: this.state.childs.concat({name:'', url: ''})});
     }
     removeChildNav=(id)=>()=>{
-         this.setState({childs: this.state.childs.filter((s, sidx)=>id!==sidx)});
+        let thiz=this;
+        let newChilds = thiz.state.childs.filter((s, sidx)=>id!==sidx);
+        let newDellArr = [];
+        if(thiz.state.childs[id]._id){
+            newDellArr = [...thiz.state.del_arr, thiz.state.childs[id]._id];
+        }
+        thiz.setState({childs: newChilds, del_arr: newDellArr});
     }
     addNewItem(){
         let thiz=this;
@@ -183,9 +190,9 @@ class ManageLeftNav extends Component{
         }).then((res)=>{
             if(res.data){
                 thiz.setState({
-                    leftNavs: res.data.data,
-                    totalItemCount: res.data.countAll,
-                    totalPage: Math.ceil(res.data.countAll/Common.pageSize),
+                    leftNavs: res.data.data.data,
+                    totalItemCount: res.data.data.countAll,
+                    totalPage: Math.ceil(res.data.data.countAll/Common.pageSize),
                     currentPage: pageNumber
                 });
             }
@@ -200,9 +207,9 @@ class ManageLeftNav extends Component{
         let thiz=this;
         LeftNavService.getLeftNav(id).then((res)=>{
             if(res.data){
-                let leftNav=res.data;
+                let leftNav=res.data.data;
                 thiz.setState({
-                    id: leftNav.id,
+                    id: leftNav._id,
                     navName: leftNav.name,
                     navUrl: leftNav.url,
                     iconClass: leftNav.iconClass,
@@ -223,15 +230,15 @@ class ManageLeftNav extends Component{
 
     editLeftNavItem(){
         let thiz=this;
-        LeftNavService.editLeftNav({
-            id:thiz.state.id,
+        LeftNavService.editLeftNav(thiz.state.id, {
             name: thiz.state.navName,
             url: thiz.state.navUrl,
             iconClass: thiz.state.iconClass,
             isHasBadge: thiz.state.isHasBadge,
             badgeClass: thiz.state.badgeClass,
             badgeNumber: thiz.state.badgeNumber,
-            childs:thiz.state.childs
+            childs:thiz.state.childs,
+            del_arr: thiz.state.del_arr
         }).then((res)=>{
             toast("Updated left nav item successfully.", { type: toast.TYPE.SUCCESS });
             thiz.setState({modalIsOpen:false});
@@ -345,7 +352,7 @@ class ManageLeftNav extends Component{
                         </thead>
                         <tbody>
                             {
-                                this.state.leftNavs.map((value, i)=>{
+                                this.state.leftNavs.length>0 && this.state.leftNavs.map((value, i)=>{
                                     return (
                                         <React.Fragment key={i}>
                                             <tr className="togglable">
@@ -357,7 +364,7 @@ class ManageLeftNav extends Component{
                                                 <td onClick={this.toggleRow(i)} className="text-center"><span className={"badge label-table badge-"+value.badgeClass}>{value.badgeClass}</span></td>
                                                 <td onClick={this.toggleRow(i)} className="text-center">{value.badgeNumber}</td>
                                                 <td className="text-center">
-                                                    <button className="btn btn-warning" onClick={this.editLeftNav(value.id)}><FontAwesomeIcon icon="pencil-alt" /></button>
+                                                    <button className="btn btn-warning" onClick={this.editLeftNav(value._id)}><FontAwesomeIcon icon="pencil-alt" /></button>
                                                     <button className="btn btn-danger fix-eraser-btn" onClick={this.deleteLeftNav(value.id)}><FontAwesomeIcon icon="eraser" /></button>
                                                 </td>
                                                 
@@ -401,7 +408,7 @@ class ManageLeftNav extends Component{
                                         <a href="javascript:void(0)" onClick={this.pageClick('prev')} className="page-link">Previous</a>
                                     </li>
                                     {
-                                        Array.from(Array(this.state.totalPage), (e, i) => {
+                                        this.state.totalPage && Array.from(Array(this.state.totalPage), (e, i) => {
                                             return (
                                                 <li  className={i+1==this.state.currentPage?"paginate_button page-item active":"paginate_button page-item"} key={i}>
                                                     <a href="javascript:void(0)" onClick={this.pageClick(i+1)} className="page-link">{i+1}</a>
