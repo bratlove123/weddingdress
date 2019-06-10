@@ -2,6 +2,9 @@ import axios from 'axios';
 import Common from '../Consts/Common';
 import AuthenticationService from './AuthenticationService';
 
+var cancel=null;
+var CancelToken = axios.CancelToken;
+
 class LeftNavService{
     static getLeftNavs () {
         const authStr = 'Bearer '.concat(AuthenticationService.getToken());
@@ -9,11 +12,18 @@ class LeftNavService{
     }
 
     static getLeftNavsWithSorting(params){
+        //Cancel previous typing
+        if (cancel != null) {
+            cancel();
+        }
         const authStr = 'Bearer '.concat(AuthenticationService.getToken());
         return axios.get(Common.apiUrl + '/leftnav/getsort', 
         { 
             headers: { Authorization: authStr },
-            params: params
+            params: params,
+            cancelToken: new CancelToken(function executor(c) {
+                cancel = c;
+            })
         });
     }
 
