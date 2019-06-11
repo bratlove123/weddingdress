@@ -2,15 +2,21 @@ import ErrorHandlerService from '../../Services/ErrorHandlerService';
 import LeftNavService from '../../Services/LeftNavService';
 import { toast } from 'react-toastify';
 import Common from '../../Consts/Common';
+import {getLeftNavsMenu} from './leftNavAction';
 
 export const createLeftNav=(leftNav)=>{
     return (dispatch) => {
         let isShow = true;
         dispatch({type: 'TOOGLE_LOADING', isShow});
+        delete leftNav._id;
+        delete leftNav.del_arr;
         LeftNavService.addLeftNav(leftNav).then((res)=>{
             toast("Added left nav item successfully.", { type: toast.TYPE.SUCCESS });
             dispatch({type: 'UPDATE_LEFT_NAV', leftNav});
             dispatch(getLeftNavs());
+            dispatch(getLeftNavsMenu());
+            let isShow = false;
+            dispatch({type: 'TOOGLE_LOADING', isShow});
         }).catch(function (error) {
             let isShow = false;
             dispatch({type: 'TOOGLE_LOADING', isShow});
@@ -61,6 +67,8 @@ export const openUpdateLeftNavDialog=(id)=>{
         if(id){
             LeftNavService.getLeftNav(id).then((res)=>{
                 if(res.data){
+                    let isShow = false;
+                    dispatch({type: 'TOOGLE_LOADING', isShow});
                     let data = {};
                     data.leftNav = res.data.data;
                     dispatch({type: 'OPEN_UPDATE_LEFT_NAV_DIALOG', data});
@@ -87,12 +95,13 @@ export const updateLeftNavDispatch=(leftNav)=>{
     return (dispatch) =>{
         let isShow = true;
         dispatch({type: 'TOOGLE_LOADING', isShow});
-        LeftNavService.editLeftNav(leftNav.id, leftNav).then((res)=>{
+        LeftNavService.editLeftNav(leftNav._id, leftNav).then((res)=>{
             let isShow = false;
             dispatch({type: 'TOOGLE_LOADING', isShow});
             toast("Updated left nav successfully.", { type: toast.TYPE.SUCCESS });
             dispatch({type: 'UPDATE_LEFT_NAV', leftNav});
             dispatch(getLeftNavs());
+            dispatch(getLeftNavsMenu());
         }).catch(function (error) {
             let isShow = false;
             dispatch({type: 'TOOGLE_LOADING', isShow});
@@ -105,6 +114,21 @@ export const updateLeftNavDispatch=(leftNav)=>{
 
 export const deleteLeftNavDispatch=(id)=>{
     return (dispatch) =>{
+        let isShow = true;
+        dispatch({type: 'TOOGLE_LOADING', isShow});
+        LeftNavService.deleteLeftNav(id).then((res)=>{
+            let isShow = false;
+            dispatch({type: 'TOOGLE_LOADING', isShow});
+            toast("Deleted left nav successfully.", { type: toast.TYPE.SUCCESS });
+            dispatch(getLeftNavs());
+            dispatch(getLeftNavsMenu());
+        }).catch(function (error) {
+            let isShow = false;
+            dispatch({type: 'TOOGLE_LOADING', isShow});
+            ErrorHandlerService.basicErrorHandler(error, function(){
+                dispatch({type: 'REDIRECT_TO_LOGIN'});
+            });
+        });
     }
 }
 

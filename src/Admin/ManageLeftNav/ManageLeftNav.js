@@ -121,6 +121,7 @@ class ManageLeftNav extends Component{
                                 <th> Is Has Badge </th>
                                 <th> Badge Class </th>
                                 <th> BadgeNumber </th>
+                                <th>Position</th>
                                 <th> Action </th>
                             </tr>
                         </thead>
@@ -137,6 +138,7 @@ class ManageLeftNav extends Component{
                                                 <td onClick={this.toggleRow(i)} className="text-center"><span className="badge label-table badge-success">{value.isHasBadge&&<FontAwesomeIcon icon="check" />}</span></td>
                                                 <td onClick={this.toggleRow(i)} className="text-center"><span className={"badge label-table badge-"+value.badgeClass}>{value.badgeClass}</span></td>
                                                 <td onClick={this.toggleRow(i)} className="text-center">{value.badgeNumber}</td>
+                                                <td onClick={this.toggleRow(i)} className="text-center">{value.position}</td>
                                                 <td className="text-center">
                                                     <button className="btn btn-warning" onClick={this.editLeftNav(value._id)}><FontAwesomeIcon icon="pencil-alt" /></button>
                                                     <button className="btn btn-danger fix-eraser-btn" onClick={this.deleteLeftNav(value._id)}><FontAwesomeIcon icon="eraser" /></button>
@@ -152,10 +154,7 @@ class ManageLeftNav extends Component{
                                                                 <td colSpan="3"></td>
                                                                 <td colSpan="2">{value.name}</td>
                                                                 <td colSpan="2">{value.url}</td>
-                                                                <td className="text-center">
-                                                                    <button className="btn btn-warning"><FontAwesomeIcon icon="pencil-alt" /></button>
-                                                                    <button className="btn btn-danger fix-eraser-btn"><FontAwesomeIcon icon="eraser" /></button>
-                                                                </td>
+                                                                <td>{value.position}</td>
                                                             </tr>
                                                         )
                                                     })

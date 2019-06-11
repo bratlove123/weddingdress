@@ -7,7 +7,7 @@ import { Scrollbars } from 'react-custom-scrollbars';
 import {connect} from 'react-redux';
 import {Link} from 'react-router-dom';
 import { Redirect } from 'react-router';
-import {getLeftNavs} from '../../Store/Actions/leftNavAction';
+import {getLeftNavsMenu} from '../../Store/Actions/leftNavAction';
 
 class LeftNav extends Component{
     constructor(props){
@@ -15,7 +15,7 @@ class LeftNav extends Component{
     }
 
     componentDidMount(){
-        this.props.getLeftNavs();
+        this.props.getLeftNavsMenu();
     }
 
     render(){
@@ -78,7 +78,7 @@ const mapStateToProps=(state)=>{
 }
 const mapDispatchToProps = (dispatch) => {
     return {
-        getLeftNavs: () => dispatch(getLeftNavs())
+        getLeftNavsMenu: () => dispatch(getLeftNavsMenu())
     }
 }
 

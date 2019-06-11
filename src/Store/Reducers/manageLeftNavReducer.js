@@ -2,18 +2,22 @@ const initState={
     modalIsOpen: false,
     redirectToLogin:false,
     leftNav: {
-        navName: '',
-        navUrl: '',
+        _id: 0,
+        name: '',
+        url: '',
         iconClass: '',
         isHasBadge: false,
         badgeClass: '',
         badgeNumber: 0,
+        position:0,
         childs: [
             {
                 name:'',
-                url: ''
+                url: '',
+                position: 0
             }
-        ]
+        ],
+        del_arr: []
     },
     isEdit:false,
     leftNavs:[],
@@ -51,8 +55,9 @@ const manageLeftNavReducer=(state=initState,action)=>{
                 return {...state, modalIsOpen: true, isEdit: true, fixOpen: state.fixOpen + 1, leftNav: action.data.leftNav}
             }
             return {...state, modalIsOpen: true, isEdit: false, fixOpen: state.fixOpen + 1, leftNav: {
-                navName: '',
-                navUrl: '',
+                _id: 0,
+                name: '',
+                url: '',
                 iconClass: '',
                 isHasBadge: false,
                 badgeClass: '',
@@ -60,9 +65,12 @@ const manageLeftNavReducer=(state=initState,action)=>{
                 childs: [
                     {
                         name:'',
-                        url: ''
+                        url: '',
+                        position: 0
                     }
-                ]
+                ],
+                position: 0,
+                del_arr: []
             }}
         case "REDIRECT_TO_LOGIN":
             return {...state, redirectToLogin: true}

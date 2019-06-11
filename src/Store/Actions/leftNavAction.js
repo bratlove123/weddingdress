@@ -2,7 +2,7 @@ import ErrorHandlerService from '../../Services/ErrorHandlerService';
 import AuthenticationService from '../../Services/AuthenticationService';
 import LeftNavService from '../../Services/LeftNavService';
 
-export const getLeftNavs=()=>{
+export const getLeftNavsMenu=()=>{
     return (dispatch) => {
         LeftNavService.getLeftNavs().then((res)=>{
             if(res.data && res.data.data && res.data.data.length >0){
