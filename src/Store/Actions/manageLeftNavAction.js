@@ -3,6 +3,7 @@ import LeftNavService from '../../Services/LeftNavService';
 import { toast } from 'react-toastify';
 import Common from '../../Consts/Common';
 import {getLeftNavsMenu} from './leftNavAction';
+import AuthenticationService from '../../Services/AuthenticationService';
 
 export const createLeftNav=(leftNav)=>{
     return (dispatch) => {
@@ -10,6 +11,8 @@ export const createLeftNav=(leftNav)=>{
         dispatch({type: 'TOOGLE_LOADING', isShow});
         delete leftNav._id;
         delete leftNav.del_arr;
+        leftNav.createdBy = AuthenticationService.getUserLoginInfo().id;
+        leftNav.modifiedBy = AuthenticationService.getUserLoginInfo().id;
         LeftNavService.addLeftNav(leftNav).then((res)=>{
             toast("Added left nav item successfully.", { type: toast.TYPE.SUCCESS });
             dispatch({type: 'UPDATE_LEFT_NAV', leftNav});
@@ -95,6 +98,8 @@ export const updateLeftNavDispatch=(leftNav)=>{
     return (dispatch) =>{
         let isShow = true;
         dispatch({type: 'TOOGLE_LOADING', isShow});
+        leftNav.modifiedOn =  new Date();
+        leftNav.modifiedBy = AuthenticationService.getUserLoginInfo().id;
         LeftNavService.editLeftNav(leftNav._id, leftNav).then((res)=>{
             let isShow = false;
             dispatch({type: 'TOOGLE_LOADING', isShow});
@@ -120,7 +125,7 @@ export const deleteLeftNavDispatch=(id)=>{
             let isShow = false;
             dispatch({type: 'TOOGLE_LOADING', isShow});
             toast("Deleted left nav successfully.", { type: toast.TYPE.SUCCESS });
-            dispatch(getLeftNavs());
+            dispatch(getLeftNavs(1));
             dispatch(getLeftNavsMenu());
         }).catch(function (error) {
             let isShow = false;

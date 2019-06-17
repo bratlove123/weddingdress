@@ -10,6 +10,7 @@ import Paging from '../../Common/Paging';
 import SortHeading from '../../Common/SortHeading';
 import ReactLoading from 'react-loading';
 import UpdateLeftNav from './UpdateLeftNav';
+import Moment from 'react-moment';
 
 class ManageLeftNav extends Component{
     breadcrumb = [
@@ -122,11 +123,13 @@ class ManageLeftNav extends Component{
                                 <th> Badge Class </th>
                                 <th> BadgeNumber </th>
                                 <th>Position</th>
+                                <th> Modified By </th>
+                                <th>Modified On</th>
                                 <th> Action </th>
                             </tr>
                         </thead>
                         <tbody>
-                        {this.props.isLoadingLeftNavs?<tr><td colSpan="8"><div className="loading"><ReactLoading type={'cylon'} color={'#02c0ce'} height={'15px'} /></div></td></tr>:
+                        {this.props.isLoadingLeftNavs?<tr><td colSpan="10"><div className="loading"><ReactLoading type={'cylon'} color={'#02c0ce'} height={'15px'} /></div></td></tr>:
                                 this.props.leftNavs.length>0 && this.props.leftNavs.map((value, i)=>{
                                     return (
                                         <React.Fragment key={i}>
@@ -139,6 +142,8 @@ class ManageLeftNav extends Component{
                                                 <td onClick={this.toggleRow(i)} className="text-center"><span className={"badge label-table badge-"+value.badgeClass}>{value.badgeClass}</span></td>
                                                 <td onClick={this.toggleRow(i)} className="text-center">{value.badgeNumber}</td>
                                                 <td onClick={this.toggleRow(i)} className="text-center">{value.position}</td>
+                                                <td onClick={this.toggleRow(i)} className="text-center">{value.modifiedBy && value.modifiedBy.userName}</td>
+                                                <td onClick={this.toggleRow(i)} className="text-center"><Moment date={value.modifiedOn} format="DD/MM/YYYY"></Moment></td>
                                                 <td className="text-center">
                                                     <button className="btn btn-warning" onClick={this.editLeftNav(value._id)}><FontAwesomeIcon icon="pencil-alt" /></button>
                                                     <button className="btn btn-danger fix-eraser-btn" onClick={this.deleteLeftNav(value._id)}><FontAwesomeIcon icon="eraser" /></button>

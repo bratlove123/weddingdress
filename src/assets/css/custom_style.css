@@ -222,10 +222,14 @@ transition: 400ms ease-out;
 
 .margin-auto{
     margin:auto;
+    padding: 0;
 }
 
 .nav-child-item{
     margin-bottom: 10px;
+    background: #eee;
+    padding: 10px;
+    border-radius: 5px;
 }
 
 .fix-scroll{
@@ -352,4 +356,8 @@ transition: 300ms ease-out;
     background: #000;
     opacity: 0.5;
     z-index: 9999;
+}
+
+.has-error{
+    border-color: #dc3545 !important;
 }

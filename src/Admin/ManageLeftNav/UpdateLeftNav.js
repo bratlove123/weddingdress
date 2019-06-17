@@ -3,19 +3,18 @@ import Modal from '../../Common/Modal';
 import { Scrollbars } from 'react-custom-scrollbars';
 import {createLeftNav, updateLeftNavDispatch} from '../../Store/Actions/manageLeftNavAction';
 import {connect} from 'react-redux';
-import Form from 'react-validation/build/form';
-import Input from 'react-validation/build/input';
-import Button from 'react-validation/build/button';
-
-const required = (value) => {
-    if (!value.toString().trim().length) {
-        return <small className="error">This field is required.</small>;
-    }
-};
+import FormValidator from '../../Common/FormValidator';
 
 class UpdateLeftNav extends Component{
     constructor(props){
         super(props);
+
+        this.validator = new FormValidator([
+            { field: 'name', method: 'isEmpty', validWhen: false, message: 'Name is required.'},
+            { field: 'url', method: 'isEmpty', validWhen: false, message: 'Url is required.'},
+            { field: 'name', parent: 'childs', method: 'isEmpty', validWhen: false, message: 'Name is required.'},
+            { field: 'url', parent: 'childs', method: 'isEmpty', validWhen: false, message: 'Url is required.'},
+        ]);
 
         this.state = {
             leftNav: {
@@ -35,12 +34,11 @@ class UpdateLeftNav extends Component{
                     }
                 ],
                 del_arr: []
-            }
+            },
+            validation: this.validator.reset()
         }
 
         this.handleChangeValue = this.handleChangeValue.bind(this);
-        this.addLeftNav = this.addLeftNav.bind(this);
-        this.updateLeftNav = this.updateLeftNav.bind(this);
         this.setIsHasBadge = this.setIsHasBadge.bind(this);
         this.handleChildsChange = this.handleChildsChange.bind(this);
         this.addNewChildNav = this.addNewChildNav.bind(this);
@@ -49,17 +47,10 @@ class UpdateLeftNav extends Component{
         this.editLeftNavItem = this.editLeftNavItem.bind(this);
     }
 
-    handleChangeValue(e){
+    handleChangeValue(e){      
         this.setState({leftNav: {...this.state.leftNav, [e.target.name]: e.target.value}});
-    }
-
-    addLeftNav(e){
-        e.preventDefault();
-        this.props.createLeftNav(this.state.leftNav);
-    }
-    updateLeftNav(e){
-        e.preventDefault();
-        this.props.updateLeftNavDispatch(this.state.leftNav);
+        const validation = this.validator.validate({...this.state.leftNav, [e.target.name]: e.target.value}, e.target.name);
+        this.setState({ validation });
     }
 
     setIsHasBadge(){
@@ -83,6 +74,8 @@ class UpdateLeftNav extends Component{
         });
 
         this.setState({ leftNav: {...this.state.leftNav, childs: newChilds} });
+        const validation = this.validator.validate({...this.state.leftNav, childs: newChilds}, {field: field, id: idx});
+        this.setState({ validation });
     }
 
     addNewChildNav(e){
@@ -92,7 +85,8 @@ class UpdateLeftNav extends Component{
 
     removeChildNav=(id)=>()=>{
         let thiz=this;
-        let newChilds = thiz.state.leftNav.childs.filter((s, sidx)=>id!==sidx);
+        let newChilds = [...thiz.state.leftNav.childs];
+        newChilds = newChilds.filter((s, sidx)=>id!==sidx);
         let newDellArr = [];
         if(thiz.state.leftNav.childs[id]._id){
             newDellArr = [...thiz.state.leftNav.del_arr, thiz.state.leftNav.childs[id]._id];
@@ -114,46 +108,70 @@ class UpdateLeftNav extends Component{
                     childs: nextProps.leftNav.childs,
                     position: nextProps.leftNav.position,
                     del_arr: nextProps.leftNav.del_arr?nextProps.leftNav.del_arr:[]
-                }
+                },
+                validation: this.validator.reset()
             });
         }
     }
 
     addNewItem(e){
         e.preventDefault();
-        this.props.createLeftNav(this.state.leftNav);
+        
+        const validation = this.validator.validate(this.state.leftNav);
+        this.setState({ validation });
+
+        if(validation.isValid){
+            this.props.createLeftNav(this.state.leftNav);
+        }
     }
 
     editLeftNavItem(e){
         e.preventDefault();
-        this.props.updateLeftNavDispatch(this.state.leftNav);
+
+        const validation = this.validator.validate(this.state.leftNav);
+        this.setState({ validation });
+
+        if(validation.isValid){
+            this.props.updateLeftNavDispatch(this.state.leftNav);
+        }
     }
 
     render(){
+        let validation = this.state.validation;
         return(
         <Modal header={!this.props.isEdit?"Add Left Nav":"Edit Left Nav"} modalIsOpen={this.props.modalIsOpen} width="700">
-            <Form>
+            <form>
                 <Scrollbars autoHeight autoHeightMin={500} autoHide autoHideTimeout={1000} autoHideDuration={200}>
                     <div className="row fix-scroll">
                         <div className="col-6">
                             <div className="form-group m-b-20 row">
                                 <div className="col-12">
                                     <label>Nav name</label>
-                                    <Input validations={[required]} onChange={this.handleChangeValue} value={this.state.leftNav.name} name="name" className="form-control" type="text" placeholder="Enter nav name"/>
+                                    <input className={validation.name.isInvalid?'has-error form-control':'form-control'} autoComplete="off" onChange={this.handleChangeValue} value={this.state.leftNav.name} name="name" type="text" placeholder="Enter nav name"/>
+                                    {validation.name.isInvalid && <ul className="parsley-errors-list filled">
+                                        <li className="parsley-required">
+                                            {validation.name.message}
+                                        </li>
+                                    </ul>}
                                 </div>
                             </div>
 
                             <div className="form-group row m-b-20">
                                 <div className="col-12">
                                     <label>Nav URL</label>
-                                    <Input validations={[required]} onChange={this.handleChangeValue} value={this.state.leftNav.url} name="url" className="form-control" type="text" placeholder="Enter nav url"/>
+                                    <input className={validation.url.isInvalid?'has-error form-control':'form-control'} autoComplete="off" onChange={this.handleChangeValue} value={this.state.leftNav.url} name="url" type="text" placeholder="Enter nav url"/>
+                                    {validation.url.isInvalid && <ul className="parsley-errors-list filled">
+                                        <li className="parsley-required">
+                                            {validation.url.message}
+                                        </li>
+                                    </ul>}
                                 </div>
                             </div>
 
                             <div className="form-group row m-b-20">
                                 <div className="col-12">
                                     <label>Icon class</label>
-                                    <input onChange={this.handleChangeValue} value={this.state.leftNav.iconClass} name="iconClass" className="form-control" type="text" placeholder="Enter icon class"/>
+                                    <input autoComplete="off" onChange={this.handleChangeValue} value={this.state.leftNav.iconClass} name="iconClass" className="form-control" type="text" placeholder="Enter icon class"/>
                                 </div>
                             </div>
 
@@ -168,10 +186,10 @@ class UpdateLeftNav extends Component{
                                 </div>
                                 {this.state.isHasBadge&&<div className="row col-12">
                                     <div className="col-6">
-                                        <input onChange={this.handleChangeValue} value={this.state.leftNav.badgeClass} name="badgeClass" className="form-control" type="text" placeholder="Badge class"/>
+                                        <input autoComplete="off" onChange={this.handleChangeValue} value={this.state.leftNav.badgeClass} name="badgeClass" className="form-control" type="text" placeholder="Badge class"/>
                                     </div>
                                     <div className="col-6">
-                                        <input onChange={this.handleChangeValue} value={this.state.leftNav.badgeNumber} name="badgeNumber" className="form-control" type="text" placeholder="Badge number"/>
+                                        <input autoComplete="off" onChange={this.handleChangeValue} value={this.state.leftNav.badgeNumber} name="badgeNumber" className="form-control" type="text" placeholder="Badge number"/>
                                     </div>
                                 </div>}
                             </div>
@@ -179,7 +197,7 @@ class UpdateLeftNav extends Component{
                             <div className="form-group row m-b-20">
                                 <div className="col-12">
                                     <label>Position</label>
-                                    <input onChange={this.handleChangeValue} value={this.state.leftNav.position} name="position" className="form-control" type="number" placeholder="Enter position"/>
+                                    <input autoComplete="off" onChange={this.handleChangeValue} value={this.state.leftNav.position} name="position" className="form-control" type="number" placeholder="Enter position"/>
                                 </div>
                             </div>
                         </div>
@@ -194,14 +212,22 @@ class UpdateLeftNav extends Component{
                                                 return (
                                                     <div className="nav-child-item row" key={i}>
                                                         <div className="col-10">
-                                                            <Input validations={[required]} onChange={this.handleChildsChange(i, 'name')} value={item.name} className="form-control" type="text" placeholder="Enter child name"/>
-                                                            <br/>
-                                                            <Input validations={[required]} onChange={this.handleChildsChange(i, 'url')} value={item.url} className="form-control" type="text" placeholder="Enter child url"/>
-                                                            <br/>
-                                                            <input type="number" onChange={this.handleChildsChange(i, 'position')} value={item.position} className="form-control" placeholder="Enter child position"/>
+                                                            <input className={validation.names && validation.names[i] && validation.names[i].isInvalid?'has-error form-control':'form-control'} autoComplete="off" onChange={this.handleChildsChange(i, 'name')} value={item.name} type="text" placeholder="Enter child name"/>
+                                                            {validation.names && validation.names[i] && validation.names[i].isInvalid && <ul className="parsley-errors-list filled">
+                                                                <li className="parsley-required">
+                                                                    {validation.names[i].message}
+                                                                </li>
+                                                            </ul>}
+                                                            <input className={validation.urls && validation.urls[i] && validation.urls[i].isInvalid?'has-error form-control':'form-control'} autoComplete="off" onChange={this.handleChildsChange(i, 'url')} value={item.url} type="text" placeholder="Enter child url"/>
+                                                            {validation.urls && validation.urls[i] && validation.urls[i].isInvalid && <ul className="parsley-errors-list filled">
+                                                                <li className="parsley-required">
+                                                                    {validation.urls[i].message}
+                                                                </li>
+                                                            </ul>}
+                                                            <input autoComplete="off" type="number" onChange={this.handleChildsChange(i, 'position')} value={item.position} className="form-control" placeholder="Enter child position"/>
                                                         </div>
                                                         <div className="col-2 margin-auto">
-                                                            <button onClick={this.removeChildNav(i)} className="btn btn-danger">-</button>
+                                                            <a className="form-control" href="javascript:void(0)" onClick={this.removeChildNav(i)} className="btn btn-danger"><i className="fi-cross"></i></a>
                                                         </div>
                                                     </div>
                                                 ) 
@@ -220,11 +246,11 @@ class UpdateLeftNav extends Component{
             
                 <div className="modal-footer">
                     {
-                        !this.props.isEdit?<Button onClick={this.addNewItem} className="btn btn-success">Add new item</Button>:
-                        <Button onClick={this.editLeftNavItem} className="btn btn-warning">Update</Button>
+                        !this.props.isEdit?<button onClick={this.addNewItem} className="btn btn-success">Add new item</button>:
+                        <button onClick={this.editLeftNavItem} className="btn btn-warning">Update</button>
                     }
                 </div>
-            </Form>
+            </form>
         </Modal>)
     }
 }
