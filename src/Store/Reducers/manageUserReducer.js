@@ -13,8 +13,8 @@ const initState={
     search: "",
     currentArrow: -1,
     user: {
-        avatar: null,
-        username: "",
+        image: null,
+        userName: "",
         password: "",
         repassword: "",
         email: "",
@@ -32,7 +32,7 @@ const manageUserReducer=(state=initState,action)=>{
         case "GET_USERS":
             return {
                 ...state, 
-                users: action.users.users, 
+                users: action.users.data, 
                 totalItemCount: action.users.countAll, 
                 totalPage: action.users.totalPage, 
                 isLoadingUsers: false, 
@@ -47,8 +47,8 @@ const manageUserReducer=(state=initState,action)=>{
                 return {...state, modalIsOpen: true, isEdit: true, fixOpen: state.fixOpen + 1, user: action.res.user, roles: action.res.roles}
             }
             return {...state, modalIsOpen: true, isEdit: false, fixOpen: state.fixOpen + 1, roles: action.roles, user: {
-                avatar: null,
-                username: "",
+                image: null,
+                userName: "",
                 password: "",
                 repassword: "",
                 email: "",

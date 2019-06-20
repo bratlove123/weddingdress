@@ -9,6 +9,7 @@ class FormValidator {
 
   validate = (state, fieldToValidate) => {
     this.validation.isValid = true;
+    var checkedFields = [];
     this.validations.forEach(v => {
       if(v.parent){
         const args = v.args || [];
@@ -48,21 +49,40 @@ class FormValidator {
           }
       }
       else{
-        const args = v.args || [];
-        const validation_method = 
-              typeof v.method === 'string' ?
-              validator[v.method] : 
-              v.method
-        
-        if(validation_method(state[v.field].toString(), ...args, state) !== v.validWhen) {
-          if(!fieldToValidate || (fieldToValidate && fieldToValidate === v.field)){
-            this.validation[v.field] = { isInvalid: true, message: v.message };
+        if(checkedFields.indexOf(v.field) < 0){
+          let args = v.args || [];
+          const validation_method = 
+                typeof v.method === 'string' ?
+                validator[v.method] : 
+                v.method
+          if(v.comparison){
+            if(!validation_method(state[v.field].toString(), state[v.comparison].toString())){
+              if(!fieldToValidate || (fieldToValidate && fieldToValidate === v.field)){
+                this.validation[v.field] = { isInvalid: true, message: v.message };
+                checkedFields.push(v.field);
+              }
+              this.validation.isValid = false;
+            }
+            else{
+              if(!fieldToValidate || (fieldToValidate && fieldToValidate === v.field)){
+                this.validation[v.field] = { isInvalid: false, message: '' };
+              }
+            }
           }
-          this.validation.isValid = false;
-        }
-        else{
-          if(!fieldToValidate || (fieldToValidate && fieldToValidate === v.field)){
-            this.validation[v.field] = { isInvalid: false, message: '' };
+          else{
+            if(validation_method(state[v.field].toString(), ...args, state) !== v.validWhen ||
+            (v.comparison && !validation_method(state[v.field].toString(), state[v.comparison].toString()))) {
+              if(!fieldToValidate || (fieldToValidate && fieldToValidate === v.field)){
+                this.validation[v.field] = { isInvalid: true, message: v.message };
+                checkedFields.push(v.field);
+              }
+              this.validation.isValid = false;
+            }
+            else{
+              if(!fieldToValidate || (fieldToValidate && fieldToValidate === v.field)){
+                this.validation[v.field] = { isInvalid: false, message: '' };
+              }
+            }
           }
         }
       }

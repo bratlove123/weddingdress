@@ -3,23 +3,26 @@ import UserService from '../../Services/UserService';
 import FileService from '../../Services/FileService';
 import { toast } from 'react-toastify';
 import Common from '../../Consts/Common';
-import axios from 'axios';
+import AuthenticationService from '../../Services/AuthenticationService';
 
 export const createUser=(user)=>{
     return (dispatch) => {
         let isShow = true;
         dispatch({type: 'TOOGLE_LOADING', isShow});
         delete user['repassword'];
-        if(user.avatar){
+        user.createdBy = AuthenticationService.getUserLoginInfo().id;
+        user.modifiedBy = AuthenticationService.getUserLoginInfo().id;
+        if(user.image){
             let formData = new FormData();
-            formData.append('file', user.avatar);
-            FileService.uploadFile(formData).then((res)=>{
-                user.avatar = res.data;
-                UserService.addUser(user).then((res)=>{
+            formData.append('image', user.image);
+            FileService.uploadImage(formData).then((res)=>{
+                let userTmp = Object.assign(user, {});
+                userTmp.image = res.data.data;
+                UserService.addUser(userTmp).then((res)=>{
                     let isShow = false;
                     dispatch({type: 'TOOGLE_LOADING', isShow});
                     toast("Added user successfully.", { type: toast.TYPE.SUCCESS });
-                    dispatch({type: 'CREATE_USER', user});
+                    dispatch({type: 'UPDATE_USER', user});
                     dispatch(getUsers());
                 }).catch(function (error) {
                     let isShow = false;
@@ -37,7 +40,7 @@ export const createUser=(user)=>{
             });
         }
         else{
-            user.avatar = "";
+            user.image = "";
             UserService.addUser(user).then((res)=>{
                 let isShow = false;
                 dispatch({type: 'TOOGLE_LOADING', isShow});
@@ -69,13 +72,15 @@ export const getUsers=(page, search, orderBy, sort, currentArrow)=>{
         };
 
         UserService.getUsersWithSorting(params).then((res)=>{
-            let users = res.data;
-            users.totalPage=Math.ceil(res.data.countAll/Common.pageSize);
+            let users = {};
+            users.data = res.data.data.data;
+            users.totalPage=Math.ceil(res.data.data.countAll/Common.pageSize);
             users.currentPage=params.pageNumber;
             users.search=params.search;
             users.orderBy=params.orderBy;
             users.sort=params.sort;
             users.currentArrow=params.currentArrow;
+            users.countAll=res.data.data.countAll;
             dispatch({type: 'GET_USERS', users});
         }).catch(function (error) {
             ErrorHandlerService.basicErrorHandler(error, function(){
@@ -90,30 +95,13 @@ export const openUpdateUserDialog=(id)=>{
         let isShow = true;
             dispatch({type: 'TOOGLE_LOADING', isShow});
         if(id){
-            axios.all([
-                UserService.getAllRoles(),
-                UserService.getUserById(id)
-            ]).then(axios.spread((role, userData)=>{
+
+                UserService.getUserById(id).then((userData)=>{
                 let isShow = false;
                 dispatch({type: 'TOOGLE_LOADING', isShow});
                 let res = {};
-                res.user = userData.data;
-                res.roles = role.data;
+                res.user = userData.data.data;
                 dispatch({type: 'OPEN_UPDATE_USER_DIALOG', res});
-            })).catch(function (error) {
-                let isShow = false;
-                    dispatch({type: 'TOOGLE_LOADING', isShow});
-                ErrorHandlerService.basicErrorHandler(error, function(){
-                    dispatch({type: 'REDIRECT_TO_LOGIN'});
-                });
-            });
-        }
-        else{
-            UserService.getAllRoles().then((res)=>{
-                let isShow = false;
-                    dispatch({type: 'TOOGLE_LOADING', isShow});
-                let roles = res.data;
-                dispatch({type: 'OPEN_UPDATE_USER_DIALOG', roles});
             }).catch(function (error) {
                 let isShow = false;
                     dispatch({type: 'TOOGLE_LOADING', isShow});
@@ -122,26 +110,62 @@ export const openUpdateUserDialog=(id)=>{
                 });
             });
         }
+        else{
+            let isShow = false;
+                    dispatch({type: 'TOOGLE_LOADING', isShow});
+            dispatch({type: 'OPEN_UPDATE_USER_DIALOG'});
+        }
     }
 }
 
 export const updateUserDispatch=(user)=>{
     return (dispatch) =>{
         let isShow = true;
-                    dispatch({type: 'TOOGLE_LOADING', isShow});
-        UserService.updateUser(user).then((res)=>{
-            let isShow = false;
-                    dispatch({type: 'TOOGLE_LOADING', isShow});
-            toast("Updated user successfully.", { type: toast.TYPE.SUCCESS });
-            dispatch({type: 'UPDATE_USER', user});
-            dispatch(getUsers());
-        }).catch(function (error) {
-            let isShow = false;
-                    dispatch({type: 'TOOGLE_LOADING', isShow});
-            ErrorHandlerService.basicErrorHandler(error, function(){
-                dispatch({type: 'REDIRECT_TO_LOGIN'});
+        dispatch({type: 'TOOGLE_LOADING', isShow});
+        user.modifiedOn =  new Date();
+        user.modifiedBy = AuthenticationService.getUserLoginInfo().id;
+        if(!user.image){
+            UserService.updateUser(user).then((res)=>{
+                let isShow = false;
+                dispatch({type: 'TOOGLE_LOADING', isShow});
+                toast("Updated user successfully.", { type: toast.TYPE.SUCCESS });
+                dispatch({type: 'UPDATE_USER', user});
+                dispatch(getUsers());
+            }).catch(function (error) {
+                let isShow = false;
+                dispatch({type: 'TOOGLE_LOADING', isShow});
+                ErrorHandlerService.basicErrorHandler(error, function(){
+                    dispatch({type: 'REDIRECT_TO_LOGIN'});
+                });
             });
-        });
+        }
+        else{
+            let formData = new FormData();
+            formData.append('image', user.image);
+            FileService.uploadImage(formData).then((res)=>{
+                let userTmp = Object.assign(user, {});
+                userTmp.image = res.data.data;
+                UserService.updateUser(userTmp).then((res)=>{
+                    let isShow = false;
+                    dispatch({type: 'TOOGLE_LOADING', isShow});
+                    toast("Updated user successfully.", { type: toast.TYPE.SUCCESS });
+                    dispatch({type: 'UPDATE_USER', user});
+                    dispatch(getUsers());
+                }).catch(function (error) {
+                    let isShow = false;
+                    dispatch({type: 'TOOGLE_LOADING', isShow});
+                    ErrorHandlerService.basicErrorHandler(error, function(){
+                        dispatch({type: 'REDIRECT_TO_LOGIN'});
+                    });
+                });
+            }).catch(function (error) {
+                let isShow = false;
+                    dispatch({type: 'TOOGLE_LOADING', isShow});
+                ErrorHandlerService.basicErrorHandler(error, function(){
+                    dispatch({type: 'REDIRECT_TO_LOGIN'});
+                });
+            });
+        }
     }
 }
 

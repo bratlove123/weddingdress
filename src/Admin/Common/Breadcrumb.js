@@ -17,7 +17,7 @@ class Breadcrumb extends Component{
                 </li>
                 <li>
                     <div className="page-title-box">
-                        <h4 className="page-title">File Uploads </h4>
+                        <h4 className="page-title">{breadcrumb&&breadcrumb.length>0&&breadcrumb[breadcrumb.length-1].name} </h4>
                         <ol className="breadcrumb">
                             <li className="breadcrumb-item"><Link to="/admin">Highdmin</Link></li>
                             {

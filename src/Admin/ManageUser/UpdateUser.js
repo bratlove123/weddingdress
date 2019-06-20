@@ -3,55 +3,38 @@ import Modal from '../../Common/Modal';
 import selectImg from '../../assets/images/select-image.png';
 import {createUser, updateUserDispatch} from '../../Store/Actions/manageUserAction';
 import {connect} from 'react-redux';
-import Form from 'react-validation/build/form';
-import Input from 'react-validation/build/input';
-import Button from 'react-validation/build/button';
-import Select from 'react-validation/build/select';
 import Common from '../../Consts/Common';
-
-const required = (value) => {
-    if (!value.toString().trim().length) {
-        // We can return string or jsx as the 'error' prop for the validated Component
-        return <small className="error">This field is required.</small>;
-    }
-};
-
-const email = (value) => {
-    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    if (!re.test(value.toLowerCase())) {
-        return <small className="error">Invalid email format</small>;
-    }
-};
-
-const minlength = (value) => {
-    if (value.trim().length < 6) {
-        return <small className="error">Password must be at least 6 characters long</small>;
-    }
-};
-
-const match = (value, props, components) =>{
-    if (value !== components['password'][0].value) {
-        return <small className="error">Passwords are not equal.</small>
-    }
-};
+import FormValidator from '../../Common/FormValidator';
 
 class UpdateUser extends Component{
     fileInput=null;
     constructor(props){
         super(props);
 
+        this.validator = new FormValidator([
+            { field: 'userName', method: 'isEmpty', validWhen: false, message: 'User name is required.'},
+            { field: 'userName', method: 'isLength', args: [{min: 8, max: 65}], validWhen: true, message: 'Length must be larger than 8.'},
+            { field: 'password', method: 'isEmpty', validWhen: false, message: 'Password is required.'},
+            { field: 'password', method: 'isLength', args: [{min: 8, max: 65}], validWhen: true, message: 'Length must be larger than 8.'},
+            { field: 'repassword', method: 'equals', comparison: 'password', validWhen: true, message: 'Password does not match.'},           
+            { field: 'email', method: 'isEmpty', validWhen: false, message: 'Email is required.'},
+            { field: 'email', method: 'isEmail', validWhen: true, message: 'Email not have right format.'},
+            { field: 'firstName', method: 'isEmpty', validWhen: false, message: 'First name is required.'},
+            { field: 'lastName', method: 'isEmpty', validWhen: false, message: 'Last name is required.'}
+        ]);
+
         this.state={
             user: {
-                avatar: null,
-                username: "",
+                image: null,
+                userName: "",
                 password: "",
                 repassword: "",
                 email: "",
                 firstName: "",
-                lastName: "",
-                role: ""
+                lastName: ""
             },
-            avatarSrc: selectImg
+            imageSrc: selectImg,
+            validation: this.validator.reset()
         };
         this.handleChangeValue=this.handleChangeValue.bind(this);
         this.triggerInputFile=this.triggerInputFile.bind(this);
@@ -64,32 +47,34 @@ class UpdateUser extends Component{
             var file = this.fileInput.files[0];
             var reader = new FileReader();
             var url = reader.readAsDataURL(file);
-            var avatar = e.target.name;
+            var image = e.target.name;
              reader.onloadend = function (e) {
                 this.setState({
-                    avatarSrc: [reader.result],
-                    user: {...this.state.user, avatar: file}
+                    imageSrc: [reader.result],
+                    user: {...this.state.user, image: file}
                 });
               }.bind(this);
         }
         else{
             this.setState({user: {...this.state.user, [e.target.name]: e.target.value}});
+            const validation = this.validator.validate({...this.state.user, [e.target.name]: e.target.value}, e.target.name);
+            this.setState({ validation });
         }
     }
     componentWillReceiveProps(nextProps){
         if(nextProps.user){
             this.setState({
                 user: {
-                    username: nextProps.user.username,
+                    userName: nextProps.user.userName,
                     password: "",
                     repassword: "",
                     email: nextProps.user.email,
                     firstName: nextProps.user.firstName,
                     lastName: nextProps.user.lastName,
-                    role: nextProps.user.role,
-                    id: nextProps.user.id
+                    _id: nextProps.user._id
                 },
-                avatarSrc: nextProps.user.avatar?Common.imgUrl+nextProps.user.avatar:selectImg
+                imageSrc: nextProps.user.image?Common.imgUrl+nextProps.user.image:selectImg,
+                validation: this.validator.reset()
             });
         }
     }
@@ -98,20 +83,26 @@ class UpdateUser extends Component{
     }
     addUser(e){
         e.preventDefault();
-        this.props.createUser(this.state.user);
+        const validation = this.validator.validate(this.state.user);
+        this.setState({ validation });
+
+        if(validation.isValid){
+            this.props.createUser(this.state.user);
+        }
     }
     updateUser(e){
         e.preventDefault();
         this.props.updateUserDispatch(this.state.user);
     }
     render(){
+        let validation = this.state.validation;
         return(
             <Modal user={this.props.user} header={!this.props.isEdit?"Add New User":"Edit User"} modalIsOpen={this.props.modalIsOpen} width="450">
-                <Form>
+                <form>
                     <div className="row container display-block">
                         <div className="form-group row display-block text-center">
-                            <img title="Choose the avatar..." className="avatar-img" src={this.state.avatarSrc} onClick={this.triggerInputFile}/>
-                            <input accept="image/x-png,image/gif,image/jpeg" ref={fileInput=>this.fileInput=fileInput} onChange={this.handleChangeValue} name="avatar" className="hidden" type="file"/>
+                            <img title="Choose the image..." className="avatar-img" src={this.state.imageSrc} onClick={this.triggerInputFile}/>
+                            <input accept="image/x-png,image/gif,image/jpeg" ref={fileInput=>this.fileInput=fileInput} onChange={this.handleChangeValue} name="image" className="hidden" type="file"/>
                         </div>
 
                         <div className="form-group row m-b-20">
@@ -119,8 +110,12 @@ class UpdateUser extends Component{
                                 <label className="fix-label-form">Username</label>
                             </div>
                             <div className="col-8">
-                            {!this.props.isEdit?<Input validations={[required, minlength]} onChange={this.handleChangeValue} value={this.state.user.username} name="username" className="form-control" type="text" placeholder="Enter username"/>
-                                :<input disabled="disabled" value={this.state.user.username} name="username" className="form-control" type="text" placeholder="Enter username"/>}
+                                <input className={validation.userName.isInvalid?'has-error form-control':'form-control'} disabled={this.props.isEdit} onChange={this.handleChangeValue} value={this.state.user.userName} name="userName" type="text" placeholder="Enter username"/>
+                                {validation.userName.isInvalid && <ul className="parsley-errors-list filled">
+                                    <li className="parsley-required">
+                                        {validation.userName.message}
+                                    </li>
+                                </ul>}
                             </div>
                         </div>
 
@@ -129,7 +124,12 @@ class UpdateUser extends Component{
                                 <label className="fix-label-form">Password</label>
                             </div>
                             <div className="col-8">
-                                <Input validations={[required, minlength]} onChange={this.handleChangeValue} value={this.state.user.password} name="password" className="form-control" type="password" placeholder="Enter password"/>
+                                <input className={validation.password.isInvalid?'has-error form-control':'form-control'} onChange={this.handleChangeValue} value={this.state.user.password} name="password" type="password" placeholder="Enter password"/>
+                                {validation.password.isInvalid && <ul className="parsley-errors-list filled">
+                                    <li className="parsley-required">
+                                        {validation.password.message}
+                                    </li>
+                                </ul>}
                             </div>
                         </div>
 
@@ -138,7 +138,12 @@ class UpdateUser extends Component{
                                 <label className="fix-label-form">Repeat Password</label>
                             </div>
                             <div className="col-8">
-                                <Input validations={[required, match]} onChange={this.handleChangeValue} value={this.state.user.repassword} name="repassword" className="form-control" type="password" placeholder="Repeat password"/>
+                                <input className={validation.repassword.isInvalid?'has-error form-control':'form-control'} onChange={this.handleChangeValue} value={this.state.user.repassword} name="repassword" type="password" placeholder="Repeat password"/>
+                                {validation.repassword.isInvalid && <ul className="parsley-errors-list filled">
+                                    <li className="parsley-required">
+                                        {validation.repassword.message}
+                                    </li>
+                                </ul>}
                             </div>
                         </div>
 
@@ -147,11 +152,12 @@ class UpdateUser extends Component{
                                 <label className="fix-label-form">Email</label>
                             </div>
                             <div className="col-8">
-                            {!this.props.isEdit?
-                                <Input validations={[required, email]} onChange={this.handleChangeValue} value={this.state.user.email} name="email" className="form-control" type="text" placeholder="Enter email"/>
-                                :
-                                <input disabled="disabled" value={this.state.user.email} name="email" className="form-control" type="text" placeholder="Enter email"/>
-                            }
+                                <input className={validation.email.isInvalid?'has-error form-control':'form-control'} disabled={this.props.isEdit} onChange={this.handleChangeValue} value={this.state.user.email} name="email" type="text" placeholder="Enter email"/>
+                                {validation.email.isInvalid && <ul className="parsley-errors-list filled">
+                                    <li className="parsley-required">
+                                        {validation.email.message}
+                                    </li>
+                                </ul>}
                             </div>
                         </div>
 
@@ -160,44 +166,37 @@ class UpdateUser extends Component{
                                 <label className="fix-label-form">Name</label>
                             </div>
                             <div className="col-4">
-                                <Input validations={[required]} onChange={this.handleChangeValue} value={this.state.user.firstName} name="firstName" className="form-control" type="text" placeholder="First Name"/>
+                                <input className={validation.firstName.isInvalid?'has-error form-control':'form-control'} onChange={this.handleChangeValue} value={this.state.user.firstName} name="firstName" type="text" placeholder="First Name"/>
+                                {validation.firstName.isInvalid && <ul className="parsley-errors-list filled">
+                                    <li className="parsley-required">
+                                        {validation.firstName.message}
+                                    </li>
+                                </ul>}
                             </div>
                             <div className="col-4">
-                                <Input validations={[required]} onChange={this.handleChangeValue} value={this.state.user.lastName} name="lastName" className="form-control" type="text" placeholder="Last Name"/>
-                            </div>
-                        </div>
-
-                        <div className="form-group row m-b-20">
-                            <div className="col-4">
-                                <label className="fix-label-form">Role</label>
-                            </div>
-                            <div className="col-8">
-                                <Select validations={[required]} onChange={this.handleChangeValue} value={this.state.user.role} name="role" className="form-control">
-                                    <option></option>
-                                    {this.props.roles.map((role, index)=>{
-                                        return (
-                                            <option value={role} key={index}>{role}</option>
-                                        )
-                                    })}
-                                </Select>                        
+                                <input className={validation.lastName.isInvalid?'has-error form-control':'form-control'} onChange={this.handleChangeValue} value={this.state.user.lastName} name="lastName" type="text" placeholder="Last Name"/>
+                                {validation.lastName.isInvalid && <ul className="parsley-errors-list filled">
+                                    <li className="parsley-required">
+                                        {validation.lastName.message}
+                                    </li>
+                                </ul>}
                             </div>
                         </div>
                     </div>
                     <div className="modal-footer">
                         {
-                            !this.props.isEdit?<Button className="btn btn-success" onClick={this.addUser}>Add new item</Button>:
-                            <Button className="btn btn-warning" onClick={this.updateUser}>Update</Button>
+                            !this.props.isEdit?<button className="btn btn-success" onClick={this.addUser}>Add user</button>:
+                            <button className="btn btn-warning" onClick={this.updateUser}>Update</button>
                         }
                     </div>
-                </Form>
+                </form>
             </Modal>
         );
     }
 }
 const mapStateToProps=(state)=>{
     return {
-        user: state.manageUser.user,
-        roles: state.manageUser.roles
+        user: state.manageUser.user
     }
 }
 const mapDispatchToProps = (dispatch) => {

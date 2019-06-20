@@ -11,11 +11,12 @@ import Common from '../../Consts/Common';
 import Paging from '../../Common/Paging';
 import SortHeading from '../../Common/SortHeading';
 import { confirmAlert } from 'react-confirm-alert';
+import Moment from 'react-moment';
 
 class ManageUser extends Component{
     breadcrumb = [
         {
-            name: "Configuration",
+            name: "Settings",
             url: ""
         },
         {
@@ -102,25 +103,29 @@ class ManageUser extends Component{
                                 <SortHeading name={'userName'} currentSort={this.props.orderBy} currentArrow={this.props.currentArrow} getDataForSort={this.sortChange}>Username</SortHeading>
                                 <SortHeading name={'email'} currentSort={this.props.orderBy} currentArrow={this.props.currentArrow} getDataForSort={this.sortChange}>Email</SortHeading>
                                 <SortHeading name={'firstName'} currentSort={this.props.orderBy} currentArrow={this.props.currentArrow} getDataForSort={this.sortChange}>Fullname</SortHeading>
+                                <th> Modified By </th>
+                                <th>Modified On</th>
                                 <th> Action </th>
                             </tr>
                         </thead>
                         <tbody>
                         {this.props.isLoadingUsers?<tr><td colSpan="6"><div className="loading"><ReactLoading type={'cylon'} color={'#02c0ce'} height={'15px'} /></div></td></tr>:
-                            this.props.users.map((user, i)=>{
+                            this.props.users.length>0 ? this.props.users.map((user, i)=>{
                                 return (
                                     <tr key={i}>
-                                        <td><img className="list-img" src={user.avatar?Common.imgUrl+user.avatar:noAvatar}/></td>
+                                        <td><img className="list-img" src={user.image?Common.imgUrl+user.image:noAvatar}/></td>
                                         <td><b>{user.userName}</b></td>
                                         <td>{user.email}</td>
                                         <td>{user.firstName + " " + user.lastName}</td>
+                                        <td>{user.modifiedBy && user.modifiedBy.userName}</td>
+                                        <td><Moment date={user.modifiedOn} format="DD/MM/YYYY"></Moment></td>
                                         <td>
-                                            <button className="btn btn-warning" onClick={this.updateUser(user.id)}><FontAwesomeIcon icon="pencil-alt" /></button>
-                                            <button className="btn btn-danger fix-eraser-btn" onClick={this.deleteUser(user.id)}><FontAwesomeIcon icon="eraser" /></button>
+                                            <button className="btn btn-warning" onClick={this.updateUser(user._id)}><FontAwesomeIcon icon="pencil-alt" /></button>
+                                            <button className="btn btn-danger fix-eraser-btn" onClick={this.deleteUser(user._id)}><FontAwesomeIcon icon="eraser" /></button>
                                         </td>
                                     </tr>
                                 )
-                            })
+                            }):<tr><td colSpan="100%" className="text-center">No Data.</td></tr>
                         }
                         </tbody>
                     </table>

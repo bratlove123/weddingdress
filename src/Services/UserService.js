@@ -26,7 +26,7 @@ class UserService{
 
     static updateUser (params) {
         const authStr = 'Bearer '.concat(AuthenticationService.getToken());
-        return axios.put(Common.apiUrl + '/user/update', params, { headers: { Authorization: authStr }});
+        return axios.put(Common.apiUrl + '/user/update/' + params._id, params, { headers: { Authorization: authStr }});
     }
 
     static deleteUser(id){

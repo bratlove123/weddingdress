@@ -3,13 +3,16 @@ import avatar from '../../assets/images/users/avatar-1.jpg';
 import CSSTransitionGroup from 'react-addons-css-transition-group';
 import { Redirect } from 'react-router';
 import AuthenticationService from '../../Services/AuthenticationService';
+import Common from '../../Consts/Common';
+
 class Control extends Component{
     constructor(props){
         super(props);
 
         this.state={
             toggleControl:false,
-            redirectToLogin: false
+            redirectToLogin: false,
+            userInfo: null
         };
         this.toggleControl=this.toggleControl.bind(this);
         this.handleOutsideClick=this.handleOutsideClick.bind(this);
@@ -30,6 +33,10 @@ class Control extends Component{
         }
     }
     
+    componentWillMount(){
+        this.setState({userInfo: AuthenticationService.getUserLoginInfo()});
+    }
+
     componentDidMount() {
         document.addEventListener('click', this.handleOutsideClick, false);
     }
@@ -50,7 +57,7 @@ class Control extends Component{
         return(
             <li className="dropdown notification-list">
                 <a onClick={this.toggleControl} className="nav-link dropdown-toggle nav-user" href="javascript:void(0);">
-                    <img src={avatar} alt="user" className="rounded-circle"/> <span className="ml-1">Maxine K <i className="mdi mdi-chevron-down"></i> </span>
+                    <img src={this.state.userInfo&&this.state.userInfo.avatar?Common.imgUrl+this.state.userInfo.avatar:avatar} alt="user" className="rounded-circle"/> <span className="ml-1">{this.state.userInfo&&this.state.userInfo.fullName?this.state.userInfo.fullName:""} <i className="mdi mdi-chevron-down"></i> </span>
                 </a>
                 <CSSTransitionGroup transitionName="dropdownmenu" transitionEnterTimeout={700} transitionLeaveTimeout={700}>
                 {this.state.toggleControl && <div className="dropdown-menu dropdown-menu-right profile-dropdown ">

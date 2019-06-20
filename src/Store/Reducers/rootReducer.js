@@ -3,6 +3,7 @@ import appReducer from './appReducer';
 import loginReducer from './loginReducer';
 import leftNavReducer from './leftNavReducer';
 import manageLeftNavReducer from './manageLeftNavReducer';
+import manageRoleReducer from './manageRoleReducer';
 import {combineReducers} from 'redux';
 
 const rootReducer=combineReducers({
@@ -10,7 +11,9 @@ const rootReducer=combineReducers({
     app: appReducer,
     login: loginReducer,
     leftNav: leftNavReducer,
-    manageLeftNav: manageLeftNavReducer
+    manageLeftNav: manageLeftNavReducer,
+    manageRoleGroup: manageRoleReducer
+
 });
 
 export default rootReducer;

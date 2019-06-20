@@ -15,7 +15,7 @@ import Moment from 'react-moment';
 class ManageLeftNav extends Component{
     breadcrumb = [
         {
-            name: "Configuration",
+            name: "Settings",
             url: ""
         },
         {
@@ -130,7 +130,7 @@ class ManageLeftNav extends Component{
                         </thead>
                         <tbody>
                         {this.props.isLoadingLeftNavs?<tr><td colSpan="10"><div className="loading"><ReactLoading type={'cylon'} color={'#02c0ce'} height={'15px'} /></div></td></tr>:
-                                this.props.leftNavs.length>0 && this.props.leftNavs.map((value, i)=>{
+                                this.props.leftNavs.length>0 ? this.props.leftNavs.map((value, i)=>{
                                     return (
                                         <React.Fragment key={i}>
                                             <tr className="togglable">
@@ -168,7 +168,7 @@ class ManageLeftNav extends Component{
                                             }
                                         </React.Fragment>
                                     )
-                                })
+                                }):<tr><td colSpan="100%" className="text-center">No Data.</td></tr>
                             }
                         </tbody>
                     </table>

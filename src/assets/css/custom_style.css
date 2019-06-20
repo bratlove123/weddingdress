@@ -361,3 +361,7 @@ transition: 300ms ease-out;
 .has-error{
     border-color: #dc3545 !important;
 }
+
+.user-img img{
+    height: 47px;
+}

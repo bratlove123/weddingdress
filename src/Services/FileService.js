@@ -3,9 +3,9 @@ import Common from '../Consts/Common';
 import AuthenticationService from './AuthenticationService';
 
 class FileService{
-    static uploadFile (file) {
+    static uploadImage (file) {
         const authStr = 'Bearer '.concat(AuthenticationService.getToken());
-        return axios.post(Common.apiUrl + '/file/upload', file, { headers: { Authorization: authStr}});
+        return axios.post(Common.apiUrl + '/upload/image', file, { headers: { Authorization: authStr}});
     }
 }
 
