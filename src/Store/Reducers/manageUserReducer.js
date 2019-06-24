@@ -2,6 +2,8 @@ const initState={
     users:[],
     isLoadingUsers: true,
     modalIsOpen: false,
+    modalPermissionIsOpen: false,
+    fixOpenPermission: false,
     isEdit: false,
     fixOpen: 1,
     redirectToLogin: false,
@@ -22,13 +24,15 @@ const initState={
         lastName: "",
         role: ""
     },
-    roles: []
+    rolesOfUser: [],
+    allRoles: [],
+    roleId: null
 };
 
 const manageUserReducer=(state=initState,action)=>{
     switch(action.type){
         case "UPDATE_USER":
-            return {...state, modalIsOpen: false}
+            return {...state, modalIsOpen: false, modalPermissionIsOpen: false}
         case "GET_USERS":
             return {
                 ...state, 
@@ -44,7 +48,7 @@ const manageUserReducer=(state=initState,action)=>{
             };
         case "OPEN_UPDATE_USER_DIALOG":
             if(action.res){
-                return {...state, modalIsOpen: true, isEdit: true, fixOpen: state.fixOpen + 1, user: action.res.user, roles: action.res.roles}
+                return {...state, modalIsOpen: true, isEdit: true, fixOpen: state.fixOpen + 1, user: action.res.user}
             }
             return {...state, modalIsOpen: true, isEdit: false, fixOpen: state.fixOpen + 1, roles: action.roles, user: {
                 image: null,
@@ -56,6 +60,10 @@ const manageUserReducer=(state=initState,action)=>{
                 lastName: "",
                 role: ""
             }}
+        case "OPEN_UPDATE_PERMISSION_DIALOG":
+            if(action.res){
+                return {...state, modalPermissionIsOpen: true, fixOpenPermission: state.fixOpenPermission + 1, rolesOfUser: action.res.rolesOfUser, allRoles: action.res.allRoles, roleId: action.res.id}
+            }
         case "REDIRECT_TO_LOGIN":
             return {...state, redirectToLogin: true}
         case "SHOW_LOADING_USER_DATA":

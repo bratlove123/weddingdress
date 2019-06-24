@@ -8,7 +8,7 @@ var CancelToken = axios.CancelToken;
 class RoleService{
     static getRoleGroups () {
         const authStr = 'Bearer '.concat(AuthenticationService.getToken());
-        return axios.get(Common.apiUrl + '/leftnav/getall', { headers: { Authorization: authStr }});
+        return axios.get(Common.apiUrl + '/role/getall', { headers: { Authorization: authStr }});
     }
 
     static getRoleGroupsWithSorting(params){

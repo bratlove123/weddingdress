@@ -365,3 +365,27 @@ transition: 300ms ease-out;
 .user-img img{
     height: 47px;
 }
+
+tr.in-active{
+    background: #ccc;
+}
+
+.action-list span{
+    margin-right: 7px;
+    cursor: pointer;
+}
+
+.select-form{
+    border: 1px solid #d1d1d1;
+    background-color: #f7f7f7;
+    padding: 20px 20px 5px;
+    margin-top: 20px;
+    position: relative;
+}
+
+.role-title{
+    position: absolute;
+    background-color: #f7f7f7;
+    top: -9px;
+    margin: 0 -5px;
+}

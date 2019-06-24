@@ -34,6 +34,11 @@ class UserService{
         return axios.delete(Common.apiUrl + '/user/delete/'+id, { headers: { Authorization: authStr }});
     }
 
+    static toggleActiveUser(id, params){
+        const authStr = 'Bearer '.concat(AuthenticationService.getToken());
+        return axios.put(Common.apiUrl + '/user/active/'+id, params,  { headers: { Authorization: authStr }});
+    }
+
     static getUsersWithSorting(params){
         //Cancel previous typing
         if (cancel != null) {
@@ -50,9 +55,9 @@ class UserService{
         });
     }
 
-    static getAllRoles(){
+    static getAllRolesById(id){
         const authStr = 'Bearer '.concat(AuthenticationService.getToken());
-        return axios.get(Common.apiUrl + '/user/roles', { headers: { Authorization: authStr }});
+        return axios.get(Common.apiUrl + '/user/roles/' + id, { headers: { Authorization: authStr }});
     }
 }
 

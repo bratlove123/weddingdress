@@ -3,8 +3,9 @@ import Layout from '../Common/Layout';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {connect} from 'react-redux';
 import UpdateUser from './UpdateUser';
+import UpdatePermission from './UpdatePermission';
 import ReactLoading from 'react-loading';
-import {getUsers, openUpdateUserDialog, deleteUserDispatch, resetState} from '../../Store/Actions/manageUserAction';
+import {getUsers, openUpdateUserDialog, deleteUserDispatch, toggleActiveDispatch, resetState, openUpdatePermissionDialog} from '../../Store/Actions/manageUserAction';
 import { Redirect } from 'react-router';
 import noAvatar from '../../assets/images/no_avatar.png';
 import Common from '../../Consts/Common';
@@ -33,6 +34,7 @@ class ManageUser extends Component{
         this.changePage=this.changePage.bind(this);
         this.handleSearchChange=this.handleSearchChange.bind(this);
         this.sortChange=this.sortChange.bind(this);
+        this.updatePermission=this.updatePermission.bind(this);
     }
 
     componentWillMount(){
@@ -45,6 +47,10 @@ class ManageUser extends Component{
 
     updateUser=(id)=>()=>{
         this.props.openUpdateUserDialog(id);
+    }
+
+    updatePermission=(id)=>()=>{
+        this.props.openUpdatePermissionDialog(id);
     }
 
     changePage(page){
@@ -77,6 +83,24 @@ class ManageUser extends Component{
         })
     };
 
+    toggleActiveDispatch = (id, isActive, isEmail) => () => {
+        confirmAlert({
+            title: 'Confirm to active',
+            message: 'Are you sure to active/deactive this user.',
+            buttons: [
+                {
+                    label: 'Yes',
+                    onClick: () => {
+                        this.props.toggleActiveDispatch(id, isActive, isEmail);
+                    }
+                },
+                {
+                    label: 'No'
+                }
+            ]
+        })
+    };
+
     componentWillUnmount(){
         this.props.resetState();
     }
@@ -91,6 +115,7 @@ class ManageUser extends Component{
         return(
             <Layout breadcrumb={this.breadcrumb}>
                 <UpdateUser modalIsOpen={this.props.modalIsOpen} isEdit={this.props.isEdit} fixOpen={this.props.fixOpen}></UpdateUser>
+                <UpdatePermission modalPermissionIsOpen={this.props.modalPermissionIsOpen} fixOpenPermission={this.props.fixOpenPermission}></UpdatePermission>
                 <div className="card-box table-responsive">
                     <div className="table-header">
                         <button className="btn btn-success" onClick={this.addNewUser} >Add New User</button>
@@ -112,16 +137,21 @@ class ManageUser extends Component{
                         {this.props.isLoadingUsers?<tr><td colSpan="6"><div className="loading"><ReactLoading type={'cylon'} color={'#02c0ce'} height={'15px'} /></div></td></tr>:
                             this.props.users.length>0 ? this.props.users.map((user, i)=>{
                                 return (
-                                    <tr key={i}>
+                                    <tr className={user.isActive && user.isConfirmEmail?'':'in-active'} key={i}>
                                         <td><img className="list-img" src={user.image?Common.imgUrl+user.image:noAvatar}/></td>
                                         <td><b>{user.userName}</b></td>
                                         <td>{user.email}</td>
                                         <td>{user.firstName + " " + user.lastName}</td>
                                         <td>{user.modifiedBy && user.modifiedBy.userName}</td>
                                         <td><Moment date={user.modifiedOn} format="DD/MM/YYYY"></Moment></td>
-                                        <td>
-                                            <button className="btn btn-warning" onClick={this.updateUser(user._id)}><FontAwesomeIcon icon="pencil-alt" /></button>
-                                            <button className="btn btn-danger fix-eraser-btn" onClick={this.deleteUser(user._id)}><FontAwesomeIcon icon="eraser" /></button>
+                                        <td className="action-list">
+                                            <span title="Edit" className="text-warning" onClick={this.updateUser(user._id)}><FontAwesomeIcon icon="pencil-alt" /></span>
+                                            <span title="Update Roles" className="text-info" onClick={this.updatePermission(user._id)}><FontAwesomeIcon icon="user-tag" /></span>
+                                            <span title="Delete" className="text-danger" onClick={this.deleteUser(user._id)}><FontAwesomeIcon icon="eraser" /></span>
+                                            {user.isActive?<span title="Toggle Active" className="text-success" onClick={this.toggleActiveDispatch(user._id, user.isActive, false)}><FontAwesomeIcon icon="user-alt" /></span>:
+                                            <span title="Toggle Active" className="text-secondary" onClick={this.toggleActiveDispatch(user._id, user.isActive, false)}><FontAwesomeIcon icon="user-alt-slash" /></span>}
+                                            {user.isConfirmEmail?<span title="Toggle Active Email" className="text-success" onClick={this.toggleActiveDispatch(user._id, user.isConfirmEmail, true)}><FontAwesomeIcon icon="envelope" /></span>:
+                                            <span title="Toggle Active Email" className="text-secondary" onClick={this.toggleActiveDispatch(user._id, user.isConfirmEmail, true)}><FontAwesomeIcon icon="envelope" /></span>}
                                         </td>
                                     </tr>
                                 )
@@ -141,6 +171,8 @@ const mapStateToProps=(state)=>{
         users: state.manageUser.users,
         isLoadingUsers: state.manageUser.isLoadingUsers,
         modalIsOpen: state.manageUser.modalIsOpen,
+        modalPermissionIsOpen: state.manageUser.modalPermissionIsOpen,
+        fixOpenPermission: state.manageUser.fixOpenPermission,
         isEdit: state.manageUser.isEdit,
         fixOpen: state.manageUser.fixOpen,
         redirectToLogin: state.manageUser.redirectToLogin,
@@ -159,7 +191,9 @@ const mapDispatchToProps = (dispatch) => {
         getUsers: (page, search, orderBy, sort, currentArrow) => dispatch(getUsers(page, search, orderBy, sort, currentArrow)),
         openUpdateUserDialog: (id) => dispatch(openUpdateUserDialog(id)),
         deleteUserDispatch: (id) => dispatch(deleteUserDispatch(id)),
-        resetState: () => dispatch(resetState())
+        openUpdatePermissionDialog: (id) => dispatch(openUpdatePermissionDialog(id)),
+        resetState: () => dispatch(resetState()),
+        toggleActiveDispatch: (id, isActive, isEmail) => dispatch(toggleActiveDispatch(id, isActive, isEmail))
     }
 }
 

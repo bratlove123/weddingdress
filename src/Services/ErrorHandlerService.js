@@ -12,7 +12,7 @@ class ErrorHandlerService{
 
     static basicErrorHandler(error, redirectToLogin){
         if(error && error.response && error.response.data){
-            toast(error.response.data.message, { type: toast.TYPE.ERROR });
+            toast(error.response.statusText, { type: toast.TYPE.ERROR });
         }
         else if(error.response && error.response.status==401){
             redirectToLogin();

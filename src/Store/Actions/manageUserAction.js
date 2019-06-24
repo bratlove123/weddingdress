@@ -1,9 +1,11 @@
 import ErrorHandlerService from '../../Services/ErrorHandlerService';
 import UserService from '../../Services/UserService';
 import FileService from '../../Services/FileService';
+import RoleService from '../../Services/RoleService';
 import { toast } from 'react-toastify';
 import Common from '../../Consts/Common';
 import AuthenticationService from '../../Services/AuthenticationService';
+import axios from 'axios';
 
 export const createUser=(user)=>{
     return (dispatch) => {
@@ -118,6 +120,34 @@ export const openUpdateUserDialog=(id)=>{
     }
 }
 
+export const openUpdatePermissionDialog=(id)=>{
+    return (dispatch) =>{
+        let isShow = true;
+            dispatch({type: 'TOOGLE_LOADING', isShow});
+        if(id){
+            axios.all([
+                UserService.getAllRolesById(id),
+                RoleService.getRoleGroups()
+            ]).then(axios.spread((rolesOfUser, allRoles)=>{
+                let isShow = false;
+                dispatch({type: 'TOOGLE_LOADING', isShow});
+                let res = {};
+                res.rolesOfUser = rolesOfUser.data.data;
+                res.allRoles = allRoles.data.data;
+                res.id = id;
+                dispatch({type: 'OPEN_UPDATE_PERMISSION_DIALOG', res});
+            })).catch(function (error) {
+                let isShow = false;
+                    dispatch({type: 'TOOGLE_LOADING', isShow});
+                    ErrorHandlerService.basicErrorHandler(error, function(){
+                        dispatch({type: 'REDIRECT_TO_LOGIN'});
+                    });
+            });
+        }
+
+    }
+}
+
 export const updateUserDispatch=(user)=>{
     return (dispatch) =>{
         let isShow = true;
@@ -181,6 +211,25 @@ export const deleteUserDispatch=(id)=>{
         }).catch(function (error) {
             let isShow = false;
                     dispatch({type: 'TOOGLE_LOADING', isShow});
+            ErrorHandlerService.basicErrorHandler(error, function(){
+                dispatch({type: 'REDIRECT_TO_LOGIN'});
+            });
+        });
+    }
+}
+
+export const toggleActiveDispatch=(id, isActive, isEmail)=>{
+    return (dispatch) =>{
+        let isShow = true;
+        dispatch({type: 'TOOGLE_LOADING', isShow});
+        UserService.toggleActiveUser(id, isEmail?{isConfirmEmail: !isActive}:{isActive: !isActive}).then((res)=>{
+            let isShow = false;
+            dispatch({type: 'TOOGLE_LOADING', isShow});
+            toast("Toggled active user successfully.", { type: toast.TYPE.SUCCESS });
+            dispatch(getUsers());
+        }).catch(function (error) {
+            let isShow = false;
+            dispatch({type: 'TOOGLE_LOADING', isShow});
             ErrorHandlerService.basicErrorHandler(error, function(){
                 dispatch({type: 'REDIRECT_TO_LOGIN'});
             });
