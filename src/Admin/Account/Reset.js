@@ -8,23 +8,25 @@ import {Link} from 'react-router-dom';
 import Form from 'react-validation/build/form';
 import queryString from 'query-string';
 import ErrorHandlerService from '../../Services/ErrorHandlerService';
+import { withNamespaces } from 'react-i18next';
+import i18n from '../../Consts/i18n';
 
 const required = (value) => {
     if (!value.toString().trim().length) {
         // We can return string or jsx as the 'error' prop for the validated Component
-        return <small className="error">This field is required.</small>;
+        return <small className="error">{i18n.t('VALIDATE_REQUIRED')}</small>;
     }
 };
 
 const match = (value, props, components) =>{
     if (value !== components['password'][0].value) {
-        return <small className="error">Passwords are not equal.</small>
+        return <small className="error">{i18n.t('VALIDATE_MATCH_PASSWORD')}</small>
     }
 };
 
 const minlength = (value) => {
     if (value.trim().length < 6) {
-        return <small className="error">Password must be at least 6 characters long</small>;
+        return <small className="error">{i18n.t('VALIDATE_PASSWORD')}</small>;
     }
 };
 
@@ -69,37 +71,37 @@ class Reset extends Component{
         if(this.state.isSuccess){
             return(<Layout>
                 <div className="text-center m-b-20">
-                    <p className="text-muted m-b-0">Reset password successfully. Please click the button bellow to login with the new password.  </p>
+                    <p className="text-muted m-b-0">{i18n.t('RESET_SUCCESS')}</p>
                 </div>
-                <Link to="/admin/login" className="btn btn-md btn-block btn-custom waves-effect waves-light mt-3">Login</Link>
+                <Link to="/admin/login" className="btn btn-md btn-block btn-custom waves-effect waves-light mt-3">{i18n.t('SIGN_IN')}</Link>
             </Layout>)
         }
 
         return(
             <Layout>
                 <div className="text-center m-b-20">
-                    <p className="text-muted m-b-0">Enter your email address and we'll send you an email with instructions to reset your password.  </p>
+                    <p className="text-muted m-b-0">{i18n.t('RESET_INSTRUCTION')}</p>
                 </div>
 
                 <Form className="form-horizontal" action="#">
 
                     <div className="form-group row m-b-20">
                         <div className="col-12">
-                            <label>Password<span className="text-danger">*</span></label>
-                            <Input validations={[required, minlength]} value={this.state.password} onChange={this.handleChangeValue} className="form-control" type="password" name="password" placeholder="Enter your password"/>
+                            <label>{i18n.t('PASSWORD')}<span className="text-danger">*</span></label>
+                            <Input validations={[required, minlength]} value={this.state.password} onChange={this.handleChangeValue} className="form-control" type="password" name="password" placeholder={i18n.t('ENTER_PASSWORD')}/>
                         </div>
                     </div>
 
                     <div className="form-group row m-b-20">
                         <div className="col-12">
-                            <label>Confirm Password<span className="text-danger">*</span></label>
-                            <Input validations={[required, match]} value={this.state.confirmPassword} onChange={this.handleChangeValue} className="form-control" type="password" name="confirmPassword" placeholder="Repeat your password"/>
+                            <label>{i18n.t('CONFIRM_PASSWORD')}<span className="text-danger">*</span></label>
+                            <Input validations={[required, match]} value={this.state.confirmPassword} onChange={this.handleChangeValue} className="form-control" type="password" name="confirmPassword" placeholder={i18n.t('ENTER_CONFIRM_PASSWORD')}/>
                         </div>
                     </div>
 
                     <div className="form-group row text-center m-t-10">
                         <div className="col-12">
-                            <Button onClick={this.resetPassword} className="btn btn-block btn-custom waves-effect waves-light">Reset Password</Button>
+                            <Button onClick={this.resetPassword} className="btn btn-block btn-custom waves-effect waves-light">{i18n.t('RESET_PASSWORD')}</Button>
                         </div>
                     </div>
 
@@ -109,4 +111,4 @@ class Reset extends Component{
     }
 }
 
-export default Reset;
+export default withNamespaces('reset')(Reset);

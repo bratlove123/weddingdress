@@ -7,30 +7,32 @@ import Input from 'react-validation/build/input';
 import Button from 'react-validation/build/button';
 import {Link} from 'react-router-dom';
 import ErrorHandlerService from '../../Services/ErrorHandlerService';
+import { withNamespaces } from 'react-i18next';
+import i18n from '../../Consts/i18n';
 
 const required = (value) => {
     if (!value.toString().trim().length) {
         // We can return string or jsx as the 'error' prop for the validated Component
-        return <small className="error">This field is required.</small>;
+        return <small className="error">{i18n.t('VALIDATE_REQUIRED')}</small>;
     }
 };
 
 const email = (value) => {
     var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     if (!re.test(value.toLowerCase())) {
-        return <small className="error">Invalid email format</small>;
+        return <small className="error">{i18n.t('VALIDATE_EMAIL')}</small>;
     }
 };
 
 const minlength = (value) => {
     if (value.trim().length < 6) {
-        return <small className="error">Password must be at least 6 characters long</small>;
+        return <small className="error">{i18n.t('VALIDATE_PASSWORD')}</small>;
     }
 };
 
 const match = (value, props, components) =>{
     if (value !== components['password'][0].value) {
-        return <small className="error">Passwords are not equal.</small>
+        return <small className="error">{i18n.t('VALIDATE_MATCH_PASSWORD')}</small>
     }
 };
 
@@ -93,43 +95,43 @@ class Registration extends Component{
 
                     <div className="form-group row m-b-20">
                         <div className="col-12">
-                            <label>Username<span className="text-danger">*</span></label>
-                            <Input validations={[required, minlength]} value={this.state.username} onChange={this.handleChangeValue} className="form-control" type="text" name="username" placeholder="johndoe"/>
+                            <label>{i18n.t('USER_NAME')}<span className="text-danger">*</span></label>
+                            <Input validations={[required, minlength]} value={this.state.username} onChange={this.handleChangeValue} className="form-control" type="text" name="username" placeholder={i18n.t('ENTER_USER_NAME')}/>
                         </div>
                     </div>
 
                     <div className="form-group row m-b-20">
                         <div className="col-12">
-                            <label>Email address<span className="text-danger">*</span></label>
-                            <Input validations={[required, email]} value={this.state.email} onChange={this.handleChangeValue} className="form-control" type="email" name="email" placeholder="john@deo.com"/>
+                            <label>{i18n.t('EMAIL')}<span className="text-danger">*</span></label>
+                            <Input validations={[required, email]} value={this.state.email} onChange={this.handleChangeValue} className="form-control" type="email" name="email" placeholder={i18n.t('ENTER_EMAIL')}/>
                         </div>
                     </div>
 
                     <div className="form-group row m-b-20">
                         <div className="col-12">
-                            <label>First Name<span className="text-danger">*</span></label>
-                            <Input validations={[required]} value={this.state.firstname} onChange={this.handleChangeValue} className="form-control" type="text" name="firstname" placeholder="John"/>
+                            <label>{i18n.t('FIRST_NAME')}<span className="text-danger">*</span></label>
+                            <Input validations={[required]} value={this.state.firstname} onChange={this.handleChangeValue} className="form-control" type="text" name="firstname" placeholder={i18n.t('ENTER_FIRST_NAME')}/>
                         </div>
                     </div>
 
                     <div className="form-group row m-b-20">
                         <div className="col-12">
-                            <label>Last Name<span className="text-danger">*</span></label>
-                            <Input validations={[required]} value={this.state.lastname} onChange={this.handleChangeValue} className="form-control" type="text" name="lastname" placeholder="Doe"/>
+                            <label>{i18n.t('LAST_NAME')}<span className="text-danger">*</span></label>
+                            <Input validations={[required]} value={this.state.lastname} onChange={this.handleChangeValue} className="form-control" type="text" name="lastname" placeholder={i18n.t('ENTER_LAST_NAME')}/>
                         </div>
                     </div>
 
                     <div className="form-group row m-b-20">
                         <div className="col-12">
-                            <label>Password<span className="text-danger">*</span></label>
-                            <Input validations={[required, minlength]} value={this.state.password} onChange={this.handleChangeValue} className="form-control" type="password" name="password" placeholder="Enter your password"/>
+                            <label>{i18n.t('PASSWORD')}<span className="text-danger">*</span></label>
+                            <Input validations={[required, minlength]} value={this.state.password} onChange={this.handleChangeValue} className="form-control" type="password" name="password" placeholder={i18n.t('ENTER_PASSWORD')}/>
                         </div>
                     </div>
 
                     <div className="form-group row m-b-20">
                         <div className="col-12">
-                            <label>Confirm Password<span className="text-danger">*</span></label>
-                            <Input validations={[required, match]} value={this.state.confirmPassword} onChange={this.handleChangeValue} className="form-control" type="password" name="confirmPassword" placeholder="Repeat your password"/>
+                            <label>{i18n.t('CONFIRM_PASSWORD')}<span className="text-danger">*</span></label>
+                            <Input validations={[required, match]} value={this.state.confirmPassword} onChange={this.handleChangeValue} className="form-control" type="password" name="confirmPassword" placeholder={i18n.t('ENTER_CONFIRM_PASSWORD')}/>
                         </div>
                     </div>
 
@@ -139,7 +141,7 @@ class Registration extends Component{
                             <div className="checkbox checkbox-custom">
                                 <input checked={this.state.rememberMe} name="rememberMe" type="checkbox"/>
                                 <label onClick={this.setRememberMeCb}>
-                                    I accept <a href="#" className="text-custom">Terms and Conditions</a>
+                                    {i18n.t('ACCEPT')}<a href='#' className='text-custom'>{i18n.t('TERMS')}</a>
                                 </label>
                             </div>
 
@@ -148,7 +150,7 @@ class Registration extends Component{
 
                     <div className="form-group row text-center m-t-10">
                         <div className="col-12">
-                            <Button onClick={this.signUp} className="btn btn-block btn-custom waves-effect waves-light">Sign Up Free</Button>
+                            <Button onClick={this.signUp} className="btn btn-block btn-custom waves-effect waves-light">{i18n.t('SIGN_UP')}</Button>
                         </div>
                     </div>
 
@@ -156,7 +158,7 @@ class Registration extends Component{
 
                 <div className="row m-t-50">
                     <div className="col-sm-12 text-center">
-                        <p className="text-muted">Already have an account?  <Link to="/admin/login"  className="text-dark m-l-5"><b>Sign In</b></Link></p>
+                        <p className="text-muted">{i18n.t('ALREADY_HAVE_ACC')}  <Link to="/admin/login"  className="text-dark m-l-5"><b>{i18n.t('SIGN_IN')}</b></Link></p>
                     </div>
                 </div>
             </Layout>
@@ -164,4 +166,4 @@ class Registration extends Component{
     }
 }
 
-export default Registration;
+export default withNamespaces('registration')(Registration);

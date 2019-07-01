@@ -8,6 +8,7 @@ import {createStore, applyMiddleware} from 'redux';
 import rootReducer from './Store/Reducers/rootReducer';
 import {Provider} from 'react-redux';
 import thunk from 'redux-thunk';
+import './Consts/i18n';
 
 const store =  createStore(rootReducer, applyMiddleware(thunk));
 

@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import Layout from './Layout';
 import {Link} from 'react-router-dom';
+import { withNamespaces } from 'react-i18next';
+import i18n from '../../Consts/i18n';
 
 class PageNotFound extends Component{
     constructor(props){
@@ -12,16 +14,13 @@ class PageNotFound extends Component{
             <Layout>
                 <div className="text-center">
                     <h1 className="text-error">404</h1>
-                    <h4 className="text-uppercase text-danger mt-3">Page Not Found</h4>
-                    <p className="text-muted mt-3">It's looking like you may have taken a wrong turn. Don't worry... it
-                        happens to the best of us. Here's a
-                        little tip that might help you get back on track.</p>
-
-                    <Link to="/" className="btn btn-md btn-block btn-custom waves-effect waves-light mt-3"> Return Home</Link>
+                    <h4 className="text-uppercase text-danger mt-3">{i18n.t('PAGE_NOT_FOUND')}</h4>
+                    <p className="text-muted mt-3">{i18n.t('PNF_INSTRUCTION')}</p>
+                    <Link to="/" className="btn btn-md btn-block btn-custom waves-effect waves-light mt-3">{i18n.t('RETURN_HOME')}</Link>
                 </div>
             </Layout>
         );
     }
 }
 
-export default PageNotFound;
+export default withNamespaces('page_not_found')(PageNotFound);

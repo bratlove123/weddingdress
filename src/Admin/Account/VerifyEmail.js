@@ -5,6 +5,9 @@ import { Redirect } from 'react-router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import queryString from 'query-string';
 import ErrorHandlerService from '../../Services/ErrorHandlerService';
+import { withNamespaces } from 'react-i18next';
+import i18n from '../../Consts/i18n';
+import { toast } from 'react-toastify';
 
 class VerifyEmail extends Component{
     constructor(props){
@@ -37,7 +40,11 @@ class VerifyEmail extends Component{
             thiz.setState({redirectToLogin: true});
         }
         else{
-            //resend mail
+            AuthenticationService.sendEmailVerify({email: thiz.state.email}).then((res)=>{
+                toast(i18n.t('RESEND_EMAIL_SUCCESS'), { type: toast.TYPE.SUCCESS });
+            }).catch(function (error) {
+                ErrorHandlerService.errorWithMessageFromAPI(error);
+            });
         }
     }
 
@@ -65,4 +72,4 @@ class VerifyEmail extends Component{
     }
 }
 
-export default VerifyEmail;
+export default withNamespaces('verify')(VerifyEmail);

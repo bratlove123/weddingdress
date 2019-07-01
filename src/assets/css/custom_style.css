@@ -389,3 +389,62 @@ tr.in-active{
     top: -9px;
     margin: 0 -5px;
 }
+
+.change-lang{
+    text-align: center;
+}
+
+.change-lang .lang-holder{
+    cursor: pointer;
+}
+
+.change-lang .lang-holder img{
+    width: 30px;
+    border-radius: 50%;
+    -webkit-transition: -webkit-transform .8s ease-in-out;
+    transition: transform .8s ease-in-out;
+}
+
+.change-lang:hover img {
+    -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
+}
+
+.change-lang:hover #choose-lang{
+    opacity: 1;
+    height: 70px;
+}
+
+#choose-lang{
+    width: 120px;
+    text-align: left;
+    position: absolute;
+    left: 257px;
+    height: 0px;
+    opacity: 0;
+    overflow: hidden;
+    transition: all .8s ease-in-out;
+}
+
+#choose-lang .choose-lang-holder{
+    padding-top: 2px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+#choose-lang .choose-lang-holder:hover{
+    background: #ddd;
+}
+
+#choose-lang .choose-lang-holder img{
+    width: 30px;
+    border-radius: 50%;
+}
+
+#choose-lang .choose-lang-holder span{
+    padding-left: 3px;
+}
+
+.fix-card-box{
+    margin-bottom: 0;
+}

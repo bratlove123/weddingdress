@@ -8,11 +8,12 @@ import {Link} from 'react-router-dom';
 import {connect} from 'react-redux';
 import {signInDispatch, loginFacebookCallbackDispatch, checkLogon, resetState} from '../../Store/Actions/loginAction';
 import AuthenticationService from '../../Services/AuthenticationService';
+import { withNamespaces } from 'react-i18next';
+import i18n from '../../Consts/i18n';
 
 const required = (value) => {
     if (!value.toString().trim().length) {
-        // We can return string or jsx as the 'error' prop for the validated Component
-        return <small className="error">This field is required.</small>;
+        return <small className="error">{i18n.t('VALIDATE_REQUIRED')}</small>;
     }
 };
 
@@ -106,19 +107,18 @@ class Login extends Component{
         return(
             <Layout>
                 <Form ref={c => { this.form = c }}>
-
                     <div className="form-group m-b-20 row">
                         <div className="col-12">
-                            <label>Username</label>
-                            <Input validations={[required]} tabIndex="1" value={this.state.login.username} onChange={this.handleChangeValue} className="form-control" type="text" name="username" placeholder="Enter your username"/>
+                            <label>{i18n.t('USER_NAME')}</label>
+                            <Input validations={[required]} tabIndex="1" value={this.state.login.username} onChange={this.handleChangeValue} className="form-control" type="text" name="username" placeholder={i18n.t('ENTER_USER_NAME')}/>
                         </div>
                     </div>
 
                     <div className="form-group row m-b-20">
                         <div className="col-12">
-                            <Link to="/admin/forgot" className="text-muted pull-right"><small>Forgot your password?</small></Link>
-                            <label>Password</label>
-                            <Input validations={[required]} tabIndex="2" value={this.state.login.password} onChange={this.handleChangeValue} className="form-control" type="password" name="password" placeholder="Enter your password"/>
+                            <Link to="/admin/forgot" className="text-muted pull-right"><small>{i18n.t('FORGOT_PASSWORD')}</small></Link>
+                            <label>{i18n.t('PASSWORD')}</label>
+                            <Input validations={[required]} tabIndex="2" value={this.state.login.password} onChange={this.handleChangeValue} className="form-control" type="password" name="password" placeholder={i18n.t('ENTER_PASSWORD')}/>
                         </div>
                     </div>
 
@@ -128,7 +128,7 @@ class Login extends Component{
                             <div className="checkbox checkbox-custom">
                                 <input id="remember" name="rememberMe" type="checkbox" checked={this.state.login.rememberMe} />
                                 <label onClick={this.setRememberMeCb}>
-                                    Remember me
+                                    {i18n.t('REMEMBER_ME')}
                                 </label>
                             </div>
 
@@ -137,15 +137,15 @@ class Login extends Component{
 
                     <div className="form-group row text-center m-t-10">
                         <div className="col-12">
-                            <Button className="btn btn-block btn-custom waves-effect waves-light" onClick={this.signIn}>Sign In</Button>
+                            <Button className="btn btn-block btn-custom waves-effect waves-light" onClick={this.signIn}>{i18n.t('SIGN_IN')}</Button>
                         </div>
                     </div>
-                    <button className="btn btn-block btn-custom waves-effect waves-light facebook-color" onClick={this.handleFBLogin}>Login with facebook</button>
+                    <button className="btn btn-block btn-custom waves-effect waves-light facebook-color" onClick={this.handleFBLogin}>{i18n.t('LOGIN_FACEBOOK')}</button>
                 </Form>
 
                 <div className="row m-t-50">
                     <div className="col-sm-12 text-center">
-                        <p className="text-muted">Don't have an account? <Link to="/admin/registration" className="text-dark m-l-5"><b>Sign Up</b></Link></p>
+                        <p className="text-muted">{i18n.t('NO_ACCOUNT')} <Link to="/admin/registration" className="text-dark m-l-5"><b>{i18n.t('SIGN_UP')}</b></Link></p>
                     </div>
                 </div>
             </Layout>
@@ -168,4 +168,4 @@ const mapDispatchToProps = (dispatch) => {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Login);
+export default withNamespaces('login')(connect(mapStateToProps, mapDispatchToProps)(Login));
