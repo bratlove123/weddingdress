@@ -4,6 +4,7 @@ import { toast } from 'react-toastify';
 import Common from '../../Consts/Common';
 import {getLeftNavsMenu} from './leftNavAction';
 import AuthenticationService from '../../Services/AuthenticationService';
+import i18n from '../../Consts/i18n';
 
 export const createLeftNav=(leftNav)=>{
     return (dispatch) => {
@@ -14,7 +15,7 @@ export const createLeftNav=(leftNav)=>{
         leftNav.createdBy = AuthenticationService.getUserLoginInfo().id;
         leftNav.modifiedBy = AuthenticationService.getUserLoginInfo().id;
         LeftNavService.addLeftNav(leftNav).then((res)=>{
-            toast("Added left nav item successfully.", { type: toast.TYPE.SUCCESS });
+            toast(i18n.t("ADD_LEFT_NAV_SUCCESS"), { type: toast.TYPE.SUCCESS });
             dispatch({type: 'UPDATE_LEFT_NAV', leftNav});
             dispatch(getLeftNavs());
             dispatch(getLeftNavsMenu());
@@ -103,7 +104,7 @@ export const updateLeftNavDispatch=(leftNav)=>{
         LeftNavService.editLeftNav(leftNav._id, leftNav).then((res)=>{
             let isShow = false;
             dispatch({type: 'TOOGLE_LOADING', isShow});
-            toast("Updated left nav successfully.", { type: toast.TYPE.SUCCESS });
+            toast(i18n.t("UPDATE_LEFT_NAV_SUCCESS"), { type: toast.TYPE.SUCCESS });
             dispatch({type: 'UPDATE_LEFT_NAV', leftNav});
             dispatch(getLeftNavs());
             dispatch(getLeftNavsMenu());
@@ -124,7 +125,7 @@ export const deleteLeftNavDispatch=(id)=>{
         LeftNavService.deleteLeftNav(id).then((res)=>{
             let isShow = false;
             dispatch({type: 'TOOGLE_LOADING', isShow});
-            toast("Deleted left nav successfully.", { type: toast.TYPE.SUCCESS });
+            toast(i18n.t("DELETE_LEFT_NAV_SUCCESS"), { type: toast.TYPE.SUCCESS });
             dispatch(getLeftNavs(1));
             dispatch(getLeftNavsMenu());
         }).catch(function (error) {

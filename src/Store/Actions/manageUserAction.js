@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 import Common from '../../Consts/Common';
 import AuthenticationService from '../../Services/AuthenticationService';
 import axios from 'axios';
+import i18n from '../../Consts/i18n';
 
 export const createUser=(user)=>{
     return (dispatch) => {
@@ -23,7 +24,7 @@ export const createUser=(user)=>{
                 UserService.addUser(userTmp).then((res)=>{
                     let isShow = false;
                     dispatch({type: 'TOOGLE_LOADING', isShow});
-                    toast("Added user successfully.", { type: toast.TYPE.SUCCESS });
+                    toast(i18n.t("ADD_USER_SUCCESS"), { type: toast.TYPE.SUCCESS });
                     dispatch({type: 'UPDATE_USER', user});
                     dispatch(getUsers());
                 }).catch(function (error) {
@@ -46,7 +47,7 @@ export const createUser=(user)=>{
             UserService.addUser(user).then((res)=>{
                 let isShow = false;
                 dispatch({type: 'TOOGLE_LOADING', isShow});
-                toast("Added user successfully.", { type: toast.TYPE.SUCCESS });
+                toast(i18n.t("ADD_USER_SUCCESS"), { type: toast.TYPE.SUCCESS });
                 dispatch({type: 'UPDATE_USER', user});
                 dispatch(getUsers());
             }).catch(function (error) {
@@ -158,7 +159,7 @@ export const updateUserDispatch=(user)=>{
             UserService.updateUser(user).then((res)=>{
                 let isShow = false;
                 dispatch({type: 'TOOGLE_LOADING', isShow});
-                toast("Updated user successfully.", { type: toast.TYPE.SUCCESS });
+                toast(i18n.t("UPDATE_USER_SUCCESS"), { type: toast.TYPE.SUCCESS });
                 dispatch({type: 'UPDATE_USER', user});
                 dispatch(getUsers());
             }).catch(function (error) {
@@ -178,7 +179,7 @@ export const updateUserDispatch=(user)=>{
                 UserService.updateUser(userTmp).then((res)=>{
                     let isShow = false;
                     dispatch({type: 'TOOGLE_LOADING', isShow});
-                    toast("Updated user successfully.", { type: toast.TYPE.SUCCESS });
+                    toast(i18n.t("UPDATE_USER_SUCCESS"), { type: toast.TYPE.SUCCESS });
                     dispatch({type: 'UPDATE_USER', user});
                     dispatch(getUsers());
                 }).catch(function (error) {
@@ -206,7 +207,7 @@ export const deleteUserDispatch=(id)=>{
         UserService.deleteUser(id).then((res)=>{
             let isShow = false;
                     dispatch({type: 'TOOGLE_LOADING', isShow});
-            toast("Deleted user successfully.", { type: toast.TYPE.SUCCESS });
+            toast(i18n.t("DELETE_USER_SUCCESS"), { type: toast.TYPE.SUCCESS });
             dispatch(getUsers());
         }).catch(function (error) {
             let isShow = false;
@@ -225,7 +226,7 @@ export const toggleActiveDispatch=(id, isActive, isEmail)=>{
         UserService.toggleActiveUser(id, isEmail?{isConfirmEmail: !isActive}:{isActive: !isActive}).then((res)=>{
             let isShow = false;
             dispatch({type: 'TOOGLE_LOADING', isShow});
-            toast("Toggled active user successfully.", { type: toast.TYPE.SUCCESS });
+            toast(i18n.t("TOOGLE_ACTIVE_USER_SUCCESS"), { type: toast.TYPE.SUCCESS });
             dispatch(getUsers());
         }).catch(function (error) {
             let isShow = false;

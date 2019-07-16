@@ -96,5 +96,15 @@
     "FULL_NAME": "Tên",
     "UPDATE_PERMISSION": "Cập nhật quyền người dùng",
     "UPDATE_USER": "Cập nhật người dùng",
-    "CHOOSE_IMAGE": "Chọn hình ảnh..."
+    "CHOOSE_IMAGE": "Chọn hình ảnh...",
+    "ADD_LEFT_NAV_SUCCESS": "Thêm điều hướng thành công.",
+    "UPDATE_LEFT_NAV_SUCCESS": "Cập nhật điều hướng thành công.",
+    "DELETE_LEFT_NAV_SUCCESS": "Xóa điều hướng thành công.",
+    "ADD_ROLE_SUCCESS": "Thêm quyền thành công.",
+    "UPDATE_ROLE_SUCCESS": "Cập nhật quyền thành công.",
+    "DELETE_ROLE_SUCCESS": "Xóa quyền thành công.",
+    "ADD_USER_SUCCESS": "Thêm người dùng thành công.",
+    "UPDATE_USER_SUCCESS": "Cập nhật người dùng thành công.",
+    "DELETE_USER_SUCCESS": "Xóa người dùng thành công.",
+    "TOOGLE_ACTIVE_USER_SUCCESS": "Cập nhật trạng thái hoạt động thành công."
 }

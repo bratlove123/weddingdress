@@ -96,5 +96,15 @@
     "FULL_NAME": "Full Name",
     "UPDATE_PERMISSION": "Update Permission",
     "UPDATE_USER": "Update User",
-    "CHOOSE_IMAGE": "Choose the image..."
+    "CHOOSE_IMAGE": "Choose the image...",
+    "ADD_LEFT_NAV_SUCCESS": "Added left nav item successfully.",
+    "UPDATE_LEFT_NAV_SUCCESS": "Updated left nav item successfully.",
+    "DELETE_LEFT_NAV_SUCCESS": "Deleted left nav successfully",
+    "ADD_ROLE_SUCCESS": "Added role item successfully.",
+    "UPDATE_ROLE_SUCCESS": "Updated role item successfully.",
+    "DELETE_ROLE_SUCCESS": "Deleted role successfully",
+    "ADD_USER_SUCCESS": "Added user item successfully.",
+    "UPDATE_USER_SUCCESS": "Updated user item successfully.",
+    "DELETE_USER_SUCCESS": "Deleted user successfully",
+    "TOOGLE_ACTIVE_USER_SUCCESS": "Toggled active user successfully."
 }

@@ -3,6 +3,7 @@ import RoleService from '../../Services/RoleService';
 import { toast } from 'react-toastify';
 import Common from '../../Consts/Common';
 import AuthenticationService from '../../Services/AuthenticationService';
+import i18n from '../../Consts/i18n';
 
 export const createRoleGroup=(roleGroup)=>{
     return (dispatch) => {
@@ -13,7 +14,7 @@ export const createRoleGroup=(roleGroup)=>{
         roleGroup.createdBy = AuthenticationService.getUserLoginInfo().id;
         roleGroup.modifiedBy = AuthenticationService.getUserLoginInfo().id;
         RoleService.addRoleGroup(roleGroup).then((res)=>{
-            toast("Added role successfully.", { type: toast.TYPE.SUCCESS });
+            toast(i18n.t("ADD_ROLE_SUCCESS"), { type: toast.TYPE.SUCCESS });
             dispatch({type: 'UPDATE_ROLE_GROUP', roleGroup});
             dispatch(getRoleGroups());
             let isShow = false;
@@ -101,7 +102,7 @@ export const updateRoleGroupDispatch=(roleGroup)=>{
         RoleService.editRoleGroup(roleGroup._id, roleGroup).then((res)=>{
             let isShow = false;
             dispatch({type: 'TOOGLE_LOADING', isShow});
-            toast("Updated role successfully.", { type: toast.TYPE.SUCCESS });
+            toast(i18n.t("UPDATE_ROLE_SUCCESS"), { type: toast.TYPE.SUCCESS });
             dispatch({type: 'UPDATE_ROLE_GROUP', roleGroup});
             dispatch(getRoleGroups());
         }).catch(function (error) {
@@ -121,7 +122,7 @@ export const deleteRoleGroupDispatch=(id)=>{
         RoleService.deleteRoleGroup(id).then((res)=>{
             let isShow = false;
             dispatch({type: 'TOOGLE_LOADING', isShow});
-            toast("Deleted role successfully.", { type: toast.TYPE.SUCCESS });
+            toast(i18n.t("DELETE_ROLE_SUCCESS"), { type: toast.TYPE.SUCCESS });
             dispatch(getRoleGroups(1));
         }).catch(function (error) {
             let isShow = false;
