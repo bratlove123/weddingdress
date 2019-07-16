@@ -1,6 +1,7 @@
 import ErrorHandlerService from '../../Services/ErrorHandlerService';
 import AuthenticationService from '../../Services/AuthenticationService';
 import { toast } from 'react-toastify';
+import i18n from '../../Consts/i18n';
 
 export const signInDispatch=(login)=>{
     return (dispatch) => {
@@ -32,10 +33,21 @@ export const loginFacebookCallbackDispatch=(response)=>{
                 ErrorHandlerService.errorWithMessageFromAPI(error);
             });
         } else if (response.status === 'not_authorized') {
-            toast("Cannot login with this facebook account.", { type: toast.TYPE.ERROR });
+            toast(i18n.t("CANNOT_LOGIN_FACEBOOK"), { type: toast.TYPE.ERROR });
         } else {
-            toast("Unknown error with facebook login.", { type: toast.TYPE.ERROR });
+            toast("UNKNOWN_ERROR_LOGIN_FACEBOOK", { type: toast.TYPE.ERROR });
         }
+    }
+}
+
+export const checkLoginStatus=()=>{
+    return (dispatch) => {
+        AuthenticationService.checkLogon().then(res=>{
+            let redirectToHome = true;
+            dispatch({type: 'REDIRECT_TO_HOME', redirectToHome});
+        }).catch(function (error) {
+
+        });
     }
 }
 

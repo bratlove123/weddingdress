@@ -65,7 +65,7 @@ class VerifyEmail extends Component{
                         {this.state.message}
                     </p>
 
-                    <a href="#" onClick={this.btnSumitClick} className="btn btn-md btn-block btn-custom waves-effect waves-light mt-3">{this.state.isSuccess?"Go Login Page":"Resend Email"}</a>
+                    <a href="#" onClick={this.btnSumitClick} className="btn btn-md btn-block btn-custom waves-effect waves-light mt-3">{this.state.isSuccess?i18n.t('LOGIN'):i18n.t('RESEND_EMAIL')}</a>
                 </div>
             </Layout>
         );

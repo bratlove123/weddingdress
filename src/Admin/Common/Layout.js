@@ -5,6 +5,10 @@ import { Redirect } from 'react-router';
 import { ToastContainer } from 'react-toastify';
 import GlobalLoading from '../../Common/GlobalLoading';
 import {connect} from 'react-redux';
+import { withNamespaces } from 'react-i18next';
+import i18n from '../../Consts/i18n';
+import vi from '../../assets/images/vi.png';
+import en from '../../assets/images/en.jpg';
 
 class Layout extends Component{
     constructor(props){
@@ -15,6 +19,10 @@ class Layout extends Component{
         };
     }
 
+    changeLanguage = (lng) => {
+        i18n.changeLanguage(lng);
+    }
+    
     render(){
         if(this.state.redirectToLogin){
             return <Redirect to={{
@@ -35,6 +43,23 @@ class Layout extends Component{
                     </div>
                     <footer className="footer text-right">
                         2018 © - Wedding Dress
+
+                        <div className="change-lang-main">
+                            {i18n.languages[0]==='vi'?<div className="lang-holder">
+                                <img src={vi}/>
+                            </div>:
+                            <div className="lang-holder">
+                                <img src={en}/>
+                            </div>}
+                            <div id="choose-lang-main">
+                                <div onClick={() => this.changeLanguage('vi')} className="choose-lang-holder">
+                                    <img src={vi} title="Tiếng việt"/>
+                                </div>
+                                <div onClick={() => this.changeLanguage('en')} className="choose-lang-holder">
+                                    <img src={en} title="English"/>
+                                </div>
+                            </div>
+                        </div>
                     </footer>
                 </div>
             </div>
@@ -48,4 +73,4 @@ export const mapStateToProps = (state) =>{
     }
 }
 
-export default connect(mapStateToProps)(Layout);
+export default withNamespaces('layout')(connect(mapStateToProps)(Layout));

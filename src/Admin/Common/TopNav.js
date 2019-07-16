@@ -3,12 +3,15 @@ import Notification from './Notification';
 import Comment from './Comment';
 import Control from './Control';
 import Breadcrumb from './Breadcrumb';
+import { withNamespaces } from 'react-i18next';
+import i18n from '../../Consts/i18n';
+
 
 class TopNav extends Component{
     constructor(props){
         super(props);
     }
-
+   
     render(){
         return(
             <div className="topbar">
@@ -19,11 +22,11 @@ class TopNav extends Component{
 
                             <li className="hide-phone app-search">
                                 <form>
-                                    <input type="text" placeholder="Search..." className="form-control"/>
+                                    <input type="text" placeholder={i18n.t("SEARCH")} className="form-control"/>
                                     <button type="submit"><i className="fa fa-search"></i></button>
                                 </form>
                             </li>
-
+                           
                             <Notification/>
                             <Comment/>
                             <Control/>
@@ -37,4 +40,4 @@ class TopNav extends Component{
     }
 }
 
-export default TopNav;
+export default withNamespaces('topNav')(TopNav);

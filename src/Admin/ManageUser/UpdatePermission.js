@@ -1,7 +1,9 @@
 import React, {Component} from 'react';
 import Modal from '../../Common/Modal';
-import {createUser, updateUserDispatch} from '../../Store/Actions/manageUserAction';
+import {updateUserDispatch} from '../../Store/Actions/manageUserAction';
 import {connect} from 'react-redux';
+import { withNamespaces } from 'react-i18next';
+import i18n from '../../Consts/i18n';
 
 class UpdatePermission extends Component{
     constructor(props){
@@ -125,7 +127,7 @@ class UpdatePermission extends Component{
             }).filter(x=>x!=null);
         });
         return(
-            <Modal header="Update permission" modalIsOpen={this.props.modalPermissionIsOpen} width="850">
+            <Modal header={i18n.t("UPDATE_PERMISSION")} modalIsOpen={this.props.modalPermissionIsOpen} width="850">
                 <form>
                     <div className="row container display-block">
                         {allRoles.map((item, i) => {  
@@ -165,7 +167,7 @@ class UpdatePermission extends Component{
                         }
                     </div>
                     <div className="modal-footer">
-                        <button className="btn btn-warning" onClick={this.updateUser}>Update</button>
+                        <button className="btn btn-warning" onClick={this.updateUser}>{i18n.t("UPDATE")}</button>
                     </div>
                 </form>
             </Modal>
@@ -185,4 +187,4 @@ const mapDispatchToProps = (dispatch) => {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(UpdatePermission);
+export default withNamespaces('updatePermission')(connect(mapStateToProps, mapDispatchToProps)(UpdatePermission));

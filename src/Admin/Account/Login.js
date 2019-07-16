@@ -6,8 +6,7 @@ import Input from 'react-validation/build/input';
 import Button from 'react-validation/build/button';
 import {Link} from 'react-router-dom';
 import {connect} from 'react-redux';
-import {signInDispatch, loginFacebookCallbackDispatch, checkLogon, resetState} from '../../Store/Actions/loginAction';
-import AuthenticationService from '../../Services/AuthenticationService';
+import {signInDispatch, loginFacebookCallbackDispatch, checkLoginStatus, resetState} from '../../Store/Actions/loginAction';
 import { withNamespaces } from 'react-i18next';
 import i18n from '../../Consts/i18n';
 
@@ -88,8 +87,12 @@ class Login extends Component{
         window.FB.login(this.checkLoginState());
     }
 
+    componentWillMount(){
+        this.props.checkLoginStatus();
+    }
+
     render(){
-        if(this.props.redirectToHome && AuthenticationService.getToken() !== null){
+        if(this.props.redirectToHome){
             if(this.state.redirectUrl){
                 return <Redirect to={this.state.redirectUrl}/>;
             }
@@ -164,7 +167,8 @@ const mapDispatchToProps = (dispatch) => {
     return {
         signInDispatch: (login) => dispatch(signInDispatch(login)),
         loginFacebookCallbackDispatch: (response) => dispatch(loginFacebookCallbackDispatch(response)),
-        resetState: ()=>dispatch(resetState())
+        resetState: ()=>dispatch(resetState()),
+        checkLoginStatus: ()=>dispatch(checkLoginStatus())
     }
 }
 

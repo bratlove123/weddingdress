@@ -4,6 +4,8 @@ import CSSTransitionGroup from 'react-addons-css-transition-group';
 import { Redirect } from 'react-router';
 import AuthenticationService from '../../Services/AuthenticationService';
 import Common from '../../Consts/Common';
+import { withNamespaces } from 'react-i18next';
+import i18n from '../../Consts/i18n';
 
 class Control extends Component{
     constructor(props){
@@ -62,27 +64,27 @@ class Control extends Component{
                 <CSSTransitionGroup transitionName="dropdownmenu" transitionEnterTimeout={700} transitionLeaveTimeout={700}>
                 {this.state.toggleControl && <div className="dropdown-menu dropdown-menu-right profile-dropdown ">
                     <div className="dropdown-item noti-title">
-                        <h6 className="text-overflow m-0">Welcome !</h6>
+                        <h6 className="text-overflow m-0">{i18n.t("WELCOME")} !</h6>
                     </div>
 
                     <a href="javascript:void(0);" className="dropdown-item notify-item">
-                        <i className="fi-head"></i> <span>My Account</span>
+                        <i className="fi-head"></i> <span>{i18n.t("MY_ACCOUNT")}</span>
                     </a>
 
                     <a href="javascript:void(0);" className="dropdown-item notify-item">
-                        <i className="fi-cog"></i> <span>Settings</span>
+                        <i className="fi-cog"></i> <span>{i18n.t("SETTINGS")}</span>
                     </a>
 
                     <a href="javascript:void(0);" className="dropdown-item notify-item">
-                        <i className="fi-help"></i> <span>Support</span>
+                        <i className="fi-help"></i> <span>{i18n.t("SUPPORT")}</span>
                     </a>
 
                     <a href="javascript:void(0);" className="dropdown-item notify-item">
-                        <i className="fi-lock"></i> <span>Lock Screen</span>
+                        <i className="fi-lock"></i> <span>{i18n.t("LOCK_SCREEN")}</span>
                     </a>
 
                     <a onClick={this.logOut} href="javascript:void(0);" className="dropdown-item notify-item">
-                        <i className="fi-power"></i> <span>Logout</span>
+                        <i className="fi-power"></i> <span>{i18n.t("LOGOUT")}</span>
                     </a>
 
                 </div>}
@@ -92,5 +94,5 @@ class Control extends Component{
     }
 }
 
-export default Control;
+export default withNamespaces('control')(Control);
 

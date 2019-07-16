@@ -32,7 +32,7 @@ class AuthenticationService{
 
     static checkLogon(){
         const authStr = 'Bearer '.concat(this.getToken());
-        return axios.get(Common.apiUrl + '/auth/check', { headers: { Authorization: authStr }});
+        return axios.get(Common.apiUrl + '/leftnav/check', { headers: { Authorization: authStr }});
     }
 
     static getToken(){

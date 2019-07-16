@@ -13,15 +13,17 @@ import Paging from '../../Common/Paging';
 import SortHeading from '../../Common/SortHeading';
 import { confirmAlert } from 'react-confirm-alert';
 import Moment from 'react-moment';
+import { withNamespaces } from 'react-i18next';
+import i18n from '../../Consts/i18n';
 
 class ManageUser extends Component{
     breadcrumb = [
         {
-            name: "Settings",
+            name: "SETTINGS",
             url: ""
         },
         {
-            name: "Manage User",
+            name: "MANAGE_USERS",
             url: ""
         }
     ];
@@ -67,17 +69,17 @@ class ManageUser extends Component{
 
     deleteUser = (id) => () => {
         confirmAlert({
-            title: 'Confirm to delete',
-            message: 'Are you sure to delete this user.',
+            title: i18n.t("DELETE_CONFIRM"),
+            message: i18n.t("SURE_DELETE"),
             buttons: [
                 {
-                    label: 'Yes',
+                    label: i18n.t("YES"),
                     onClick: () => {
                         this.props.deleteUserDispatch(id);
                     }
                 },
                 {
-                    label: 'No'
+                    label: i18n.t("NO")
                 }
             ]
         })
@@ -85,17 +87,17 @@ class ManageUser extends Component{
 
     toggleActiveDispatch = (id, isActive, isEmail) => () => {
         confirmAlert({
-            title: 'Confirm to active',
-            message: 'Are you sure to active/deactive this user.',
+            title: i18n.t("ACTIVE_CONFIRM"),
+            message: i18n.t("SURE_ACTIVE"),
             buttons: [
                 {
-                    label: 'Yes',
+                    label: i18n.t("YES"),
                     onClick: () => {
                         this.props.toggleActiveDispatch(id, isActive, isEmail);
                     }
                 },
                 {
-                    label: 'No'
+                    label: i18n.t("NO")
                 }
             ]
         })
@@ -118,19 +120,22 @@ class ManageUser extends Component{
                 <UpdatePermission modalPermissionIsOpen={this.props.modalPermissionIsOpen} fixOpenPermission={this.props.fixOpenPermission}></UpdatePermission>
                 <div className="card-box table-responsive">
                     <div className="table-header">
-                        <button className="btn btn-success" onClick={this.addNewUser} >Add New User</button>
-                        <input onChange={this.handleSearchChange} type="text" name="search" className="form-control search-box" placeholder="Search" />
+                        <button className="btn btn-success" onClick={this.addNewUser} >{i18n.t("ADD_NEW_USER")} </button>
+                        <div className="inner-addon right-addon">
+                            <i className="fi fi-search"></i>
+                            <input onChange={this.handleSearchChange} type="text" name="search" className="form-control search-box" placeholder={i18n.t("SEARCH")}  /> 
+                        </div>
                     </div>
                     <table className="table table-colored m-b-0 toggle-arrow-tiny fix-table">
                         <thead>
                             <tr>
-                                <th>Avatar</th>
-                                <SortHeading name={'userName'} currentSort={this.props.orderBy} currentArrow={this.props.currentArrow} getDataForSort={this.sortChange}>Username</SortHeading>
-                                <SortHeading name={'email'} currentSort={this.props.orderBy} currentArrow={this.props.currentArrow} getDataForSort={this.sortChange}>Email</SortHeading>
-                                <SortHeading name={'firstName'} currentSort={this.props.orderBy} currentArrow={this.props.currentArrow} getDataForSort={this.sortChange}>Fullname</SortHeading>
-                                <th> Modified By </th>
-                                <th>Modified On</th>
-                                <th> Action </th>
+                                <th>{i18n.t("AVATAR")} </th>
+                                <SortHeading name={'userName'} currentSort={this.props.orderBy} currentArrow={this.props.currentArrow} getDataForSort={this.sortChange}>{i18n.t("USER_NAME")} </SortHeading>
+                                <SortHeading name={'email'} currentSort={this.props.orderBy} currentArrow={this.props.currentArrow} getDataForSort={this.sortChange}>{i18n.t("EMAIL")} </SortHeading>
+                                <SortHeading name={'firstName'} currentSort={this.props.orderBy} currentArrow={this.props.currentArrow} getDataForSort={this.sortChange}>{i18n.t("FULL_NAME")} </SortHeading>
+                                <th> {i18n.t("MODIFIED_BY")} </th>
+                                <th>{i18n.t("MODIFIED_ON")}</th>
+                                <th> {i18n.t("ACTION")} </th>
                             </tr>
                         </thead>
                         <tbody>
@@ -155,7 +160,7 @@ class ManageUser extends Component{
                                         </td>
                                     </tr>
                                 )
-                            }):<tr><td colSpan="100%" className="text-center">No Data.</td></tr>
+                            }):<tr><td colSpan="100%" className="text-center">{i18n.t("NO_DATA")} </td></tr>
                         }
                         </tbody>
                     </table>
@@ -197,4 +202,4 @@ const mapDispatchToProps = (dispatch) => {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ManageUser);
+export default withNamespaces('manageUser')(connect(mapStateToProps, mapDispatchToProps)(ManageUser));

@@ -13,8 +13,14 @@ export const getLeftNavsMenu=()=>{
             }
         }).catch(function (error) {
             ErrorHandlerService.basicErrorHandler(error, function(){
-                dispatch({type: 'REDIRECT_TO_LOGIN'});
+                dispatch({type: 'REDIRECT_TO_LOGIN_LEFT_NAV'});
             });
         });
+    }
+}
+
+export const resetState=()=>{
+    return (dispatch) => {
+        dispatch({type: 'RESET_STATE'});
     }
 }

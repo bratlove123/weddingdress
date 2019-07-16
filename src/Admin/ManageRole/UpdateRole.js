@@ -4,16 +4,18 @@ import { Scrollbars } from 'react-custom-scrollbars';
 import {createRoleGroup, updateRoleGroupDispatch} from '../../Store/Actions/ManageRoleAction';
 import {connect} from 'react-redux';
 import FormValidator from '../../Common/FormValidator';
+import { withNamespaces } from 'react-i18next';
+import i18n from '../../Consts/i18n';
 
 class UpdateRole extends Component{
     constructor(props){
         super(props);
 
         this.validator = new FormValidator([
-            { field: 'name', method: 'isEmpty', validWhen: false, message: 'Name is required.'},
-            { field: 'code', method: 'isEmpty', validWhen: false, message: 'Code is required.'},
-            { field: 'name', parent: 'childs', method: 'isEmpty', validWhen: false, message: 'Name is required.'},
-            { field: 'code', parent: 'childs', method: 'isEmpty', validWhen: false, message: 'Code is required.'},
+            { field: 'name', method: 'isEmpty', validWhen: false, message: i18n.t("VALIDATE_REQUIRED")},
+            { field: 'code', method: 'isEmpty', validWhen: false, message: i18n.t("VALIDATE_REQUIRED")},
+            { field: 'name', parent: 'childs', method: 'isEmpty', validWhen: false, message: i18n.t("VALIDATE_REQUIRED")},
+            { field: 'code', parent: 'childs', method: 'isEmpty', validWhen: false, message: i18n.t("VALIDATE_REQUIRED")},
         ]);
 
         this.state = {
@@ -118,15 +120,15 @@ class UpdateRole extends Component{
     render(){
         let validation = this.state.validation;
         return(
-        <Modal header={!this.props.isEdit?"Add Role":"Edit Role"} modalIsOpen={this.props.modalIsOpen} width="700">
+        <Modal header={!this.props.isEdit?i18n.t("ADD_NEW_ROLE"):i18n.t("EDIT_ROLE")} modalIsOpen={this.props.modalIsOpen} width="700">
             <form>
                 <Scrollbars autoHeight autoHeightMin={500} autoHide autoHideTimeout={1000} autoHideDuration={200}>
                     <div className="row fix-scroll">
                         <div className="col-6">
                             <div className="form-group m-b-20 row">
                                 <div className="col-12">
-                                    <label>Role name</label>
-                                    <input className={validation.name.isInvalid?'has-error form-control':'form-control'} autoComplete="off" onChange={this.handleChangeValue} value={this.state.roleGroup.name} name="name" type="text" placeholder="Enter role name"/>
+                                    <label>{i18n.t("NAME")}</label>
+                                    <input className={validation.name.isInvalid?'has-error form-control':'form-control'} autoComplete="off" onChange={this.handleChangeValue} value={this.state.roleGroup.name} name="name" type="text" placeholder={i18n.t("NAME")}/>
                                     {validation.name.isInvalid && <ul className="parsley-errors-list filled">
                                         <li className="parsley-required">
                                             {validation.name.message}
@@ -137,8 +139,8 @@ class UpdateRole extends Component{
 
                             <div className="form-group row m-b-20">
                                 <div className="col-12">
-                                    <label>Role Code</label>
-                                    <input className={validation.code.isInvalid?'has-error form-control':'form-control'} autoComplete="off" onChange={this.handleChangeValue} value={this.state.roleGroup.code} name="code" type="text" placeholder="Enter role code"/>
+                                    <label>{i18n.t("CODE")}</label>
+                                    <input className={validation.code.isInvalid?'has-error form-control':'form-control'} autoComplete="off" onChange={this.handleChangeValue} value={this.state.roleGroup.code} name="code" type="text" placeholder={i18n.t("CODE")}/>
                                     {validation.code.isInvalid && <ul className="parsley-errors-list filled">
                                         <li className="parsley-required">
                                             {validation.code.message}
@@ -150,20 +152,20 @@ class UpdateRole extends Component{
                         <div className="col-6">
                             <div className="form-group row m-b-20">
                                 <div className="col-12 image-urls">
-                                    <label>Childs</label>
+                                    <label>{i18n.t("CHILDS")}</label>
                                     <div className="nav-childs">
                                         {
                                             this.state.roleGroup.childs.map((item, i) => {        
                                                 return (
                                                     <div className="nav-child-item row" key={i}>
                                                         <div className="col-10">
-                                                            <input className={validation.names && validation.names[i] && validation.names[i].isInvalid?'has-error form-control':'form-control'} autoComplete="off" onChange={this.handleChildsChange(i, 'name')} value={item.name} type="text" placeholder="Enter role name"/>
+                                                            <input className={validation.names && validation.names[i] && validation.names[i].isInvalid?'has-error form-control':'form-control'} autoComplete="off" onChange={this.handleChildsChange(i, 'name')} value={item.name} type="text" placeholder={i18n.t("ENTER_CHILD_NAME")}/>
                                                             {validation.names && validation.names[i] && validation.names[i].isInvalid && <ul className="parsley-errors-list filled">
                                                                 <li className="parsley-required">
                                                                     {validation.names[i].message}
                                                                 </li>
                                                             </ul>}
-                                                            <input className={validation.codes && validation.codes[i] && validation.codes[i].isInvalid?'has-error form-control':'form-control'} autoComplete="off" onChange={this.handleChildsChange(i, 'code')} value={item.code} type="text" placeholder="Enter role code"/>
+                                                            <input className={validation.codes && validation.codes[i] && validation.codes[i].isInvalid?'has-error form-control':'form-control'} autoComplete="off" onChange={this.handleChildsChange(i, 'code')} value={item.code} type="text" placeholder={i18n.t("ENTER_CHILD_CODE")}/>
                                                             {validation.codes && validation.codes[i] && validation.codes[i].isInvalid && <ul className="parsley-errors-list filled">
                                                                 <li className="parsley-required">
                                                                     {validation.codes[i].message}
@@ -180,7 +182,7 @@ class UpdateRole extends Component{
                                     </div>
                                 </div>
                                 <div className="col-12 btn-add-url">
-                                    <button onClick={this.addNewRole} className="btn btn-primary">Add more child</button>
+                                    <button onClick={this.addNewRole} className="btn btn-primary">{i18n.t("ADD_MORE_CHILD")}</button>
                                 </div>
                             </div>
                         </div>
@@ -190,8 +192,8 @@ class UpdateRole extends Component{
             
                 <div className="modal-footer">
                     {
-                        !this.props.isEdit?<button onClick={this.addRoleGroup} className="btn btn-success">Add new item</button>:
-                        <button onClick={this.editRoleGroup} className="btn btn-warning">Update</button>
+                        !this.props.isEdit?<button onClick={this.addRoleGroup} className="btn btn-success">{i18n.t("ADD_ITEM")}</button>:
+                        <button onClick={this.editRoleGroup} className="btn btn-warning">{i18n.t("UPDATE")}</button>
                     }
                 </div>
             </form>
@@ -211,4 +213,4 @@ const mapDispatchToProps = (dispatch) => {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(UpdateRole);
+export default withNamespaces('updateRole')(connect(mapStateToProps, mapDispatchToProps)(UpdateRole));

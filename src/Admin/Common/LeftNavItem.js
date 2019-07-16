@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import CSSTransitionGroup from 'react-addons-css-transition-group';
 import {Link} from 'react-router-dom';
+import { withNamespaces } from 'react-i18next';
+import i18n from '../../Consts/i18n';
 
 class LeftNavItem extends Component{
     constructor(props){
@@ -29,7 +31,7 @@ class LeftNavItem extends Component{
         const config = this.props.config;
         const ulHtml = this.state.toggle?<ul className="nav-second-level">
                                             {config.childs.map((item, i) => {        
-                                                return (<li key={i} className={item.url==window.location.pathname?'active':''}><Link to={item.url}>{item.name}</Link></li>) 
+                                                return (<li key={i} className={item.url==window.location.pathname?'active':''}><Link to={item.url}>{i18n.t(item.name)}</Link></li>) 
                                             })}
                                         </ul>:"";
     
@@ -37,7 +39,7 @@ class LeftNavItem extends Component{
             <li className={this.state.toggle?'active':''}>
                 <a className={this.state.toggle?'active':''} onClick={this.toggleItem} href={config.url}>
                     <i className={config.iconClass}></i> 
-                    <span> {config.name} </span> 
+                    <span> {i18n.t(config.name)} </span> 
                     {config.isHasBadge?<span className={`badge badge-pill pull-right ${config.badgeClass}`}>{config.badgeNumer}</span>:<span className="menu-arrow"></span>}                  
                 </a>
 
@@ -49,4 +51,4 @@ class LeftNavItem extends Component{
     }
 }
 
-export default LeftNavItem;
+export default withNamespaces('leftNavItem')(LeftNavItem);

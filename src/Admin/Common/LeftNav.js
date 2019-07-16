@@ -7,7 +7,7 @@ import { Scrollbars } from 'react-custom-scrollbars';
 import {connect} from 'react-redux';
 import {Link} from 'react-router-dom';
 import { Redirect } from 'react-router';
-import {getLeftNavsMenu} from '../../Store/Actions/leftNavAction';
+import {getLeftNavsMenu, resetState} from '../../Store/Actions/leftNavAction';
 import Common from '../../Consts/Common';
 
 class LeftNav extends Component{
@@ -19,8 +19,12 @@ class LeftNav extends Component{
         this.props.getLeftNavsMenu();
     }
 
+    componentWillUnmount(){
+        this.props.resetState();
+    }
+
     render(){
-        if(this.props.redirectToLogin){
+        if(this.props.redirectToLoginLeftNav){
             return <Redirect to={{
                 pathname: '/admin/login',
                 state: { currentUrl: window.location.pathname }
@@ -74,12 +78,13 @@ const mapStateToProps=(state)=>{
     return {
         leftNavItems: state.leftNav.leftNavItems,
         userInfo: state.leftNav.userInfo,
-        redirectToLogin:state.leftNav.redirectToLogin
+        redirectToLoginLeftNav:state.leftNav.redirectToLoginLeftNav
     }
 }
 const mapDispatchToProps = (dispatch) => {
     return {
-        getLeftNavsMenu: () => dispatch(getLeftNavsMenu())
+        getLeftNavsMenu: () => dispatch(getLeftNavsMenu()),
+        resetState: () => dispatch(resetState())
     }
 }
 

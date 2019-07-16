@@ -5,6 +5,8 @@ import {createUser, updateUserDispatch} from '../../Store/Actions/manageUserActi
 import {connect} from 'react-redux';
 import Common from '../../Consts/Common';
 import FormValidator from '../../Common/FormValidator';
+import { withNamespaces } from 'react-i18next';
+import i18n from '../../Consts/i18n';
 
 class UpdateUser extends Component{
     fileInput=null;
@@ -12,15 +14,15 @@ class UpdateUser extends Component{
         super(props);
 
         this.validator = new FormValidator([
-            { field: 'userName', method: 'isEmpty', validWhen: false, message: 'User name is required.'},
-            { field: 'userName', method: 'isLength', args: [{min: 8, max: 65}], validWhen: true, message: 'Length must be larger than 8.'},
-            { field: 'password', method: 'isEmpty', validWhen: false, message: 'Password is required.'},
-            { field: 'password', method: 'isLength', args: [{min: 8, max: 65}], validWhen: true, message: 'Length must be larger than 8.'},
-            { field: 'repassword', method: 'equals', comparison: 'password', validWhen: true, message: 'Password does not match.'},           
-            { field: 'email', method: 'isEmpty', validWhen: false, message: 'Email is required.'},
-            { field: 'email', method: 'isEmail', validWhen: true, message: 'Email not have right format.'},
-            { field: 'firstName', method: 'isEmpty', validWhen: false, message: 'First name is required.'},
-            { field: 'lastName', method: 'isEmpty', validWhen: false, message: 'Last name is required.'}
+            { field: 'userName', method: 'isEmpty', validWhen: false, message: i18n.t("VALIDATE_REQUIRED")},
+            { field: 'userName', method: 'isLength', args: [{min: 8, max: 65}], validWhen: true, message: i18n.t("VALIDATE_PASSWORD")},
+            { field: 'password', method: 'isEmpty', validWhen: false, message: i18n.t("VALIDATE_REQUIRED")},
+            { field: 'password', method: 'isLength', args: [{min: 8, max: 65}], validWhen: true, message: i18n.t("VALIDATE_PASSWORD")},
+            { field: 'repassword', method: 'equals', comparison: 'password', validWhen: true, message: i18n.t("VALIDATE_MATCH_PASSWORD")},           
+            { field: 'email', method: 'isEmpty', validWhen: false, message: i18n.t("VALIDATE_REQUIRED")},
+            { field: 'email', method: 'isEmail', validWhen: true, message: i18n.t("VALIDATE_EMAIL")},
+            { field: 'firstName', method: 'isEmpty', validWhen: false, message: i18n.t("VALIDATE_REQUIRED")},
+            { field: 'lastName', method: 'isEmpty', validWhen: false, message: i18n.t("VALIDATE_REQUIRED")}
         ]);
 
         this.state={
@@ -97,20 +99,20 @@ class UpdateUser extends Component{
     render(){
         let validation = this.state.validation;
         return(
-            <Modal user={this.props.user} header={!this.props.isEdit?"Add New User":"Edit User"} modalIsOpen={this.props.modalIsOpen} width="450">
+            <Modal user={this.props.user} header={!this.props.isEdit?i18n.t("ADD_NEW_USER"):i18n.t("UPDATE_USER")} modalIsOpen={this.props.modalIsOpen} width="450">
                 <form>
                     <div className="row container display-block">
                         <div className="form-group row display-block text-center">
-                            <img title="Choose the image..." className="avatar-img" src={this.state.imageSrc} onClick={this.triggerInputFile}/>
+                            <img title={i18n.t("CHOOSE_IMAGE")} className="avatar-img" src={this.state.imageSrc} onClick={this.triggerInputFile}/>
                             <input accept="image/x-png,image/gif,image/jpeg" ref={fileInput=>this.fileInput=fileInput} onChange={this.handleChangeValue} name="image" className="hidden" type="file"/>
                         </div>
 
                         <div className="form-group row m-b-20">
                             <div className="col-4">
-                                <label className="fix-label-form">Username</label>
+                                <label className="fix-label-form">{i18n.t("USER_NAME")}</label>
                             </div>
                             <div className="col-8">
-                                <input className={validation.userName.isInvalid?'has-error form-control':'form-control'} disabled={this.props.isEdit} onChange={this.handleChangeValue} value={this.state.user.userName} name="userName" type="text" placeholder="Enter username"/>
+                                <input className={validation.userName.isInvalid?'has-error form-control':'form-control'} disabled={this.props.isEdit} onChange={this.handleChangeValue} value={this.state.user.userName} name="userName" type="text" placeholder={i18n.t("USER_NAME")}/>
                                 {validation.userName.isInvalid && <ul className="parsley-errors-list filled">
                                     <li className="parsley-required">
                                         {validation.userName.message}
@@ -121,10 +123,10 @@ class UpdateUser extends Component{
 
                         <div className="form-group row m-b-20">
                             <div className="col-4">
-                                <label className="fix-label-form">Password</label>
+                                <label className="fix-label-form">{i18n.t("PASSWORD")}</label>
                             </div>
                             <div className="col-8">
-                                <input className={validation.password.isInvalid?'has-error form-control':'form-control'} onChange={this.handleChangeValue} value={this.state.user.password} name="password" type="password" placeholder="Enter password"/>
+                                <input className={validation.password.isInvalid?'has-error form-control':'form-control'} onChange={this.handleChangeValue} value={this.state.user.password} name="password" type="password" placeholder={i18n.t("PASSWORD")}/>
                                 {validation.password.isInvalid && <ul className="parsley-errors-list filled">
                                     <li className="parsley-required">
                                         {validation.password.message}
@@ -135,10 +137,10 @@ class UpdateUser extends Component{
 
                         <div className="form-group row m-b-20">
                             <div className="col-4">
-                                <label className="fix-label-form">Repeat Password</label>
+                                <label className="fix-label-form">{i18n.t("CONFIRM_PASSWORD")}</label>
                             </div>
                             <div className="col-8">
-                                <input className={validation.repassword.isInvalid?'has-error form-control':'form-control'} onChange={this.handleChangeValue} value={this.state.user.repassword} name="repassword" type="password" placeholder="Repeat password"/>
+                                <input className={validation.repassword.isInvalid?'has-error form-control':'form-control'} onChange={this.handleChangeValue} value={this.state.user.repassword} name="repassword" type="password" placeholder={i18n.t("CONFIRM_PASSWORD")}/>
                                 {validation.repassword.isInvalid && <ul className="parsley-errors-list filled">
                                     <li className="parsley-required">
                                         {validation.repassword.message}
@@ -149,10 +151,10 @@ class UpdateUser extends Component{
 
                         <div className="form-group row m-b-20">
                             <div className="col-4">
-                                <label className="fix-label-form">Email</label>
+                                <label className="fix-label-form">{i18n.t("EMAIL")}</label>
                             </div>
                             <div className="col-8">
-                                <input className={validation.email.isInvalid?'has-error form-control':'form-control'} disabled={this.props.isEdit} onChange={this.handleChangeValue} value={this.state.user.email} name="email" type="text" placeholder="Enter email"/>
+                                <input className={validation.email.isInvalid?'has-error form-control':'form-control'} disabled={this.props.isEdit} onChange={this.handleChangeValue} value={this.state.user.email} name="email" type="text" placeholder={i18n.t("EMAIL")}/>
                                 {validation.email.isInvalid && <ul className="parsley-errors-list filled">
                                     <li className="parsley-required">
                                         {validation.email.message}
@@ -163,10 +165,10 @@ class UpdateUser extends Component{
 
                         <div className="form-group row m-b-20">
                             <div className="col-4">
-                                <label className="fix-label-form">Name</label>
+                                <label className="fix-label-form">{i18n.t("FULL_NAME")}</label>
                             </div>
                             <div className="col-4">
-                                <input className={validation.firstName.isInvalid?'has-error form-control':'form-control'} onChange={this.handleChangeValue} value={this.state.user.firstName} name="firstName" type="text" placeholder="First Name"/>
+                                <input className={validation.firstName.isInvalid?'has-error form-control':'form-control'} onChange={this.handleChangeValue} value={this.state.user.firstName} name="firstName" type="text" placeholder={i18n.t("FIRST_NAME")}/>
                                 {validation.firstName.isInvalid && <ul className="parsley-errors-list filled">
                                     <li className="parsley-required">
                                         {validation.firstName.message}
@@ -174,7 +176,7 @@ class UpdateUser extends Component{
                                 </ul>}
                             </div>
                             <div className="col-4">
-                                <input className={validation.lastName.isInvalid?'has-error form-control':'form-control'} onChange={this.handleChangeValue} value={this.state.user.lastName} name="lastName" type="text" placeholder="Last Name"/>
+                                <input className={validation.lastName.isInvalid?'has-error form-control':'form-control'} onChange={this.handleChangeValue} value={this.state.user.lastName} name="lastName" type="text" placeholder={i18n.t("LAST_NAME")}/>
                                 {validation.lastName.isInvalid && <ul className="parsley-errors-list filled">
                                     <li className="parsley-required">
                                         {validation.lastName.message}
@@ -185,8 +187,8 @@ class UpdateUser extends Component{
                     </div>
                     <div className="modal-footer">
                         {
-                            !this.props.isEdit?<button className="btn btn-success" onClick={this.addUser}>Add user</button>:
-                            <button className="btn btn-warning" onClick={this.updateUser}>Update</button>
+                            !this.props.isEdit?<button className="btn btn-success" onClick={this.addUser}>{i18n.t("ADD_ITEM")}</button>:
+                            <button className="btn btn-warning" onClick={this.updateUser}>{i18n.t("UPDATE")}</button>
                         }
                     </div>
                 </form>
@@ -206,4 +208,4 @@ const mapDispatchToProps = (dispatch) => {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(UpdateUser);
+export default withNamespaces('updateUser')(connect(mapStateToProps, mapDispatchToProps)(UpdateUser));

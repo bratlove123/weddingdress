@@ -11,15 +11,17 @@ import SortHeading from '../../Common/SortHeading';
 import ReactLoading from 'react-loading';
 import UpdateRole from './UpdateRole';
 import Moment from 'react-moment';
+import { withNamespaces } from 'react-i18next';
+import i18n from '../../Consts/i18n';
 
 class ManageRole extends Component{
     breadcrumb = [
         {
-            name: "Settings",
+            name: "SETTINGS",
             url: ""
         },
         {
-            name: "Manage Role",
+            name: "MANAGE_ROLES",
             url: ""
         }
     ];
@@ -37,7 +39,7 @@ class ManageRole extends Component{
     }
 
     componentDidMount(){
-        document.title = "Manage Role";
+        document.title = i18n.t("MANAGE_ROLES");
     }
 
     toggleRow=(i)=>()=>{
@@ -52,17 +54,17 @@ class ManageRole extends Component{
 
     deleteRoleGroup = (id) => () => {
         confirmAlert({
-            title: 'Confirm to delete',
-            message: 'Are you sure to delete this item.',
+            title: i18n.t("DELETE_CONFIRM"),
+            message: i18n.t("SURE_DELETE"),
             buttons: [
             {
-                label: 'Yes',
+                label: i18n.t("YES"),
                 onClick: () => {
                     this.props.deleteRoleGroupDispatch(id);
                 }
             },
             {
-                label: 'No'
+                label: i18n.t("NO")
             }
             ]
         })
@@ -109,18 +111,21 @@ class ManageRole extends Component{
                 <UpdateRole modalIsOpen={this.props.modalIsOpen} isEdit={this.props.isEdit} fixOpen={this.props.fixOpen}></UpdateRole>
                 <div className="card-box table-responsive">
                     <div className="table-header">
-                        <button className="btn btn-success" onClick={this.addNewItem}>Add Role Group</button>
-                        <input onChange={this.handleSearchChange} name="currentSearch" className="form-control search-box" placeholder="Search" />
+                        <button className="btn btn-success" onClick={this.addNewItem}>{i18n.t("ADD_NEW_ROLE")}</button>
+                        <div className="inner-addon right-addon">
+                            <i className="fi fi-search"></i>    
+                            <input onChange={this.handleSearchChange} name="currentSearch" className="form-control search-box" placeholder={i18n.t("SEARCH")} />
+                        </div>
                     </div>
                     <table className="table table-colored m-b-0 toggle-arrow-tiny fix-table">
                         <thead>
                             <tr>
                                 <th></th>
-                                <SortHeading name={'name'} currentSort={this.props.orderBy} currentArrow={this.props.currentArrow} getDataForSort={this.sortChange}>Name</SortHeading>
-                                <SortHeading name={'code'} currentSort={this.props.orderBy} currentArrow={this.props.currentArrow} getDataForSort={this.sortChange}>Code</SortHeading>
-                                <th> Modified By </th>
-                                <th>Modified On</th>
-                                <th> Action </th>
+                                <SortHeading name={'name'} currentSort={this.props.orderBy} currentArrow={this.props.currentArrow} getDataForSort={this.sortChange}>{i18n.t("NAME")}</SortHeading>
+                                <SortHeading name={'code'} currentSort={this.props.orderBy} currentArrow={this.props.currentArrow} getDataForSort={this.sortChange}>{i18n.t("CODE")}</SortHeading>
+                                <th> {i18n.t("MODIFIED_BY")} </th>
+                                <th>{i18n.t("MODIFIED_ON")}</th>
+                                <th> {i18n.t("ACTION")} </th>
                             </tr>
                         </thead>
                         <tbody>
@@ -157,7 +162,7 @@ class ManageRole extends Component{
                                             }
                                         </React.Fragment>
                                     )
-                                }):<tr><td colSpan="100%" className="text-center">No Data.</td></tr>
+                                }):<tr><td colSpan="100%" className="text-center">{i18n.t("NO_DATA")}</td></tr>
                             }
                         </tbody>
                     </table>
@@ -195,4 +200,4 @@ const mapDispatchToProps = (dispatch) => {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ManageRole);
+export default withNamespaces('manageLeftNav')(connect(mapStateToProps, mapDispatchToProps)(ManageRole));

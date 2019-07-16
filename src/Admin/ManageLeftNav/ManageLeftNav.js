@@ -11,15 +11,17 @@ import SortHeading from '../../Common/SortHeading';
 import ReactLoading from 'react-loading';
 import UpdateLeftNav from './UpdateLeftNav';
 import Moment from 'react-moment';
+import { withNamespaces } from 'react-i18next';
+import i18n from '../../Consts/i18n';
 
 class ManageLeftNav extends Component{
     breadcrumb = [
         {
-            name: "Settings",
+            name: "SETTINGS",
             url: ""
         },
         {
-            name: "Manage Left Nav",
+            name: "MANAGE_LEFT_NAVS",
             url: ""
         }
     ];
@@ -37,7 +39,7 @@ class ManageLeftNav extends Component{
     }
 
     componentDidMount(){
-        document.title = "Manage Left Nav";
+        document.title = i18n.t("MANAGE_LEFT_NAVS");
     }
 
     toggleRow=(i)=>()=>{
@@ -52,17 +54,17 @@ class ManageLeftNav extends Component{
 
     deleteLeftNav = (id) => () => {
         confirmAlert({
-            title: 'Confirm to delete',
-            message: 'Are you sure to delete this item.',
+            title: i18n.t("DELETE_CONFIRM"),
+            message: i18n.t("SURE_DELETE"),
             buttons: [
             {
-                label: 'Yes',
+                label: i18n.t("YES"),
                 onClick: () => {
                     this.props.deleteLeftNavDispatch(id);
                 }
             },
             {
-                label: 'No'
+                label: i18n.t("NO")
             }
             ]
         })
@@ -109,23 +111,27 @@ class ManageLeftNav extends Component{
                 <UpdateLeftNav modalIsOpen={this.props.modalIsOpen} isEdit={this.props.isEdit} fixOpen={this.props.fixOpen}></UpdateLeftNav>
                 <div className="card-box table-responsive">
                     <div className="table-header">
-                        <button className="btn btn-success" onClick={this.addNewItem}>Add New Nav</button>
-                        <input onChange={this.handleSearchChange} name="currentSearch" className="form-control search-box" placeholder="Search" />
+                        <button className="btn btn-success" onClick={this.addNewItem}>{i18n.t("ADD_NEW_NAV")}</button>
+                        <div className="inner-addon right-addon">
+                            <i className="fi fi-search"></i>      
+                            <input onChange={this.handleSearchChange} name="currentSearch" className="form-control search-box" placeholder={i18n.t("SEARCH")} />
+                        </div>
+                        
                     </div>
                     <table className="table table-colored m-b-0 toggle-arrow-tiny fix-table">
                         <thead>
                             <tr>
                                 <th></th>
-                                <SortHeading name={'name'} currentSort={this.props.orderBy} currentArrow={this.props.currentArrow} getDataForSort={this.sortChange}>Nav Name</SortHeading>
-                                <SortHeading name={'url'} currentSort={this.props.orderBy} currentArrow={this.props.currentArrow} getDataForSort={this.sortChange}>Nav Url</SortHeading>
-                                <th> Icon Class </th>
-                                <th> Is Has Badge </th>
-                                <th> Badge Class </th>
-                                <th> BadgeNumber </th>
-                                <th>Position</th>
-                                <th> Modified By </th>
-                                <th>Modified On</th>
-                                <th> Action </th>
+                                <SortHeading name={'name'} currentSort={this.props.orderBy} currentArrow={this.props.currentArrow} getDataForSort={this.sortChange}>{i18n.t("NAV_NAME")}</SortHeading>
+                                <SortHeading name={'url'} currentSort={this.props.orderBy} currentArrow={this.props.currentArrow} getDataForSort={this.sortChange}>{i18n.t("NAV_URL")}</SortHeading>
+                                <th> {i18n.t("ICON_CLASS")} </th>
+                                <th> {i18n.t("IS_HAS_BADGE")} </th>
+                                <th> {i18n.t("BADGE_CLASS")} </th>
+                                <th> {i18n.t("BADGE_NUMBER")} </th>
+                                <th>{i18n.t("POSITION")}</th>
+                                <th> {i18n.t("MODIFIED_BY")} </th>
+                                <th>{i18n.t("MODIFIED_ON")}</th>
+                                <th> {i18n.t("ACTION")} </th>
                             </tr>
                         </thead>
                         <tbody>
@@ -168,7 +174,7 @@ class ManageLeftNav extends Component{
                                             }
                                         </React.Fragment>
                                     )
-                                }):<tr><td colSpan="100%" className="text-center">No Data.</td></tr>
+                                }):<tr><td colSpan="100%" className="text-center">{i18n.t("NO_DATA")}</td></tr>
                             }
                         </tbody>
                     </table>
@@ -206,4 +212,4 @@ const mapDispatchToProps = (dispatch) => {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ManageLeftNav);
+export default withNamespaces('manageLeftNav')(connect(mapStateToProps, mapDispatchToProps)(ManageLeftNav));

@@ -1,4 +1,6 @@
 import { toast } from 'react-toastify';
+import AuthenticationService from './AuthenticationService';
+import i18n from '../Consts/i18n';
 
 class ErrorHandlerService{
     static errorWithMessageFromAPI(error){
@@ -11,14 +13,14 @@ class ErrorHandlerService{
     }
 
     static basicErrorHandler(error, redirectToLogin){
-        if(error && error.response && error.response.data){
-            toast(error.response.statusText, { type: toast.TYPE.ERROR });
-        }
-        else if(error.response && error.response.status==401){
+        if(error.response && error.response.status==401){
+            AuthenticationService.removeToken();
             redirectToLogin();
         }
         else{
-            toast(error.message, { type: toast.TYPE.ERROR });
+            if(error && error.response && error.response.data){
+                toast(error.response.data, { type: toast.TYPE.ERROR });
+            }
         }
     }
 
@@ -26,8 +28,10 @@ class ErrorHandlerService{
         if(error && error.response && error.response.data){
             switch(error.response.data.code){
                 case "USER_NOT_FOUND":
+                    toast(i18n.t("USER_NOT_FOUND"), { type: toast.TYPE.ERROR });
+                    break;
                 case "WRONG_PASSWORD":
-                    toast(error.response.data.message, { type: toast.TYPE.ERROR });
+                    toast(i18n.t("WRONG_PASSWORD"), { type: toast.TYPE.ERROR });
                     break;
                 case "NOT_CONFIRM_EMAIL":
                     let email = error.response.data.email;
