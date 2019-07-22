@@ -141,7 +141,7 @@ class UpdateLeftNav extends Component{
     render(){
         let validation = this.state.validation;
         return(
-        <Modal header={!this.props.isEdit?i18n.t("ADD_NEW_NAV"):i18n.t("EDIT_NEW_NAV")} modalIsOpen={this.props.modalIsOpen} width="700">
+        <Modal header={!this.props.isEdit?i18n.t("ADD_NEW_NAV"):i18n.t("EDIT_NAV")} modalIsOpen={this.props.modalIsOpen} width="700">
             <form>
                 <Scrollbars autoHeight autoHeightMin={500} autoHide autoHideTimeout={1000} autoHideDuration={200}>
                     <div className="row fix-scroll">
@@ -220,13 +220,13 @@ class UpdateLeftNav extends Component{
                                                                     {validation.names[i].message}
                                                                 </li>
                                                             </ul>}
-                                                            <input className={validation.urls && validation.urls[i] && validation.urls[i].isInvalid?'has-error form-control':'form-control'} autoComplete="off" onChange={this.handleChildsChange(i, 'url')} value={item.url} type="text" placeholder={i18n.t("ENTER_CHILD_POSITION")}/>
+                                                            <input className={validation.urls && validation.urls[i] && validation.urls[i].isInvalid?'has-error form-control':'form-control'} autoComplete="off" onChange={this.handleChildsChange(i, 'url')} value={item.url} type="text" placeholder={i18n.t("ENTER_CHILD_URL")}/>
                                                             {validation.urls && validation.urls[i] && validation.urls[i].isInvalid && <ul className="parsley-errors-list filled">
                                                                 <li className="parsley-required">
                                                                     {validation.urls[i].message}
                                                                 </li>
                                                             </ul>}
-                                                            <input autoComplete="off" type="number" onChange={this.handleChildsChange(i, 'position')} value={item.position} className="form-control" placeholder={i18n.t("BADGE_NUMBER")}/>
+                                                            <input autoComplete="off" type="number" onChange={this.handleChildsChange(i, 'position')} value={item.position} className="form-control" placeholder={i18n.t("ENTER_CHILD_POSITION")}/>
                                                         </div>
                                                         <div className="col-2 margin-auto">
                                                             <a className="form-control" href="javascript:void(0)" onClick={this.removeChildNav(i)} className="btn btn-danger"><i className="fi-cross"></i></a>

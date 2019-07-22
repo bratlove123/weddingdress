@@ -63,7 +63,7 @@
     "ACTION": "Action",
     "NO_DATA": "No Data",
     "ADD_NEW_NAV": "Add new nav",
-    "EDIT_NEW_NAV": "Edit new nav",
+    "EDIT_NAV": "Edit nav",
     "CHILDS": "Childs",
     "ADD_MORE_CHILD": "Add more child",
     "ADD_ITEM": "Add item",
@@ -106,5 +106,16 @@
     "ADD_USER_SUCCESS": "Added user item successfully.",
     "UPDATE_USER_SUCCESS": "Updated user item successfully.",
     "DELETE_USER_SUCCESS": "Deleted user successfully",
-    "TOOGLE_ACTIVE_USER_SUCCESS": "Toggled active user successfully."
+    "TOOGLE_ACTIVE_USER_SUCCESS": "Toggled active user successfully.",
+    "PRODUCT": "Manage Product",
+    "MANAGE_TYPES": "Manage Types",
+    "ADD_NEW_TYPE": "Add New Type",
+    "TYPE_NAME": "Type Name",
+    "SIZE_CHILDS": "Size",
+    "TYPE_CHILD_NAME": "Size",
+    "MANAGE_COLORS": "Manage Colors",
+    "COLOR_NAME": "Color name",
+    "COLOR_CODE": "Color code",
+    "ADD_NEW_COLOR": "Add color",
+    "EDIT_COLOR": "Edit color"
 }

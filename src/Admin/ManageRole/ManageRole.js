@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import { Redirect } from 'react-router';
-import {getRoleGroups, openUpdateRoleGroupDialog, deleteRoleGroupDispatch, resetState} from '../../Store/Actions/ManageRoleAction';
+import {getRoleGroups, openUpdateRoleGroupDialog, deleteRoleGroupDispatch, resetState} from '../../Store/Actions/manageRoleAction';
 import {connect} from 'react-redux';
 import Paging from '../../Common/Paging';
 import SortHeading from '../../Common/SortHeading';

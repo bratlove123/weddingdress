@@ -1,19 +1,51 @@
 import React, { Component } from 'react';
-import Login from './Admin/Account/Login';
-import Registration from './Admin/Account/Registration';
-import Dashboard from './Admin/Dashboard/Dashboard';
-import ConfirmEmail from './Admin/Account/ConfirmEmail';
-import VerifyEmail from './Admin/Account/VerifyEmail';
-import Forgot from './Admin/Account/Forgot';
-import Reset from './Admin/Account/Reset';
-import FacebookAuth from './Admin/Account/FacebookAuth';
-import ManageLeftNav from './Admin/ManageLeftNav/ManageLeftNav';
-import ManageUser from './Admin/ManageUser/ManageUser';
-import ManageRole from './Admin/ManageRole/ManageRole';
 import {Switch, Route} from 'react-router-dom';
 import PrivateRoute from './Common/PrivateRoute';
 import LoginRoute from './Common/LoginRoute';
-import PageNotFound from './Admin/Account/PageNotFound';
+import asyncComponent from './Common/AsyncComponent';
+
+const Login = asyncComponent(() =>
+  import('./Admin/Account/Login').then(module => module.default)
+)
+const Registration = asyncComponent(() =>
+  import('./Admin/Account/Registration').then(module => module.default)
+)
+const Dashboard = asyncComponent(() =>
+  import('./Admin/Dashboard/Dashboard').then(module => module.default)
+)
+const ConfirmEmail = asyncComponent(() =>
+  import('./Admin/Account/ConfirmEmail').then(module => module.default)
+)
+const VerifyEmail = asyncComponent(() =>
+  import('./Admin/Account/VerifyEmail').then(module => module.default)
+)
+const Forgot = asyncComponent(() =>
+  import('./Admin/Account/Forgot').then(module => module.default)
+)
+const Reset = asyncComponent(() =>
+  import('./Admin/Account/Reset').then(module => module.default)
+)
+const FacebookAuth = asyncComponent(() =>
+  import('./Admin/Account/FacebookAuth').then(module => module.default)
+)
+const ManageLeftNav = asyncComponent(() =>
+  import('./Admin/ManageLeftNav/ManageLeftNav').then(module => module.default)
+)
+const ManageUser = asyncComponent(() =>
+  import('./Admin/ManageUser/ManageUser').then(module => module.default)
+)
+const ManageRole = asyncComponent(() =>
+  import('./Admin/ManageRole/ManageRole').then(module => module.default)
+)
+const ManageType = asyncComponent(() =>
+  import('./Admin/ManageType/ManageType').then(module => module.default)
+)
+const ManageColor = asyncComponent(() =>
+  import('./Admin/ManageColor/ManageColor').then(module => module.default)
+)
+const PageNotFound = asyncComponent(() =>
+  import('./Admin/Account/PageNotFound').then(module => module.default)
+)
 
 class Routing extends Component{
     render(){
@@ -31,6 +63,8 @@ class Routing extends Component{
                 <PrivateRoute path="/admin/manageleftnav" component={ManageLeftNav} />
                 <PrivateRoute path="/admin/manageuser" component={ManageUser} />
                 <PrivateRoute path="/admin/managerole" component={ManageRole} />
+                <PrivateRoute path="/admin/managetype" component={ManageType} />
+                <PrivateRoute path="/admin/managecolor" component={ManageColor} />
                 <PrivateRoute component={PageNotFound} />
             </Switch>
         );

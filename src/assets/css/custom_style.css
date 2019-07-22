@@ -537,3 +537,20 @@ tr.in-active{
 footer{
     display: inline-flex;
 }
+
+.color-picker-container{
+    position: fixed;
+}
+
+.color-picker-pallet{
+    position: relative;
+    z-index: 9999999;
+}
+
+.color-picker-cover{
+    position: absolute;
+    top: 0px;
+    bottom: 0px;
+    right: 0px;
+    left: 0px;
+}

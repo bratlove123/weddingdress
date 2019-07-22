@@ -42,7 +42,7 @@ class Modal extends Component{
             <CSSTransitionGroup transitionName="modal" transitionEnterTimeout={100} transitionLeaveTimeout={100}>
                 {this.state.modalIsOpen&&<div className="modal-mask">
                                     <div className="modal-wrapper">
-                                        <div className="modal-container" style={{width: this.props.width + "px"}}>
+                                        <div className="modal-container" style={{height: this.props.height + 'px', width: this.props.width + "px"}}>
 
                                             <div className="modal-header">
                                                 <h3>

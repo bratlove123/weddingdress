@@ -63,7 +63,7 @@
     "ACTION": "Thao tác",
     "NO_DATA": "Không có dữ liệu.",
     "ADD_NEW_NAV": "Thêm điều hướng",
-    "EDIT_NEW_NAV": "Sửa điều hướng",
+    "EDIT_NAV": "Sửa điều hướng",
     "CHILDS": "Phần tử con",
     "ADD_MORE_CHILD": "Thêm phần tử con",
     "ADD_ITEM": "Thêm",
@@ -106,5 +106,16 @@
     "ADD_USER_SUCCESS": "Thêm người dùng thành công.",
     "UPDATE_USER_SUCCESS": "Cập nhật người dùng thành công.",
     "DELETE_USER_SUCCESS": "Xóa người dùng thành công.",
-    "TOOGLE_ACTIVE_USER_SUCCESS": "Cập nhật trạng thái hoạt động thành công."
+    "TOOGLE_ACTIVE_USER_SUCCESS": "Cập nhật trạng thái hoạt động thành công.",
+    "PRODUCT": "Quản lí sản phẩm",
+    "MANAGE_TYPES": "Quản lí loại",
+    "ADD_NEW_TYPE": "Thêm loại mới",
+    "TYPE_NAME": "Tên loại",
+    "SIZE_CHILDS": "Size",
+    "TYPE_CHILD_NAME": "Nhập size",
+    "MANAGE_COLORS": "Quản lý màu",
+    "COLOR_NAME": "Tên màu",
+    "COLOR_CODE": "Mã màu",
+    "ADD_NEW_COLOR": "Thêm màu",
+    "EDIT_COLOR": "Sửa màu"
 }

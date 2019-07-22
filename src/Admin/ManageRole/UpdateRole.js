@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import Modal from '../../Common/Modal';
 import { Scrollbars } from 'react-custom-scrollbars';
-import {createRoleGroup, updateRoleGroupDispatch} from '../../Store/Actions/ManageRoleAction';
+import {createRoleGroup, updateRoleGroupDispatch} from '../../Store/Actions/manageRoleAction';
 import {connect} from 'react-redux';
 import FormValidator from '../../Common/FormValidator';
 import { withNamespaces } from 'react-i18next';

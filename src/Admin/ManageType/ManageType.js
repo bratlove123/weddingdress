@@ -4,24 +4,24 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import { Redirect } from 'react-router';
-import {getLeftNavs, openUpdateLeftNavDialog, deleteLeftNavDispatch, resetState} from '../../Store/Actions/manageLeftNavAction';
+import {getTypes, openUpdateTypeDialog, deleteTypeDispatch, resetState} from '../../Store/Actions/manageTypeAction';
 import {connect} from 'react-redux';
 import Paging from '../../Common/Paging';
 import SortHeading from '../../Common/SortHeading';
 import ReactLoading from 'react-loading';
-import UpdateLeftNav from './UpdateLeftNav';
+import UpdateType from './UpdateType';
 import Moment from 'react-moment';
 import { withNamespaces } from 'react-i18next';
 import i18n from '../../Consts/i18n';
 
-class ManageLeftNav extends Component{
+class ManageType extends Component{
     breadcrumb = [
         {
             name: "SETTINGS",
             url: ""
         },
         {
-            name: "MANAGE_LEFT_NAVS",
+            name: "MANAGE_TYPES",
             url: ""
         }
     ];
@@ -31,28 +31,28 @@ class ManageLeftNav extends Component{
 
         this.addNewItem=this.addNewItem.bind(this);
         this.toggleRow=this.toggleRow.bind(this);
-        this.getLeftNavsItem=this.getLeftNavsItem.bind(this);
-        this.editLeftNav=this.editLeftNav.bind(this);
+        this.getTypesItem=this.getTypesItem.bind(this);
+        this.editType=this.editType.bind(this);
         this.handleSearchChange = this.handleSearchChange.bind(this);
         this.changePage=this.changePage.bind(this);
         this.sortChange = this.sortChange.bind(this);
     }
 
     componentDidMount(){
-        document.title = i18n.t("MANAGE_LEFT_NAVS");
+        document.title = i18n.t("MANAGE_TYPES");
     }
 
     toggleRow=(i)=>()=>{
-        const leftNavs = this.props.leftNavs.map((child, sidx) => {
+        const types = this.props.types.map((child, sidx) => {
             if (sidx !== i) return child;
             child.isExpand=!child.isExpand;
             return child;
         });
 
-        this.setState({leftNavs:leftNavs});
+        this.setState({types:types});
     }
 
-    deleteLeftNav = (id) => () => {
+    deleteType = (id) => () => {
         confirmAlert({
             title: i18n.t("DELETE_CONFIRM"),
             message: i18n.t("SURE_DELETE"),
@@ -60,7 +60,7 @@ class ManageLeftNav extends Component{
             {
                 label: i18n.t("YES"),
                 onClick: () => {
-                    this.props.deleteLeftNavDispatch(id);
+                    this.props.deleteTypeDispatch(id);
                 }
             },
             {
@@ -71,31 +71,31 @@ class ManageLeftNav extends Component{
     };
 
     addNewItem(){
-        this.props.openUpdateLeftNavDialog();
+        this.props.openUpdateTypeDialog();
     }
 
     componentWillMount(){
-        this.props.getLeftNavs();
+        this.props.getTypes();
     }
 
-    getLeftNavsItem(pageSize, pageNumber, orderBy, sort, search){
-        this.props.getLeftNavs(pageSize, pageNumber, orderBy, sort, search)
+    getTypesItem(pageSize, pageNumber, orderBy, sort, search){
+        this.props.getTypes(pageSize, pageNumber, orderBy, sort, search)
     }
 
     handleSearchChange(e){
-        this.props.getLeftNavs(undefined, e.target.value);
+        this.props.getTypes(undefined, e.target.value);
     }
 
     changePage(page){
-        this.props.getLeftNavs(page);
+        this.props.getTypes(page);
     }
 
     sortChange(name, isAsc, nextArrow){
-        this.props.getLeftNavs(undefined, undefined, name, isAsc, nextArrow);
+        this.props.getTypes(undefined, undefined, name, isAsc, nextArrow);
     }
 
-    editLeftNav=(id)=>()=>{
-        this.props.openUpdateLeftNavDialog(id);
+    editType=(id)=>()=>{
+        this.props.openUpdateTypeDialog(id);
     }
 
     render(){
@@ -108,10 +108,10 @@ class ManageLeftNav extends Component{
 
         return(
             <Layout breadcrumb={this.breadcrumb}>
-                <UpdateLeftNav modalIsOpen={this.props.modalIsOpen} isEdit={this.props.isEdit} fixOpen={this.props.fixOpen}></UpdateLeftNav>
+                <UpdateType modalIsOpen={this.props.modalIsOpen} isEdit={this.props.isEdit} fixOpen={this.props.fixOpen}></UpdateType>
                 <div className="card-box table-responsive">
                     <div className="table-header">
-                        <button className="btn btn-success" onClick={this.addNewItem}>{i18n.t("ADD_NEW_NAV")}</button>
+                        <button className="btn btn-success" onClick={this.addNewItem}>{i18n.t("ADD_NEW_TYPE")}</button>
                         <div className="inner-addon right-addon">
                             <i className="fi fi-search"></i>      
                             <input onChange={this.handleSearchChange} name="currentSearch" className="form-control search-box" placeholder={i18n.t("SEARCH")} />
@@ -122,50 +122,36 @@ class ManageLeftNav extends Component{
                         <thead>
                             <tr>
                                 <th></th>
-                                <SortHeading name={'name'} currentSort={this.props.orderBy} currentArrow={this.props.currentArrow} getDataForSort={this.sortChange}>{i18n.t("NAV_NAME")}</SortHeading>
-                                <SortHeading name={'url'} currentSort={this.props.orderBy} currentArrow={this.props.currentArrow} getDataForSort={this.sortChange}>{i18n.t("NAV_URL")}</SortHeading>
-                                <th> {i18n.t("ICON_CLASS")} </th>
-                                <th> {i18n.t("IS_HAS_BADGE")} </th>
-                                <th> {i18n.t("BADGE_CLASS")} </th>
-                                <th> {i18n.t("BADGE_NUMBER")} </th>
-                                <th>{i18n.t("POSITION")}</th>
+                                <SortHeading name={'name'} currentSort={this.props.orderBy} currentArrow={this.props.currentArrow} getDataForSort={this.sortChange}>{i18n.t("TYPE_NAME")}</SortHeading>
                                 <th> {i18n.t("MODIFIED_BY")} </th>
                                 <th>{i18n.t("MODIFIED_ON")}</th>
                                 <th> {i18n.t("ACTION")} </th>
                             </tr>
                         </thead>
                         <tbody>
-                        {this.props.isLoadingLeftNavs?<tr><td colSpan="10"><div className="loading"><ReactLoading type={'cylon'} color={'#02c0ce'} height={'15px'} /></div></td></tr>:
-                                this.props.leftNavs.length>0 ? this.props.leftNavs.map((value, i)=>{
+                        {this.props.isLoadingTypes?<tr><td colSpan="10"><div className="loading"><ReactLoading type={'cylon'} color={'#02c0ce'} height={'15px'} /></div></td></tr>:
+                                this.props.types.length>0 ? this.props.types.map((value, i)=>{
                                     return (
                                         <React.Fragment key={i}>
                                             <tr className="togglable">
                                                 <td onClick={this.toggleRow(i)}>{value.isExpand?<FontAwesomeIcon icon="minus-square" />:<FontAwesomeIcon icon="plus-square" />}</td>
                                                 <td onClick={this.toggleRow(i)}>{value.name}</td>
-                                                <td><a href={value.url}>{value.url}</a></td>
-                                                <td onClick={this.toggleRow(i)} className="text-center"><i className={value.iconClass}></i></td>
-                                                <td onClick={this.toggleRow(i)} className="text-center"><span className="badge label-table badge-success">{value.isHasBadge&&<FontAwesomeIcon icon="check" />}</span></td>
-                                                <td onClick={this.toggleRow(i)} className="text-center"><span className={"badge label-table badge-"+value.badgeClass}>{value.badgeClass}</span></td>
-                                                <td onClick={this.toggleRow(i)} className="text-center">{value.badgeNumber}</td>
-                                                <td onClick={this.toggleRow(i)} className="text-center">{value.position}</td>
                                                 <td onClick={this.toggleRow(i)} className="text-center">{value.modifiedBy && value.modifiedBy.userName}</td>
                                                 <td onClick={this.toggleRow(i)} className="text-center"><Moment date={value.modifiedOn} format="DD/MM/YYYY"></Moment></td>
                                                 <td className="text-center">
-                                                    <button className="btn btn-warning" onClick={this.editLeftNav(value._id)}><FontAwesomeIcon icon="pencil-alt" /></button>
-                                                    <button className="btn btn-danger fix-eraser-btn" onClick={this.deleteLeftNav(value._id)}><FontAwesomeIcon icon="eraser" /></button>
+                                                    <button className="btn btn-warning" onClick={this.editType(value._id)}><FontAwesomeIcon icon="pencil-alt" /></button>
+                                                    <button className="btn btn-danger fix-eraser-btn" onClick={this.deleteType(value._id)}><FontAwesomeIcon icon="eraser" /></button>
                                                 </td>
                                                 
                                             </tr>
                                             {
-                                                value.childs.length>0&&value.childs[0].name&&value.childs[0].url&&value.childs[0].position&&value.isExpand&&<React.Fragment>
+                                                value.sizes.length>0&&value.sizes[0].name&&value.isExpand&&<React.Fragment>
                                                 {
-                                                    value.childs.map((value, i)=>{
+                                                    value.sizes.map((value, i)=>{
                                                         return(
                                                             <tr key={i}>
                                                                 <td colSpan="3"></td>
                                                                 <td colSpan="2">{value.name}</td>
-                                                                <td colSpan="2">{value.url}</td>
-                                                                <td>{value.position}</td>
                                                             </tr>
                                                         )
                                                     })
@@ -187,29 +173,29 @@ class ManageLeftNav extends Component{
 
 const mapStateToProps=(state)=>{
     return {
-        leftNavs: state.manageLeftNav.leftNavs,
-        isLoadingLeftNavs: state.manageLeftNav.isLoadingLeftNavs,
-        modalIsOpen: state.manageLeftNav.modalIsOpen,
-        isEdit: state.manageLeftNav.isEdit,
-        fixOpen: state.manageLeftNav.fixOpen,
-        redirectToLogin: state.manageLeftNav.redirectToLogin,
-        currentPage: state.manageLeftNav.currentPage,
-        totalPage: state.manageLeftNav.totalPage,
-        totalItemCount: state.manageLeftNav.totalItemCount,
-        orderBy: state.manageLeftNav.orderBy,
-        sort: state.manageLeftNav.sort,
-        search: state.manageLeftNav.search,
-        currentArrow: state.manageLeftNav.currentArrow
+        types: state.manageType.types,
+        isLoadingTypes: state.manageType.isLoadingTypes,
+        modalIsOpen: state.manageType.modalIsOpen,
+        isEdit: state.manageType.isEdit,
+        fixOpen: state.manageType.fixOpen,
+        redirectToLogin: state.manageType.redirectToLogin,
+        currentPage: state.manageType.currentPage,
+        totalPage: state.manageType.totalPage,
+        totalItemCount: state.manageType.totalItemCount,
+        orderBy: state.manageType.orderBy,
+        sort: state.manageType.sort,
+        search: state.manageType.search,
+        currentArrow: state.manageType.currentArrow
     }
 }
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        getLeftNavs: (page, search, orderBy, sort, currentArrow) => dispatch(getLeftNavs(page, search, orderBy, sort, currentArrow)),
-        openUpdateLeftNavDialog: (id) => dispatch(openUpdateLeftNavDialog(id)),
-        deleteLeftNavDispatch: (id) => dispatch(deleteLeftNavDispatch(id)),
+        getTypes: (page, search, orderBy, sort, currentArrow) => dispatch(getTypes(page, search, orderBy, sort, currentArrow)),
+        openUpdateTypeDialog: (id) => dispatch(openUpdateTypeDialog(id)),
+        deleteTypeDispatch: (id) => dispatch(deleteTypeDispatch(id)),
         resetState: () => dispatch(resetState())
     }
 }
 
-export default withNamespaces('manageLeftNav')(connect(mapStateToProps, mapDispatchToProps)(ManageLeftNav));
+export default withNamespaces('manageType')(connect(mapStateToProps, mapDispatchToProps)(ManageType));
