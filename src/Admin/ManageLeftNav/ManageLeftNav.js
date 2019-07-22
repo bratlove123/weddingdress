@@ -157,7 +157,7 @@ class ManageLeftNav extends Component{
                                                 
                                             </tr>
                                             {
-                                                value.childs.length>0&&value.childs[0].name&&value.childs[0].url&&value.childs[0].position&&value.isExpand&&<React.Fragment>
+                                                value.childs.length>0&&value.childs[0].name&&value.childs[0].url&&value.isExpand&&<React.Fragment>
                                                 {
                                                     value.childs.map((value, i)=>{
                                                         return(
