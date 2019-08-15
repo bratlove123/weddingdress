@@ -46,6 +46,9 @@ const ManageColor = asyncComponent(() =>
 const ManageSupplier = asyncComponent(() =>
   import('./Admin/ManageSupplier/ManageSupplier').then(module => module.default)
 )
+const ManageProduct = asyncComponent(() =>
+  import('./Admin/ManageProduct/ManageProduct').then(module => module.default)
+)
 const PageNotFound = asyncComponent(() =>
   import('./Admin/Account/PageNotFound').then(module => module.default)
 )
@@ -69,6 +72,7 @@ class Routing extends Component{
                 <PrivateRoute path="/admin/managetype" component={ManageType} />
                 <PrivateRoute path="/admin/managecolor" component={ManageColor} />
                 <PrivateRoute path="/admin/managesupplier" component={ManageSupplier} />
+                <PrivateRoute path="/admin/manageProduct" component={ManageProduct} />
                 <PrivateRoute component={PageNotFound} />
             </Switch>
         );

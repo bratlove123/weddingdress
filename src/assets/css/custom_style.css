@@ -225,6 +225,10 @@ transition: 400ms ease-out;
     padding: 0;
 }
 
+.margin-auto-padding{
+    margin:auto;
+}
+
 .nav-child-item{
     margin-bottom: 10px;
     background: #eee;
@@ -554,3 +558,59 @@ footer{
     right: 0px;
     left: 0px;
 }
+
+.upload-btn-wrapper {
+    position: relative;
+    overflow: hidden;
+    display: inline-flex;
+  }
+  
+  .upload-btn-wrapper .btn-upload {
+    border: 2px solid gray;
+    color: gray;
+    background-color: white;
+    padding: 15px 15px;
+    border-radius: 8px;
+    font-size: 10px;
+    font-weight: bold;
+    margin: 5px 0px;
+  }
+  
+.upload-btn-wrapper input[type=file] {
+    font-size: 100px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: 0;
+  }
+
+  .upload-btn-wrapper .preview-img{
+    margin: 5px 5px 0px 5px;
+  }
+
+  .upload-btn-wrapper .preview-img img{
+    width: 49px;
+    border-radius: 5px;
+    border: 2px solid #fff;
+    height: 49px;
+    margin-right: 5px;
+  }
+
+  .sub-btn-add{
+    margin-top: 5px;
+  }
+
+  .size-block{
+    background: #ccc;
+    padding: 5px;
+    border-radius: 5px;
+    margin-bottom: 5px;
+  }
+
+  .sub-table{
+      width: 100%;
+  }
+
+  .sub-table thead tr{
+    background: #eee;
+  }
