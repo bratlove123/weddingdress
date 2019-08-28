@@ -1,30 +1,30 @@
 import ErrorHandlerService from '../../Services/ErrorHandlerService';
-import SupplierService from '../../Services/SupplierService';
+import ManageCustomerGroupService from '../../Services/ManageCustomerGroupService';
 import { toast } from 'react-toastify';
 import Common from '../../Consts/Common';
 import AuthenticationService from '../../Services/AuthenticationService';
 import i18n from '../../Consts/i18n';
 import FileService from '../../Services/FileService';
 
-export const createSupplier=(supplier)=>{
+export const createCustomerGroup=(customerGroup)=>{
     return (dispatch) => {
         let isShow = true;
         dispatch({type: 'TOOGLE_LOADING', isShow});
-        delete supplier._id;
-        supplier.createdBy = AuthenticationService.getUserLoginInfo().id;
-        supplier.modifiedBy = AuthenticationService.getUserLoginInfo().id;
-        if(supplier.image){
+        delete customerGroup._id;
+        customerGroup.createdBy = AuthenticationService.getUserLoginInfo().id;
+        customerGroup.modifiedBy = AuthenticationService.getUserLoginInfo().id;
+        if(customerGroup.image){
             let formData = new FormData();
-            formData.append('image', supplier.image);
+            formData.append('image', customerGroup.image);
             FileService.uploadImage(formData).then((res)=>{
-                let supplierTmp = Object.assign(supplier, {});
-                supplierTmp.image = res.data.data;
-                SupplierService.addSupplier(supplierTmp).then((res)=>{
+                let customerGroupTmp = Object.assign(customerGroup, {});
+                customerGroupTmp.image = res.data.data;
+                ManageCustomerGroupService.addCustomerGroup(customerGroupTmp).then((res)=>{
                     let isShow = false;
                     dispatch({type: 'TOOGLE_LOADING', isShow});
-                    toast(i18n.t("ADD_SUPPLIER_SUCCESS"), { type: toast.TYPE.SUCCESS });
-                    dispatch({type: 'UPDATE_SUPPLIER', supplier});
-                    dispatch(getSuppliers());
+                    toast(i18n.t("ADD_CUSTOMER_GROUP_SUCCESS"), { type: toast.TYPE.SUCCESS });
+                    dispatch({type: 'UPDATE_CUSTOMER_GROUP', customerGroup});
+                    dispatch(getCustomerGroups());
                 }).catch(function (error) {
                     let isShow = false;
                     dispatch({type: 'TOOGLE_LOADING', isShow});
@@ -41,11 +41,11 @@ export const createSupplier=(supplier)=>{
             });
         }
         else{
-            supplier.image = "";
-            SupplierService.addSupplier(supplier).then((res)=>{
-                toast(i18n.t("ADD_SUPPLIER_SUCCESS"), { type: toast.TYPE.SUCCESS });
-                dispatch({type: 'UPDATE_SUPPLIER', supplier});
-                dispatch(getSuppliers());
+            customerGroup.image = "";
+            ManageCustomerGroupService.addCustomerGroup(customerGroup).then((res)=>{
+                toast(i18n.t("ADD_CUSTOMER_GROUP_SUCCESS"), { type: toast.TYPE.SUCCESS });
+                dispatch({type: 'UPDATE_CUSTOMER_GROUP', customerGroup});
+                dispatch(getCustomerGroups());
                 let isShow = false;
                 dispatch({type: 'TOOGLE_LOADING', isShow});
             }).catch(function (error) {
@@ -59,10 +59,10 @@ export const createSupplier=(supplier)=>{
     }
 }
 
-export const getSuppliers=(page, search, orderBy, sort, currentArrow)=>{
+export const getCustomerGroups=(page, search, orderBy, sort, currentArrow)=>{
     return (dispatch, getState) => {
-        dispatch({type: 'SHOW_LOADING_SUPPLIER_DATA'});
-        let state = getState().manageSupplier;
+        dispatch({type: 'SHOW_LOADING_CUSTOMER_GROUP_DATA'});
+        let state = getState().manageCustomerGroup;
         let params = {
             pageSize: Common.pageSize,
             pageNumber: page!==undefined?page:state.currentPage,
@@ -71,18 +71,18 @@ export const getSuppliers=(page, search, orderBy, sort, currentArrow)=>{
             search: search!==undefined?search:state.search,
             currentArrow: currentArrow!==undefined?currentArrow:state.currentArrow
         };
-        SupplierService.getSuppliersWithSorting(params).then((res)=>{
+        ManageCustomerGroupService.getCustomerGroupsWithSorting(params).then((res)=>{
             if(res.data){
-                let suppliers = {};
-                suppliers.data = res.data.data.data;
-                suppliers.totalPage=Math.ceil(res.data.data.countAll/Common.pageSize);
-                suppliers.currentPage=params.pageNumber;
-                suppliers.search=params.search;
-                suppliers.orderBy=params.orderBy;
-                suppliers.sort=params.sort;
-                suppliers.currentArrow=params.currentArrow;
-                suppliers.countAll=res.data.data.countAll;
-                dispatch({type: 'GET_SUPPLIERS', suppliers});
+                let customerGroups = {};
+                customerGroups.data = res.data.data.data;
+                customerGroups.totalPage=Math.ceil(res.data.data.countAll/Common.pageSize);
+                customerGroups.currentPage=params.pageNumber;
+                customerGroups.search=params.search;
+                customerGroups.orderBy=params.orderBy;
+                customerGroups.sort=params.sort;
+                customerGroups.currentArrow=params.currentArrow;
+                customerGroups.countAll=res.data.data.countAll;
+                dispatch({type: 'GET_CUSTOMER_GROUPS', customerGroups});
             }
         }).catch(function (error) {
             ErrorHandlerService.basicErrorHandler(error, function(){
@@ -92,18 +92,18 @@ export const getSuppliers=(page, search, orderBy, sort, currentArrow)=>{
     }
 }
 
-export const openUpdateSupplierDialog=(id)=>{
+export const openUpdateCustomerGroupDialog=(id)=>{
     return (dispatch) =>{
         let isShow = true;
         dispatch({type: 'TOOGLE_LOADING', isShow});
         if(id){
-            SupplierService.getSupplier(id).then((res)=>{
+            ManageCustomerGroupService.getCustomerGroup(id).then((res)=>{
                 if(res.data){
                     let isShow = false;
                     dispatch({type: 'TOOGLE_LOADING', isShow});
                     let data = {};
-                    data.supplier = res.data.data;
-                    dispatch({type: 'OPEN_UPDATE_SUPPLIER_DIALOG', data});
+                    data.customerGroup = res.data.data;
+                    dispatch({type: 'OPEN_UPDATE_CUSTOMER_GROUP_DIALOG', data});
                 }
             }).catch(function (error) {
                 ErrorHandlerService.basicErrorHandler(error, function(){
@@ -118,29 +118,29 @@ export const openUpdateSupplierDialog=(id)=>{
         else{
             let isShow = false;
             dispatch({type: 'TOOGLE_LOADING', isShow});
-            dispatch({type: 'OPEN_UPDATE_SUPPLIER_DIALOG'});
+            dispatch({type: 'OPEN_UPDATE_CUSTOMER_GROUP_DIALOG'});
         }
     }
 }
 
-export const updateSupplierDispatch=(supplier)=>{
+export const updateCustomerGroupDispatch=(customerGroup)=>{
     return (dispatch) =>{
         let isShow = true;
         dispatch({type: 'TOOGLE_LOADING', isShow});
-        supplier.modifiedOn =  new Date();
-        supplier.modifiedBy = AuthenticationService.getUserLoginInfo().id;
-        if(supplier.image){
+        customerGroup.modifiedOn =  new Date();
+        customerGroup.modifiedBy = AuthenticationService.getUserLoginInfo().id;
+        if(customerGroup.image){
             let formData = new FormData();
-            formData.append('image', supplier.image);
+            formData.append('image', customerGroup.image);
             FileService.uploadImage(formData).then((res)=>{
-                let supplierTmp = Object.assign(supplier, {});
-                supplierTmp.image = res.data.data;
-                SupplierService.editSupplier(supplierTmp).then((res)=>{
+                let customerGroupTmp = Object.assign(customerGroup, {});
+                customerGroupTmp.image = res.data.data;
+                ManageCustomerGroupService.editCustomerGroup(customerGroupTmp._id, customerGroupTmp).then((res)=>{
                     let isShow = false;
                     dispatch({type: 'TOOGLE_LOADING', isShow});
-                    toast(i18n.t("UPDATE_SUPPLIER_SUCCESS"), { type: toast.TYPE.SUCCESS });
-                    dispatch({type: 'UPDATE_SUPPLIER', supplier});
-                    dispatch(getSuppliers());
+                    toast(i18n.t("UPDATE_CUSTOMER_GROUP_SUCCESS"), { type: toast.TYPE.SUCCESS });
+                    dispatch({type: 'UPDATE_CUSTOMER_GROUP', customerGroup});
+                    dispatch(getCustomerGroups());
                 }).catch(function (error) {
                     let isShow = false;
                     dispatch({type: 'TOOGLE_LOADING', isShow});
@@ -157,12 +157,12 @@ export const updateSupplierDispatch=(supplier)=>{
             });
         }
         else{
-            SupplierService.editSupplier(supplier._id, supplier).then((res)=>{
+            ManageCustomerGroupService.editCustomerGroup(customerGroup._id, customerGroup).then((res)=>{
                 let isShow = false;
                 dispatch({type: 'TOOGLE_LOADING', isShow});
-                toast(i18n.t("UPDATE_SUPPLIER_SUCCESS"), { type: toast.TYPE.SUCCESS });
-                dispatch({type: 'UPDATE_SUPPLIER', supplier});
-                dispatch(getSuppliers());
+                toast(i18n.t("UPDATE_CUSTOMER_GROUP_SUCCESS"), { type: toast.TYPE.SUCCESS });
+                dispatch({type: 'UPDATE_CUSTOMER_GROUP', customerGroup});
+                dispatch(getCustomerGroups());
             }).catch(function (error) {
                 let isShow = false;
                 dispatch({type: 'TOOGLE_LOADING', isShow});
@@ -174,15 +174,15 @@ export const updateSupplierDispatch=(supplier)=>{
     }
 }
 
-export const deleteSupplierDispatch=(id)=>{
+export const deleteCustomerGroupDispatch=(id)=>{
     return (dispatch) =>{
         let isShow = true;
         dispatch({type: 'TOOGLE_LOADING', isShow});
-        SupplierService.deleteSupplier(id).then((res)=>{
+        ManageCustomerGroupService.deleteCustomerGroup(id).then((res)=>{
             let isShow = false;
             dispatch({type: 'TOOGLE_LOADING', isShow});
-            toast(i18n.t("DELETE_SUPPLIER_SUCCESS"), { type: toast.TYPE.SUCCESS });
-            dispatch(getSuppliers(1));
+            toast(i18n.t("DELETE_CUSTOMER_GROUP_SUCCESS"), { type: toast.TYPE.SUCCESS });
+            dispatch(getCustomerGroups(1));
         }).catch(function (error) {
             let isShow = false;
             dispatch({type: 'TOOGLE_LOADING', isShow});

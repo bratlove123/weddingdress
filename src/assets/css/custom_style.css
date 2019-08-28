@@ -310,12 +310,12 @@ transition: 300ms ease-out;
 }
 
 .avatar-img {
-    width: 150px;
-    height: 150px;
+    width: 100px;
+    height: 100px;
     border-radius: 50%;
-    margin: 20px;
-
+    -o-object-fit: cover;
     object-fit: cover;
+    -o-object-position: center right;
     object-position: center right;
     cursor: pointer;
 }
@@ -613,4 +613,24 @@ footer{
 
   .sub-table thead tr{
     background: #eee;
+  }
+
+  .format-currency{
+    margin: 5px 0;
+    font-weight: bold;
+    color: #681622;
+  }
+
+  .radio-group{
+      display: inline-flex;
+      margin-left: 20px;
+  }
+
+  .radio-group .radio{
+      margin-left: 20px;
+  }
+
+  .react-datetime-picker__wrapper{
+    border-radius: 5px;
+    border: 1px solid #d9e3e9 !important;
   }

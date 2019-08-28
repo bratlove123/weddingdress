@@ -9,6 +9,7 @@ import i18n from '../../Consts/i18n';
 import ReactTooltip from 'react-tooltip'
 import Common from '../../Consts/Common';
 import { toast } from 'react-toastify';
+import FormatCurrency from '../../Common/FormatCurrency';
 
 class UpdateProduct extends Component{
     constructor(props){
@@ -371,16 +372,19 @@ class UpdateProduct extends Component{
                                                                             <input data-tip={i18n.t("PRICE")} 
                                                                             className={validation.prices && validation.prices[i] && validation.prices[i].isInvalid?'has-error form-control':'form-control'}
                                                                             autoComplete="off" type="number" onChange={this.handleChildsChange(i, 'price')} value={item.price} placeholder={i18n.t("PRICE")}/>
+                                                                            <FormatCurrency price={item.price}></FormatCurrency>
                                                                         </div>
                                                                         <div className="col-4">
                                                                             <input data-tip={i18n.t("OG_PRICE")} 
                                                                             className={validation.ogPrices && validation.ogPrices[i] && validation.ogPrices[i].isInvalid?'has-error form-control':'form-control'}
                                                                             autoComplete="off" type="number" onChange={this.handleChildsChange(i, 'ogPrice')} value={item.ogPrice} placeholder={i18n.t("OG_PRICE")}/>
+                                                                            <FormatCurrency price={item.ogPrice}></FormatCurrency>
                                                                         </div>
                                                                         <div className="col-4">
                                                                             <input data-tip={i18n.t("WH_PRICE")}
                                                                             className={validation.whPrices && validation.whPrices[i] && validation.whPrices[i].isInvalid?'has-error form-control':'form-control'}
                                                                             autoComplete="off" type="number" onChange={this.handleChildsChange(i, 'whPrice')} value={item.whPrice} placeholder={i18n.t("WH_PRICE")}/>
+                                                                            <FormatCurrency price={item.whPrice}></FormatCurrency>
                                                                         </div>
                                                                     </div>
                                                                     <a href="javascript:void(0)" onClick={this.addNewSize(i)} className="btn btn-success sub-btn-add"><i className="fi fi-circle-plus"></i> {i18n.t("ADD_SIZE")}</a>

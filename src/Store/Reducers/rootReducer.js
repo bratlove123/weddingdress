@@ -8,6 +8,8 @@ import manageTypeReducer from './manageTypeReducer';
 import manageColorReducer from './manageColorReducer';
 import manageSupplierReducer from './manageSupplierReducer';
 import manageProductReducer from './manageProductReducer';
+import manageCustomerReducer from './manageCustomerReducer';
+import manageCustomerGroupReducer from './manageCustomerGroupReducer';
 import {combineReducers} from 'redux';
 
 const rootReducer=combineReducers({
@@ -20,7 +22,9 @@ const rootReducer=combineReducers({
     manageType: manageTypeReducer,
     manageColor: manageColorReducer,
     manageSupplier: manageSupplierReducer,
-    manageProduct: manageProductReducer
+    manageProduct: manageProductReducer,
+    manageCustomer: manageCustomerReducer,
+    manageCustomerGroup: manageCustomerGroupReducer
 });
 
 export default rootReducer;

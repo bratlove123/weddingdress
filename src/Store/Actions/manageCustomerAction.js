@@ -1,30 +1,33 @@
 import ErrorHandlerService from '../../Services/ErrorHandlerService';
-import SupplierService from '../../Services/SupplierService';
+import ManageCustomerService from '../../Services/ManageCustomerService';
+import ManageCustomerGroupService from '../../Services/ManageCustomerGroupService';
 import { toast } from 'react-toastify';
 import Common from '../../Consts/Common';
 import AuthenticationService from '../../Services/AuthenticationService';
 import i18n from '../../Consts/i18n';
 import FileService from '../../Services/FileService';
+import axios from 'axios';
 
-export const createSupplier=(supplier)=>{
+export const createCustomer=(customer)=>{
     return (dispatch) => {
         let isShow = true;
         dispatch({type: 'TOOGLE_LOADING', isShow});
-        delete supplier._id;
-        supplier.createdBy = AuthenticationService.getUserLoginInfo().id;
-        supplier.modifiedBy = AuthenticationService.getUserLoginInfo().id;
-        if(supplier.image){
+        delete customer._id;
+        customer.createdBy = AuthenticationService.getUserLoginInfo().id;
+        customer.modifiedBy = AuthenticationService.getUserLoginInfo().id;
+        if(customer.image){
             let formData = new FormData();
-            formData.append('image', supplier.image);
+            formData.append('image', customer.image);
             FileService.uploadImage(formData).then((res)=>{
-                let supplierTmp = Object.assign(supplier, {});
-                supplierTmp.image = res.data.data;
-                SupplierService.addSupplier(supplierTmp).then((res)=>{
+                let customerTmp = Object.assign(customer, {});
+                customerTmp.image = res.data.data;
+                customerTmp.sex = customerTmp.sex == 'true';
+                ManageCustomerService.addCustomer(customerTmp).then((res)=>{
                     let isShow = false;
                     dispatch({type: 'TOOGLE_LOADING', isShow});
-                    toast(i18n.t("ADD_SUPPLIER_SUCCESS"), { type: toast.TYPE.SUCCESS });
-                    dispatch({type: 'UPDATE_SUPPLIER', supplier});
-                    dispatch(getSuppliers());
+                    toast(i18n.t("ADD_CUSTOMER_SUCCESS"), { type: toast.TYPE.SUCCESS });
+                    dispatch({type: 'UPDATE_CUSTOMER', customer});
+                    dispatch(getCustomers());
                 }).catch(function (error) {
                     let isShow = false;
                     dispatch({type: 'TOOGLE_LOADING', isShow});
@@ -41,11 +44,12 @@ export const createSupplier=(supplier)=>{
             });
         }
         else{
-            supplier.image = "";
-            SupplierService.addSupplier(supplier).then((res)=>{
-                toast(i18n.t("ADD_SUPPLIER_SUCCESS"), { type: toast.TYPE.SUCCESS });
-                dispatch({type: 'UPDATE_SUPPLIER', supplier});
-                dispatch(getSuppliers());
+            customer.image = "";
+            customer.sex = customer.sex == 'true';
+            ManageCustomerService.addCustomer(customer).then((res)=>{
+                toast(i18n.t("ADD_CUSTOMER_SUCCESS"), { type: toast.TYPE.SUCCESS });
+                dispatch({type: 'UPDATE_CUSTOMER', customer});
+                dispatch(getCustomers());
                 let isShow = false;
                 dispatch({type: 'TOOGLE_LOADING', isShow});
             }).catch(function (error) {
@@ -59,10 +63,10 @@ export const createSupplier=(supplier)=>{
     }
 }
 
-export const getSuppliers=(page, search, orderBy, sort, currentArrow)=>{
+export const getCustomers=(page, search, orderBy, sort, currentArrow)=>{
     return (dispatch, getState) => {
-        dispatch({type: 'SHOW_LOADING_SUPPLIER_DATA'});
-        let state = getState().manageSupplier;
+        dispatch({type: 'SHOW_LOADING_CUSTOMER_DATA'});
+        let state = getState().manageCustomer;
         let params = {
             pageSize: Common.pageSize,
             pageNumber: page!==undefined?page:state.currentPage,
@@ -71,18 +75,18 @@ export const getSuppliers=(page, search, orderBy, sort, currentArrow)=>{
             search: search!==undefined?search:state.search,
             currentArrow: currentArrow!==undefined?currentArrow:state.currentArrow
         };
-        SupplierService.getSuppliersWithSorting(params).then((res)=>{
+        ManageCustomerService.getCustomersWithSorting(params).then((res)=>{
             if(res.data){
-                let suppliers = {};
-                suppliers.data = res.data.data.data;
-                suppliers.totalPage=Math.ceil(res.data.data.countAll/Common.pageSize);
-                suppliers.currentPage=params.pageNumber;
-                suppliers.search=params.search;
-                suppliers.orderBy=params.orderBy;
-                suppliers.sort=params.sort;
-                suppliers.currentArrow=params.currentArrow;
-                suppliers.countAll=res.data.data.countAll;
-                dispatch({type: 'GET_SUPPLIERS', suppliers});
+                let customers = {};
+                customers.data = res.data.data.data;
+                customers.totalPage=Math.ceil(res.data.data.countAll/Common.pageSize);
+                customers.currentPage=params.pageNumber;
+                customers.search=params.search;
+                customers.orderBy=params.orderBy;
+                customers.sort=params.sort;
+                customers.currentArrow=params.currentArrow;
+                customers.countAll=res.data.data.countAll;
+                dispatch({type: 'GET_CUSTOMERS', customers});
             }
         }).catch(function (error) {
             ErrorHandlerService.basicErrorHandler(error, function(){
@@ -92,20 +96,24 @@ export const getSuppliers=(page, search, orderBy, sort, currentArrow)=>{
     }
 }
 
-export const openUpdateSupplierDialog=(id)=>{
+export const openUpdateCustomerDialog=(id)=>{
     return (dispatch) =>{
         let isShow = true;
         dispatch({type: 'TOOGLE_LOADING', isShow});
         if(id){
-            SupplierService.getSupplier(id).then((res)=>{
-                if(res.data){
+            axios.all([
+                ManageCustomerService.getCustomer(id),
+                ManageCustomerGroupService.getCustomerGroups()
+              ])
+              .then(axios.spread((customer, customerGroups) => {
                     let isShow = false;
                     dispatch({type: 'TOOGLE_LOADING', isShow});
                     let data = {};
-                    data.supplier = res.data.data;
-                    dispatch({type: 'OPEN_UPDATE_SUPPLIER_DIALOG', data});
-                }
-            }).catch(function (error) {
+                    data.customer = customer.data.data;
+                    data.customerGroups = customerGroups.data.data;
+                    data.isEdit = true;
+                    dispatch({type: 'OPEN_UPDATE_CUSTOMER_DIALOG', data});
+              })).catch(function (error) {
                 ErrorHandlerService.basicErrorHandler(error, function(){
                     let isShow = false;
                     dispatch({type: 'TOOGLE_LOADING', isShow});
@@ -116,31 +124,36 @@ export const openUpdateSupplierDialog=(id)=>{
             });
         }
         else{
-            let isShow = false;
-            dispatch({type: 'TOOGLE_LOADING', isShow});
-            dispatch({type: 'OPEN_UPDATE_SUPPLIER_DIALOG'});
+            ManageCustomerGroupService.getCustomerGroups().then((res)=>{
+                let isShow = false;
+                dispatch({type: 'TOOGLE_LOADING', isShow});
+                let data = {};
+                data.customerGroups = res.data.data;
+                dispatch({type: 'OPEN_UPDATE_CUSTOMER_DIALOG', data});
+            });
+            
         }
     }
 }
 
-export const updateSupplierDispatch=(supplier)=>{
+export const updateCustomerDispatch=(customer)=>{
     return (dispatch) =>{
         let isShow = true;
         dispatch({type: 'TOOGLE_LOADING', isShow});
-        supplier.modifiedOn =  new Date();
-        supplier.modifiedBy = AuthenticationService.getUserLoginInfo().id;
-        if(supplier.image){
+        customer.modifiedOn =  new Date();
+        customer.modifiedBy = AuthenticationService.getUserLoginInfo().id;
+        if(customer.image){
             let formData = new FormData();
-            formData.append('image', supplier.image);
+            formData.append('image', customer.image);
             FileService.uploadImage(formData).then((res)=>{
-                let supplierTmp = Object.assign(supplier, {});
-                supplierTmp.image = res.data.data;
-                SupplierService.editSupplier(supplierTmp).then((res)=>{
+                let customerTmp = Object.assign(customer, {});
+                customerTmp.image = res.data.data;
+                ManageCustomerService.editCustomer(customerTmp._id, customerTmp).then((res)=>{
                     let isShow = false;
                     dispatch({type: 'TOOGLE_LOADING', isShow});
-                    toast(i18n.t("UPDATE_SUPPLIER_SUCCESS"), { type: toast.TYPE.SUCCESS });
-                    dispatch({type: 'UPDATE_SUPPLIER', supplier});
-                    dispatch(getSuppliers());
+                    toast(i18n.t("UPDATE_CUSTOMER_SUCCESS"), { type: toast.TYPE.SUCCESS });
+                    dispatch({type: 'UPDATE_CUSTOMER', customer});
+                    dispatch(getCustomers());
                 }).catch(function (error) {
                     let isShow = false;
                     dispatch({type: 'TOOGLE_LOADING', isShow});
@@ -157,12 +170,12 @@ export const updateSupplierDispatch=(supplier)=>{
             });
         }
         else{
-            SupplierService.editSupplier(supplier._id, supplier).then((res)=>{
+            ManageCustomerService.editCustomer(customer._id, customer).then((res)=>{
                 let isShow = false;
                 dispatch({type: 'TOOGLE_LOADING', isShow});
-                toast(i18n.t("UPDATE_SUPPLIER_SUCCESS"), { type: toast.TYPE.SUCCESS });
-                dispatch({type: 'UPDATE_SUPPLIER', supplier});
-                dispatch(getSuppliers());
+                toast(i18n.t("UPDATE_CUSTOMER_SUCCESS"), { type: toast.TYPE.SUCCESS });
+                dispatch({type: 'UPDATE_CUSTOMER', customer});
+                dispatch(getCustomers());
             }).catch(function (error) {
                 let isShow = false;
                 dispatch({type: 'TOOGLE_LOADING', isShow});
@@ -174,15 +187,15 @@ export const updateSupplierDispatch=(supplier)=>{
     }
 }
 
-export const deleteSupplierDispatch=(id)=>{
+export const deleteCustomerDispatch=(id)=>{
     return (dispatch) =>{
         let isShow = true;
         dispatch({type: 'TOOGLE_LOADING', isShow});
-        SupplierService.deleteSupplier(id).then((res)=>{
+        ManageCustomerService.deleteCustomer(id).then((res)=>{
             let isShow = false;
             dispatch({type: 'TOOGLE_LOADING', isShow});
-            toast(i18n.t("DELETE_SUPPLIER_SUCCESS"), { type: toast.TYPE.SUCCESS });
-            dispatch(getSuppliers(1));
+            toast(i18n.t("DELETE_CUSTOMER_SUCCESS"), { type: toast.TYPE.SUCCESS });
+            dispatch(getCustomers(1));
         }).catch(function (error) {
             let isShow = false;
             dispatch({type: 'TOOGLE_LOADING', isShow});
